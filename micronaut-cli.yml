@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: no.nav.hm.grunndata.alternativprodukter
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [app-name, data, data-jdbc, flyway, gradle, http-client-test, jdbc-hikari, junit, kapt, kotlin, kotlin-application, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, openapi, postgres, readme, serialization-jackson, shade, static-resources, swagger-ui, testcontainers, yaml, yaml-build]
