@@ -2,7 +2,7 @@
 
 Database med alternativprodukter
 
-## Running hm-grunndata-register for backend developing:
+## Running hm-grunndata-alternativprodukter locally:
 
 ```
 cd hm-grunndata-alternativprodukter
