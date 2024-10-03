@@ -1,2 +1,2 @@
 CREATE USER alternativprodukter with password 'alternativprodukter';
-CREATE DATABASE register owner alternativprodukter;
+CREATE DATABASE alternativprodukter owner alternativprodukter;
