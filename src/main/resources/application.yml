@@ -54,6 +54,9 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
+  task:
+    scheduling:
+      enabled: ${SCHEDULING_ENABLED:false}
 endpoints:
   metrics:
     enabled: true

@@ -2,7 +2,10 @@ package no.nav.hm.grunndata.alternativprodukter.importing
 
 import jakarta.inject.Singleton
 import jakarta.transaction.Transactional
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.withContext
+import no.nav.hm.grunndata.alternativprodukter.AlternativeProductsService
 import no.nav.hm.grunndata.alternativprodukter.parser.ExcelParser
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
@@ -12,13 +15,14 @@ import kotlin.io.path.Path
 @Singleton
 open class FileImportService(
     private val fileImportHistoryRepository: FileImportHistoryRepository,
+    private val alternativeProductsService: AlternativeProductsService
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(FileImportService::class.java)
     }
 
     @Transactional
-    open suspend fun importNewFiles(directoryPath: String) {
+    open suspend fun importNewFiles(directoryPath: String) = withContext(Dispatchers.IO) {
         val path = Paths.get(directoryPath)
         val allFilesInDirectory = Files.list(path).map { it.fileName.toString() }.toList()
 
@@ -28,7 +32,7 @@ open class FileImportService(
 
         if (filesToImport.isEmpty()) {
             LOG.info("No new files to import")
-            return
+            return@withContext
         } else {
             LOG.info("Found ${filesToImport.size} new files to import")
         }
@@ -38,9 +42,12 @@ open class FileImportService(
             val filePath = Path(directoryPath, fileName)
             val parseResult = ExcelParser().readExcel(filePath.toString())
 
-            val i = parseResult
-            // Import the file
-            // After successful import, add the file name to the fileImportHistoryRepository
+            parseResult.addGroups.map { addGroup ->
+                alternativeProductsService.saveAlternativeProducts(addGroup)
+            }
+
+            fileImportHistoryRepository.save(FileImportHistory(filename = fileName))
         }
     }
+
 }

@@ -20,11 +20,23 @@ class ExcelParserTest {
         val filePath = "src/test/resources/substituttlister/test_substituttlister_sletting.xlsx"
         val excelParser = ExcelParser()
         val parseResult = excelParser.readExcel(filePath)
-        assertTrue(parseResult.addGroups.isNotEmpty())
-        assertEquals(5, parseResult.addGroups.size)
-        parseResult.removeGroups.size shouldBe 2
+        assertTrue(parseResult.addGroups.isEmpty())
+        assertTrue(parseResult.removeGroups.isNotEmpty())
+        parseResult.removeGroups.size shouldBe 1
         parseResult.removeGroups.get(0).size shouldBe 3
-        parseResult.removeGroups.size shouldBe 2
-        parseResult.removeGroups.get(1).size shouldBe 1
+        parseResult.removeGroups.size shouldBe 1
+    }
+
+    @Test
+    fun `reads personløftere V1 without exception being thrown`() {
+        val filePath = "src/test/resources/substituttlister/test_personloftere_V1.xlsx"
+        val excelParser = ExcelParser()
+        val parseResult = excelParser.readExcel(filePath)
+        assertTrue(parseResult.addGroups.isNotEmpty())
+        assertEquals(6, parseResult.addGroups.size)
+
+        parseResult.addGroups.forEach {
+           assertTrue(it.size > 1)
+        }
     }
 }

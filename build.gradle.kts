@@ -13,7 +13,7 @@ version = "0.1"
 group = "no.nav.hm.grunndata.alternativprodukter"
 
 val kotlinVersion=project.properties.get("kotlinVersion")
-val poiVersion = "5.2.5"
+val poiVersion = "5.3.0"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 
@@ -50,7 +50,7 @@ dependencies {
     implementation("org.testcontainers:postgresql")
     implementation("org.testcontainers:testcontainers")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-
+    implementation("org.apache.logging.log4j:log4j-core:2.24.1")
 }
 
 

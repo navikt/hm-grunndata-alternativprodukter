@@ -19,4 +19,7 @@ interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, U
 
     @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr""")
     fun findBySourceHmsArtnr(sourceHmsArtnr: String): List<HmsArtnrMapping>
+
+    @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr AND target_hms_artnr = :targetHmsArtnr""")
+    fun findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr: String, targetHmsArtnr: String): HmsArtnrMapping?
 }
