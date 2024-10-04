@@ -16,6 +16,7 @@ val kotlinVersion=project.properties.get("kotlinVersion")
 val poiVersion = "5.3.0"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
+val micrometerRegistryPrometheusVersion = "1.9.1"
 
 repositories {
     mavenCentral()
@@ -45,12 +46,19 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     runtimeOnly("org.yaml:snakeyaml")
+
+    implementation("org.apache.logging.log4j:log4j-core:2.24.1")
+
+    implementation("io.micronaut.micrometer:micronaut-micrometer-core")
+    implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
+    implementation("io.micronaut:micronaut-management")
+
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    implementation("org.apache.logging.log4j:log4j-core:2.24.1")
+
 }
 
 
