@@ -1,12 +1,12 @@
-apiVersion: "nais.io/v1alpha1"
-kind: "Application"
+apiVersion: nais.io/v1alpha1
+kind: Application
 metadata:
   name: hm-grunndata-alternativprodukter
   namespace: teamdigihot
   labels:
     team: teamdigihot
 spec:
-  image: {{ image }}
+  image: {{image}}
   port: 8080
   ingresses:
     - https://hm-alternativprodukter.intern.dev.nav.no
@@ -17,8 +17,8 @@ spec:
     path: /internal/isReady
     initialDelay: 20
   replicas:
-    min: {{ min_replicas }}
-    max: {{ max_replicas }}
+    min: {{min_replicas}}
+    max: {{max_replicas}}
     cpuThresholdPercentage: 50
   resources:
     limits:
@@ -45,7 +45,7 @@ spec:
         tier: db-f1-micro
         diskType: SSD
         highAvailability: true
-        diskSize: {{ disk_size }}
+        diskSize: {{disk_size}}
         diskAutoresize: true
         autoBackupHour: 3
         databases:
