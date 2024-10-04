@@ -25,7 +25,7 @@ open class FileImportService(
     open suspend fun importNewMappings(directoryPath: String) = withContext(Dispatchers.IO) {
         val path = Paths.get(directoryPath)
         val allFilesInDirectory =
-            Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }
+            Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }.sorted()
 
         val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
 
@@ -37,6 +37,7 @@ open class FileImportService(
         } else {
             LOG.info("Found ${filesToImport.size} new files to import")
         }
+
 
         filesToImport.forEach { fileName ->
             LOG.info("Importing file $fileName")
