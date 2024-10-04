@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 class ExcelParserTest {
     @Test
     fun `reads Excel and returns groups to be added`() {
-        val filePath = "src/test/resources/substituttlister/test_substituttlister.xlsx"
+        val filePath = "src/test/resources/substituttlister/V2_test_substituttlister.xlsx"
         val excelParser = ExcelParser()
         val parseResult = excelParser.readExcel(filePath)
         assertTrue(parseResult.addGroups.isNotEmpty())
@@ -17,7 +17,7 @@ class ExcelParserTest {
 
     @Test
     fun `reads Excel and returns groups to be added and removed`() {
-        val filePath = "src/test/resources/substituttlister/test_substituttlister_sletting.xlsx"
+        val filePath = "src/test/resources/substituttlister/V3_test_substituttlister_sletting.xlsx"
         val excelParser = ExcelParser()
         val parseResult = excelParser.readExcel(filePath)
         assertTrue(parseResult.addGroups.isEmpty())
@@ -29,7 +29,7 @@ class ExcelParserTest {
 
     @Test
     fun `reads personløftere V1 without exception being thrown`() {
-        val filePath = "src/test/resources/substituttlister/test_personloftere_V1.xlsx"
+        val filePath = "src/test/resources/substituttlister/V1_test_personloftere.xlsx"
         val excelParser = ExcelParser()
         val parseResult = excelParser.readExcel(filePath)
         assertTrue(parseResult.addGroups.isNotEmpty())

@@ -27,6 +27,12 @@ open class FileImportService(
         val allFilesInDirectory =
             Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }.sorted()
 
+        val allFilesStartWithVAndNumber = allFilesInDirectory.all { it.matches(Regex("^V\\d+.*")) }
+
+        if (!allFilesStartWithVAndNumber) {
+            LOG.error("Not all files start with an uppercase V followed by a number (version number)")
+        }
+
         val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
 
         val filesToImport = allFilesInDirectory.filter { it !in importedFiles }
