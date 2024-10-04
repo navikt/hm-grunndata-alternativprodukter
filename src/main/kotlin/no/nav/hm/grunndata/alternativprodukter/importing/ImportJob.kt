@@ -21,7 +21,7 @@ open class ImportJob(
     open fun importNewAlternativeProductMappings() {
         runBlocking {
             LOG.info("Running alternative product mappings import job")
-            val directoryPath = "substituttlister/"
+            val directoryPath = "./substituttlister/"
             fileImportService.importNewMappings(directoryPath)
             LOG.info("Alternative product mappings import job executed successfully")
         }

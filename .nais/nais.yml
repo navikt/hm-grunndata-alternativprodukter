@@ -42,8 +42,6 @@ spec:
       value: "8080"
     - name: JAVA_OPTS
       value: "{{ java_opts }}"
-  filesFrom:
-    mountPath: /subtituttlister
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter
