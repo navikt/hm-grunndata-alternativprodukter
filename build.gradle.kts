@@ -18,10 +18,6 @@ val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 val micrometerRegistryPrometheusVersion = "1.9.1"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
     kapt("io.micronaut:micronaut-http-validation")
@@ -52,6 +48,8 @@ dependencies {
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
     implementation("io.micronaut:micronaut-management")
+
+    implementation("com.github.navikt:hm-micronaut-leaderelection:202405140823")
 
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
@@ -102,4 +100,10 @@ micronaut {
 }
 
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven("https://packages.confluent.io/maven/")
+    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
+}
 
