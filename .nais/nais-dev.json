@@ -1,0 +1,13 @@
+{
+  "disk_tier": "db-f1-micro",
+  "disk_size": 10,
+  "min_replicas": 1,
+  "max_replicas": 1,
+  "ingress": ["https://hm-alternativprodukter.intern.dev.nav.no"],
+  "cookie_domain": "dev.nav.no",
+  "swagger_enabled": true,
+  "schedulers_enabled": true,
+  "java_opts": "-Xms128m -Xmx1500m -XX:+UseG1GC",
+  "env": {
+  }
+}

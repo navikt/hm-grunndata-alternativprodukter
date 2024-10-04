@@ -1,15 +1,17 @@
-apiVersion: nais.io/v1alpha1
-kind: Application
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
 metadata:
   name: hm-grunndata-alternativprodukter
   namespace: teamdigihot
   labels:
     team: teamdigihot
 spec:
-  image: {{image}}
+  image: {{ image }}
   port: 8080
   ingresses:
-    - https://hm-alternativprodukter.intern.dev.nav.no
+  {{#each ingress as |url|}}
+     - {{url}}
+  {{/each}}
   liveness:
     path: /internal/isAlive
     initialDelay: 20
@@ -17,8 +19,8 @@ spec:
     path: /internal/isReady
     initialDelay: 20
   replicas:
-    min: {{min_replicas}}
-    max: {{max_replicas}}
+    min: {{ min_replicas }}
+    max: {{ max_replicas }}
     cpuThresholdPercentage: 50
   resources:
     limits:
@@ -38,14 +40,22 @@ spec:
       value: true
     - name: SWAGGER_ENABLED
       value: true
+    - name: SERVER_PORT
+      value: "8080"
+    - name: JAVA_OPTS
+      value: "{{ java_opts }}"
+  {{#each env}}
+   - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter
         type: POSTGRES_14
-        tier: db-f1-micro
+        tier: {{ disk_tier }}
         diskType: SSD
         highAvailability: true
-        diskSize: {{disk_size}}
+        diskSize: {{ disk_size }}
         diskAutoresize: true
         autoBackupHour: 3
         databases:
