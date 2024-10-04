@@ -22,9 +22,10 @@ open class FileImportService(
     }
 
     @Transactional
-    open suspend fun importNewFiles(directoryPath: String) = withContext(Dispatchers.IO) {
+    open suspend fun importNewMappings(directoryPath: String) = withContext(Dispatchers.IO) {
         val path = Paths.get(directoryPath)
-        val allFilesInDirectory = Files.list(path).map { it.fileName.toString() }.toList()
+        val allFilesInDirectory =
+            Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }
 
         val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
 
@@ -44,6 +45,10 @@ open class FileImportService(
 
             parseResult.addGroups.map { addGroup ->
                 alternativeProductsService.saveAlternativeProducts(addGroup)
+            }
+
+            parseResult.removeGroups.map { removeGroup ->
+                alternativeProductsService.deleteAlternativeProducts(removeGroup)
             }
 
             fileImportHistoryRepository.save(FileImportHistory(filename = fileName))

@@ -17,6 +17,9 @@ interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, U
         targetHmsArtnr: String,
     )
 
+    @Query("""DELETE FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr AND target_hms_artnr = :targetHmsArtnr""")
+    fun deleteMapping(sourceHmsArtnr: String, targetHmsArtnr: String)
+
     @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr""")
     fun findBySourceHmsArtnr(sourceHmsArtnr: String): List<HmsArtnrMapping>
 

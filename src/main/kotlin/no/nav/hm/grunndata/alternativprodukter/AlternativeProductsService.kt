@@ -16,11 +16,7 @@ open class AlternativeProductsService(
         return hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
     }
 
-    suspend fun saveAlternativeProducts(hmsArtnrList: List<String>) {
-        if (hmsArtnrList.size < 2) {
-            throw IllegalArgumentException("List must contain at least two elements for there to be a mapping")
-        }
-
+    private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> {
         val pairs = mutableListOf<Pair<String, String>>()
         for (i in hmsArtnrList.indices) {
             for (j in hmsArtnrList.indices) {
@@ -29,6 +25,34 @@ open class AlternativeProductsService(
                 }
             }
         }
+
+        return pairs
+    }
+
+    fun deleteAlternativeProducts(hmsArtnrList: List<String>) {
+        if (hmsArtnrList.size < 2) {
+            throw IllegalArgumentException("List must contain at least two elements for there to be a mapping")
+        }
+
+        val pairs = generateMappingList(hmsArtnrList)
+
+        pairs.map {
+            val existingMapping = hmsArtnrMappingRepository.findBySourceHmsArtnrAndTargetHmsArtnr(it.first, it.second)
+            if (existingMapping != null) {
+                hmsArtnrMappingRepository.deleteMapping(sourceHmsArtnr = it.first, targetHmsArtnr = it.second)
+            } else {
+                LOG.warn("Did not find mapping to delete for sourceHmsArtnr: ${it.first} and targetHmsArtnr: ${it.second}")
+            }
+
+        }
+    }
+
+    suspend fun saveAlternativeProducts(hmsArtnrList: List<String>) {
+        if (hmsArtnrList.size < 2) {
+            throw IllegalArgumentException("List must contain at least two elements for there to be a mapping")
+        }
+
+        val pairs = generateMappingList(hmsArtnrList)
 
         pairs.map {
             val existingMapping = hmsArtnrMappingRepository.findBySourceHmsArtnrAndTargetHmsArtnr(it.first, it.second)

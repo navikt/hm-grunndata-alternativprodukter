@@ -20,7 +20,7 @@ class ImportJob(
         runBlocking {
             LOG.info("Executing job")
             val directoryPath = "src/main/resources/substituttlister/"
-            fileImportService.importNewFiles(directoryPath)
+            fileImportService.importNewMappings(directoryPath)
             LOG.info("Job executed successfully")
         }
 
