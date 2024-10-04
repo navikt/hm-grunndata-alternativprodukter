@@ -8,6 +8,4 @@
   "swagger_enabled": true,
   "schedulers_enabled": true,
   "java_opts": "-Xms128m -Xmx1500m -XX:+UseG1GC",
-  "env": {
-  }
 }
