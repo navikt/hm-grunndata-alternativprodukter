@@ -23,9 +23,15 @@ open class FileImportService(
 
     @Transactional
     open suspend fun importNewMappings(directoryPath: String) = withContext(Dispatchers.IO) {
-        val path = Paths.get(directoryPath)
-        val allFilesInDirectory =
-            Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }.sorted()
+        val url = this::class.java.classLoader.getResource(directoryPath)
+        if (url == null) {
+            LOG.error("Directory $directoryPath not found in classpath")
+            return@withContext
+        }
+
+        val uri = url.toURI()
+        val path = Paths.get(uri)
+        val allFilesInDirectory = Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }.sorted()
 
         val allFilesStartWithVAndNumber = allFilesInDirectory.all { it.matches(Regex("^V\\d+.*")) }
 
@@ -47,8 +53,16 @@ open class FileImportService(
 
         filesToImport.forEach { fileName ->
             LOG.info("Importing file $fileName")
-            val filePath = Path(directoryPath, fileName)
-            val parseResult = ExcelParser().readExcel(filePath.toString())
+
+            // Get the InputStream for the file from the classpath
+            val inputStream = this::class.java.classLoader.getResourceAsStream("$directoryPath/$fileName")
+            if (inputStream == null) {
+                LOG.error("File $fileName not found in classpath")
+                return@forEach
+            }
+
+            // Use the InputStream to read the file
+            val parseResult = ExcelParser().readExcel(inputStream)
 
             parseResult.addGroups.map { addGroup ->
                 alternativeProductsService.saveAlternativeProducts(addGroup)

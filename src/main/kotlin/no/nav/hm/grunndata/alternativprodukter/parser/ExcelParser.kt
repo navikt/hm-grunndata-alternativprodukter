@@ -4,12 +4,12 @@ import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStream
 
 class ExcelParser {
     @Throws(IOException::class)
-    fun readExcel(filePath: String?): ParseResult {
-        val fis = FileInputStream(filePath)
-        val workbook: Workbook = XSSFWorkbook(fis)
+    fun readExcel(inputStream: InputStream): ParseResult {
+        val workbook: Workbook = XSSFWorkbook(inputStream)
         val sheet = workbook.getSheetAt(0)
         val addGroups: MutableList<List<String>> = ArrayList()
         val currentAddGroup: MutableList<String> = ArrayList()
@@ -55,7 +55,7 @@ class ExcelParser {
             removeGroups.add(currentRemoveGroup)
         }
         workbook.close()
-        fis.close()
+        inputStream.close()
         return ParseResult(addGroups, removeGroups)
     }
 }

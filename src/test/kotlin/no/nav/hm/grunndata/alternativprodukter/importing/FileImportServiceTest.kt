@@ -18,7 +18,7 @@ class FileImportServiceTest(
     fun `importNewFiles should import new files and store handled filename`() {
 
         runBlocking {
-            fileImportService.importNewMappings("src/test/resources/substituttlister/")
+            fileImportService.importNewMappings("substituttlister/")
             fileImportHistoryRepository.findAll().toList().size shouldBe 3
 
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 2

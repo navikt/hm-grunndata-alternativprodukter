@@ -8,18 +8,20 @@ import org.junit.jupiter.api.Test
 class ExcelParserTest {
     @Test
     fun `reads Excel and returns groups to be added`() {
-        val filePath = "src/test/resources/substituttlister/V2_test_substituttlister.xlsx"
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V2_test_substituttlister.xlsx")
         val excelParser = ExcelParser()
-        val parseResult = excelParser.readExcel(filePath)
+        val parseResult = excelParser.readExcel(inputStream)
         assertTrue(parseResult.addGroups.isNotEmpty())
         assertEquals(6, parseResult.addGroups.size)
     }
 
     @Test
     fun `reads Excel and returns groups to be added and removed`() {
-        val filePath = "src/test/resources/substituttlister/V3_test_substituttlister_sletting.xlsx"
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V3_test_substituttlister_sletting.xlsx")
         val excelParser = ExcelParser()
-        val parseResult = excelParser.readExcel(filePath)
+        val parseResult = excelParser.readExcel(inputStream)
         assertTrue(parseResult.addGroups.isEmpty())
         assertTrue(parseResult.removeGroups.isNotEmpty())
         parseResult.removeGroups.size shouldBe 1
@@ -29,14 +31,15 @@ class ExcelParserTest {
 
     @Test
     fun `reads personløftere V1 without exception being thrown`() {
-        val filePath = "src/test/resources/substituttlister/V1_test_personloftere.xlsx"
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V1_test_personloftere.xlsx")
         val excelParser = ExcelParser()
-        val parseResult = excelParser.readExcel(filePath)
+        val parseResult = excelParser.readExcel(inputStream)
         assertTrue(parseResult.addGroups.isNotEmpty())
         assertEquals(6, parseResult.addGroups.size)
 
         parseResult.addGroups.forEach {
-           assertTrue(it.size > 1)
+            assertTrue(it.size > 1)
         }
     }
 }
