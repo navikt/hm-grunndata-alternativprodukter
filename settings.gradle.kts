@@ -1,4 +1,4 @@
 
 
-rootProject.name="alternativprodukter"
+rootProject.name="hm-grunndata-alternativprodukter"
 

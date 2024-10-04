@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,8 +10,8 @@ plugins {
     id("io.micronaut.aot") version "4.4.2"
 }
 
-version = "0.1"
-group = "no.nav.hm.grunndata.alternativprodukter"
+group = "no.nav.hm"
+version = properties["version"] ?: "local-build"
 
 val kotlinVersion=project.properties.get("kotlinVersion")
 val poiVersion = "5.3.0"
@@ -76,6 +77,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.named<KotlinCompile>("compileTestKotlin") {
     kotlinOptions.jvmTarget = jvmTarget
+}
+
+tasks.named<ShadowJar>("shadowJar") {
+    isZip64 = true
 }
 
 micronaut {
