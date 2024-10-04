@@ -1,0 +1,59 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hm-grunndata-alternativprodukter
+  namespace: teamdigihot
+  labels:
+    team: teamdigihot
+spec:
+  image: { { image } }
+  port: 8080
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 20
+  readiness:
+    path: /internal/isReady
+    initialDelay: 20
+  replicas:
+    min: { { min_replicas } }
+    max: { { max_replicas } }
+    cpuThresholdPercentage: 50
+  resources:
+    limits:
+      memory: 1048Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  env:
+    - name: DB_DRIVER
+      value: "org.postgresql.Driver"
+    - name: DB_JDBC_URL
+      value: "jdbc:postgresql://${DB_HOST}:5432/alternativprodukter"
+    - name: SCHEDULERS_ENABLED
+      value: true
+    - name: SWAGGER_ENABLED
+      value: true
+  gcp:
+    sqlInstances:
+      - name: hm-grunndata-alternativprodukter
+        type: POSTGRES_14
+        tier: db-f1-micro
+        diskType: SSD
+        highAvailability: true
+        diskSize: { { disk_size } }
+        diskAutoresize: true
+        autoBackupHour: 3
+        databases:
+          - name: alternativprodukter
+            envVarPrefix: DB
+        cascadingDelete: false
+  accessPolicy:
+    outbound:
+      external:
+        - host: navikt.github.io
+    inbound:
+      rules:
+        - application: hm-oversikt-frontend
