@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -9,6 +10,8 @@ plugins {
     id("io.micronaut.application") version "4.4.2"
     id("io.micronaut.aot") version "4.4.2"
 }
+
+
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
@@ -83,6 +86,17 @@ tasks.named<ShadowJar>("shadowJar") {
     isZip64 = true
 }
 
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = TestExceptionFormat.FULL
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+}
+
 micronaut {
     runtime("netty")
     testRuntime("junit5")
@@ -111,4 +125,5 @@ repositories {
     maven("https://packages.confluent.io/maven/")
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
+
 
