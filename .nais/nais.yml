@@ -37,9 +37,9 @@ spec:
     - name: DB_JDBC_URL
       value: "jdbc:postgresql://${DB_HOST}:5432/alternativprodukter"
     - name: SCHEDULERS_ENABLED
-      value: true
+      value: "{{ swagger_enabled }}"
     - name: SWAGGER_ENABLED
-      value: true
+      value: "{{ schedulers_enabled }}"
     - name: SERVER_PORT
       value: "8080"
     - name: JAVA_OPTS
