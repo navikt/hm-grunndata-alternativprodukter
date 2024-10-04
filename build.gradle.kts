@@ -118,6 +118,16 @@ micronaut {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs("src/main/kotlin")
+        }
+        resources {
+            srcDirs("src/main/resources/substituttlister")
+        }
+    }
+}
 
 repositories {
     mavenLocal()
