@@ -8,9 +8,6 @@ import kotlinx.coroutines.withContext
 import no.nav.hm.grunndata.alternativprodukter.AlternativeProductsService
 import no.nav.hm.grunndata.alternativprodukter.parser.ExcelParser
 import org.slf4j.LoggerFactory
-import java.nio.file.Files
-import java.nio.file.Paths
-import kotlin.io.path.Path
 
 @Singleton
 open class FileImportService(
@@ -22,58 +19,50 @@ open class FileImportService(
     }
 
     @Transactional
-    open suspend fun importNewMappings(directoryPath: String) = withContext(Dispatchers.IO) {
-        val url = this::class.java.classLoader.getResource(directoryPath)
-        if (url == null) {
-            LOG.error("Directory $directoryPath not found in classpath")
-            return@withContext
-        }
-
-        val uri = url.toURI()
-        val path = Paths.get(uri)
-        val allFilesInDirectory = Files.list(path).map { it.fileName.toString() }.toList().filter { !it.startsWith("~") }.sorted()
-
-        val allFilesStartWithVAndNumber = allFilesInDirectory.all { it.matches(Regex("^V\\d+.*")) }
-
-        if (!allFilesStartWithVAndNumber) {
-            LOG.error("Not all files start with an uppercase V followed by a number (version number)")
-        }
-
-        val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
-
-        val filesToImport = allFilesInDirectory.filter { it !in importedFiles }
-
-        if (filesToImport.isEmpty()) {
-            LOG.info("No new files to import")
-            return@withContext
-        } else {
-            LOG.info("Found ${filesToImport.size} new files to import")
-        }
+    open suspend fun importNewMappings(importFiles: List<String> = SubstituteFiles.values().map { it.fileName }) =
+        withContext(Dispatchers.IO) {
 
 
-        filesToImport.forEach { fileName ->
-            LOG.info("Importing file $fileName")
+            val allFilesStartWithVAndNumber = importFiles.all { it.matches(Regex("^V\\d+.*")) }
 
-            // Get the InputStream for the file from the classpath
-            val inputStream = this::class.java.classLoader.getResourceAsStream("$directoryPath/$fileName")
-            if (inputStream == null) {
-                LOG.error("File $fileName not found in classpath")
-                return@forEach
+            if (!allFilesStartWithVAndNumber) {
+                LOG.error("Not all files start with an uppercase V followed by a number (version number)")
             }
 
-            // Use the InputStream to read the file
-            val parseResult = ExcelParser().readExcel(inputStream)
+            val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
+            val filesToImport = importFiles.filter { it !in importedFiles }
 
-            parseResult.addGroups.map { addGroup ->
-                alternativeProductsService.saveAlternativeProducts(addGroup)
+            if (filesToImport.isEmpty()) {
+                LOG.info("No new files to import")
+                return@withContext
+            } else {
+                LOG.info("Found ${filesToImport.size} new files to import")
             }
 
-            parseResult.removeGroups.map { removeGroup ->
-                alternativeProductsService.deleteAlternativeProducts(removeGroup)
-            }
 
-            fileImportHistoryRepository.save(FileImportHistory(filename = fileName))
+            filesToImport.forEach { fileName ->
+                LOG.info("Importing file $fileName")
+
+                // Get the InputStream for the file from the classpath
+                val inputStream = this::class.java.classLoader.getResourceAsStream("$fileName")
+                if (inputStream == null) {
+                    LOG.error("File $fileName not found in classpath")
+                    return@forEach
+                }
+
+                // Use the InputStream to read the file
+                val parseResult = ExcelParser().readExcel(inputStream)
+
+                parseResult.addGroups.map { addGroup ->
+                    alternativeProductsService.saveAlternativeProducts(addGroup)
+                }
+
+                parseResult.removeGroups.map { removeGroup ->
+                    alternativeProductsService.deleteAlternativeProducts(removeGroup)
+                }
+
+                fileImportHistoryRepository.save(FileImportHistory(filename = fileName))
+            }
         }
-    }
 
 }
