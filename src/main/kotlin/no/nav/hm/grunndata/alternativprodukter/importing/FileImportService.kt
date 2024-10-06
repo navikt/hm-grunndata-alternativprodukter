@@ -27,6 +27,7 @@ open class FileImportService(
 
             if (!allFilesStartWithVAndNumber) {
                 LOG.error("Not all files start with an uppercase V followed by a number (version number)")
+                throw IllegalArgumentException("Not all files start with an uppercase V followed by a number (version number)")
             }
 
             val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
@@ -44,7 +45,7 @@ open class FileImportService(
                 LOG.info("Importing file $fileName")
 
                 // Get the InputStream for the file from the classpath
-                val inputStream = this::class.java.classLoader.getResourceAsStream("$fileName")
+                val inputStream = this::class.java.classLoader.getResourceAsStream("substituttlister/$fileName")
                 if (inputStream == null) {
                     LOG.error("File $fileName not found in classpath")
                     return@forEach

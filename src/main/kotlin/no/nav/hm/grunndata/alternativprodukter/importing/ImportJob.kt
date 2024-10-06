@@ -20,9 +20,14 @@ open class ImportJob(
     @Scheduled(initialDelay = "10s")
     open fun importNewAlternativeProductMappings() {
         runBlocking {
-            LOG.info("Running alternative product mappings import job")
-            fileImportService.importNewMappings()
-            LOG.info("Alternative product mappings import job executed successfully")
+            try {
+                LOG.info("Running alternative product mappings import job")
+                fileImportService.importNewMappings()
+                LOG.info("Alternative product mappings import job executed successfully")
+            } catch (e: Exception) {
+                LOG.error("Error while running alternative product mappings import job", e)
+            }
+
         }
 
     }
