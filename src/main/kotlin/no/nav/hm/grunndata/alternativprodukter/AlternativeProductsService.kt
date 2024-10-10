@@ -19,9 +19,9 @@ open class AlternativeProductsService(
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
 
         val azureBody = AzureBody()
+        LOG.info("azure body: $azureBody")
         val authToken = azureAdClient.getToken(azureBody)
 
-        LOG.info("azure body: $azureBody")
         LOG.info("authtoken: $authToken")
 
         return alternatives.map { AlternativeProduct(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
