@@ -6,6 +6,7 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 
 @Client("\${azure.endpoint}")
@@ -15,6 +16,7 @@ interface AzureAdClient {
 }
 
 @Introspected
+@Serdeable
 data class AzureAdTokenResponse(
     val access_token: String,
     val expires_in: Long,
