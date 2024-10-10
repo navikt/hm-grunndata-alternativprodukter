@@ -8,7 +8,8 @@ import java.util.UUID
 open class AlternativeProductsService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
     private val oebsClient: OebsClient,
-    private val azureAdClient: AzureAdClient
+    private val azureAdClient: AzureAdClient,
+    private val azureBody: AzureBody
 ) {
 
     companion object {
@@ -18,8 +19,7 @@ open class AlternativeProductsService(
     suspend fun getAlternativeProducts(hmsArtnr: String): List<AlternativeProduct> {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
 
-        val azureBody = AzureBody()
-        LOG.info("azure body: $azureBody")
+        LOG.info("azure client: ${azureBody.client_id}")
         val authToken = azureAdClient.getToken(azureBody)
 
         LOG.info("authtoken: $authToken")

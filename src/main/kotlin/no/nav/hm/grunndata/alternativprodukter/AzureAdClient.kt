@@ -6,6 +6,7 @@ import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
+import jakarta.inject.Singleton
 
 @Client("\${azure.endpoint}")
 interface AzureAdClient {
@@ -19,13 +20,14 @@ data class AzureAdTokenResponse(
     val token_type: String,
 )
 
-@Introspected
-data class AzureBody(
+@Singleton
+class AzureBody(
     @Value("\${azure.client.id}")
-    val client_id: String = "",
+    val client_id: String,
     @Value("\${azure.client.secret}")
-    val client_secret: String = "",
-    val grant_type: String = "client_credentials",
+    val client_secret: String,
+    @Value("\${azure.grant.type}")
+    val grant_type: String,
     @Value("\${azure.scope}")
-    val scope: String = "",
+    val scope: String,
 )
