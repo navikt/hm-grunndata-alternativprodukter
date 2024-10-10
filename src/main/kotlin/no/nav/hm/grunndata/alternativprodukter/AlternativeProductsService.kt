@@ -21,6 +21,9 @@ open class AlternativeProductsService(
         val azureBody = AzureBody()
         val authToken = azureAdClient.getToken(azureBody)
 
+        LOG.info("azure body: $azureBody")
+        LOG.info("authtoken: $authToken")
+
         return alternatives.map { AlternativeProduct(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
     }
 
