@@ -48,6 +48,7 @@ spec:
   {{#each env}}
     - name: {{@key}}
       value: "{{this}}"
+  {{/each}}
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter-db
