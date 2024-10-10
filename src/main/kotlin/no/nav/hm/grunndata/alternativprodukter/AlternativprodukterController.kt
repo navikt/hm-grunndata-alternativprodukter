@@ -11,9 +11,12 @@ class AlternativeProductsController(
     private val AlternativeProductsService: AlternativeProductsService,
 ) {
     @Get("/{hmsArtNr}")
-    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<List<String>> {
+    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<List<AlternativeProduct>> {
+
         return HttpResponse.ok(
             AlternativeProductsService.getAlternativeProducts(hmsArtNr),
         )
     }
 }
+
+data class AlternativeProduct(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)
