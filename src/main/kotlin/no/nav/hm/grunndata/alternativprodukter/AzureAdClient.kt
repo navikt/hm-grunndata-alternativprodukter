@@ -21,6 +21,7 @@ data class AzureAdTokenResponse(
 )
 
 @Singleton
+@Introspected
 class AzureBody(
     @Value("\${azure.client.id}")
     val client_id: String,
