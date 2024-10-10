@@ -18,11 +18,7 @@ open class AlternativeProductsService(
 
     suspend fun getAlternativeProducts(hmsArtnr: String): List<AlternativeProduct> {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
-
-        LOG.info("azure client: ${azureBody.client_id}")
         val authToken = azureAdClient.getToken(azureBody)
-
-        LOG.info("authtoken: $authToken")
 
         return alternatives.map { AlternativeProduct(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
     }
