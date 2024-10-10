@@ -9,7 +9,7 @@ import io.micronaut.http.client.annotation.Client
 
 @Client("\${azure.endpoint}")
 interface AzureAdClient {
-    @Post(value = "", produces = [MediaType.APPLICATION_FORM_URLENCODED])
+    @Post(value = "/", produces = [MediaType.APPLICATION_FORM_URLENCODED])
     suspend fun getToken(@Body authBody: AzureBody): AzureAdTokenResponse
 }
 
