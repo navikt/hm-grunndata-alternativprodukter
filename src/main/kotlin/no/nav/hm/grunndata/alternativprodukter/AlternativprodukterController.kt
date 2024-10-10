@@ -1,8 +1,10 @@
 package no.nav.hm.grunndata.alternativprodukter
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
 
 @Controller("/alternativ")
@@ -19,4 +21,5 @@ class AlternativeProductsController(
     }
 }
 
+@Serdeable
 data class AlternativeProduct(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)
