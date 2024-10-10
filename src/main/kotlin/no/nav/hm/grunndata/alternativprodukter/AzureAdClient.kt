@@ -15,7 +15,6 @@ interface AzureAdClient {
     suspend fun getToken(@Body authBody: AzureBody): AzureAdTokenResponse
 }
 
-@Introspected
 @Serdeable
 data class AzureAdTokenResponse(
     val access_token: String,

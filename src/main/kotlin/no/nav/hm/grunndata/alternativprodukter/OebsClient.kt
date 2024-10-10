@@ -13,7 +13,6 @@ interface OebsClient {
     suspend fun getWarehouseStock(hmsNr: String, @Header authorization: String): List<WarehouseStockResponse>
 }
 
-@Introspected
 @Serdeable
 data class WarehouseStockResponse(
     val erPåLager: Boolean,
