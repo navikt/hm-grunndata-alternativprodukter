@@ -7,7 +7,7 @@ import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 
-@Client("\${azure.endpoint}")
+@Client("\${azure.openid.config.token.endpoint}")
 interface AzureAdClient {
     @Post(value = "", produces = [MediaType.APPLICATION_FORM_URLENCODED])
     suspend fun getToken(@Body authBody: AzureBody): AzureAdTokenResponse
@@ -21,9 +21,9 @@ data class AzureAdTokenResponse(
 
 @Introspected
 data class AzureBody(
-    @Value("\${azure.client.id}")
+    @Value("\${azure.app.client.id}")
     val client_id: String = "",
-    @Value("\${azure.client.secret}")
+    @Value("\${azure.app.client.secret}")
     val client_secret: String = "",
     val grant_type: String = "client_credentials",
     @Value("\${azure.scope}")
