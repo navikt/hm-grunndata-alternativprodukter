@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.alternativprodukter
 
 import io.micronaut.context.annotation.Value
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
@@ -18,6 +19,7 @@ data class AzureAdTokenResponse(
     val token_type: String,
 )
 
+@Introspected
 data class AzureBody(
     @Value("\${azure.client.id}")
     val client_id: String = "",
