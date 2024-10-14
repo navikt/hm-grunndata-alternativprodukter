@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.alternativprodukter
 
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
@@ -13,7 +12,7 @@ class AlternativeProductsController(
     private val AlternativeProductsService: AlternativeProductsService,
 ) {
     @Get("/{hmsArtNr}")
-    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<List<AlternativeProduct>> {
+    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<AlternativeProductsResponse> {
 
         return HttpResponse.ok(
             AlternativeProductsService.getAlternativeProducts(hmsArtNr),
@@ -22,4 +21,7 @@ class AlternativeProductsController(
 }
 
 @Serdeable
-data class AlternativeProduct(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)
+data class AlternativeProductsResponse(val original: ProductStock, val alternatives: List<ProductStock>)
+
+@Serdeable
+data class ProductStock(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)

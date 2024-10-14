@@ -16,11 +16,15 @@ open class AlternativeProductsService(
         private val LOG = LoggerFactory.getLogger(AlternativeProductsService::class.java)
     }
 
-    suspend fun getAlternativeProducts(hmsArtnr: String): List<AlternativeProduct> {
+    suspend fun getAlternativeProducts(hmsArtnr: String): AlternativeProductsResponse {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
         val authToken = azureAdClient.getToken(azureBody)
 
-        return alternatives.map { AlternativeProduct(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
+
+        return AlternativeProductsResponse(
+            ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
+            alternatives.map { ProductStock(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
+        )
     }
 
     private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> =
