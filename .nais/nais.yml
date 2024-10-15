@@ -31,6 +31,9 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
+  azure:
+    application:
+      enabled: true
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"
@@ -42,6 +45,10 @@ spec:
       value: "8080"
     - name: JAVA_OPTS
       value: "{{ java_opts }}"
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter-db
@@ -60,6 +67,9 @@ spec:
     outbound:
       external:
         - host: navikt.github.io
+        - host: hm-oebs-api-proxy.dev-fss-pub.nais.io
     inbound:
       rules:
         - application: hm-oversikt-frontend
+          namespace: teamdigihot
+          cluster: dev-gcp

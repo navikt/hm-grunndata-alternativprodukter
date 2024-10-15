@@ -7,14 +7,25 @@ import java.util.UUID
 @Singleton
 open class AlternativeProductsService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
+    private val oebsClient: OebsClient,
+    private val azureAdClient: AzureAdClient,
+    private val azureBody: AzureBody
 ) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AlternativeProductsService::class.java)
     }
 
-    fun getAlternativeProducts(hmsArtnr: String): List<String> =
-        hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
+    suspend fun getAlternativeProducts(hmsArtnr: String): AlternativeProductsResponse {
+        val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
+        val authToken = azureAdClient.getToken(azureBody)
+
+
+        return AlternativeProductsResponse(
+            ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
+            alternatives.map { ProductStock(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
+        )
+    }
 
     private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> =
         hmsArtnrList.indices.flatMap { i ->

@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.alternativprodukter
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
 
 @Controller("/alternativ")
@@ -11,9 +12,16 @@ class AlternativeProductsController(
     private val AlternativeProductsService: AlternativeProductsService,
 ) {
     @Get("/{hmsArtNr}")
-    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<List<String>> {
+    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<AlternativeProductsResponse> {
+
         return HttpResponse.ok(
             AlternativeProductsService.getAlternativeProducts(hmsArtNr),
         )
     }
 }
+
+@Serdeable
+data class AlternativeProductsResponse(val original: ProductStock, val alternatives: List<ProductStock>)
+
+@Serdeable
+data class ProductStock(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)
