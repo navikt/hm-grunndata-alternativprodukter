@@ -8,6 +8,7 @@
   "swagger_enabled": true,
   "schedulers_enabled": true,
   "java_opts": "-Xms128m -Xmx1500m -XX:+UseG1GC",
+  "oebs_api_proxy": "hm-oebs-api-proxy.dev-fss-pub.nais.io",
   "env": {
     "AZURE_SCOPE_OEBS_PROXY": "api://dev-fss.teamdigihot.hm-oebs-api-proxy/.default"
   }

@@ -67,7 +67,7 @@ spec:
     outbound:
       external:
         - host: navikt.github.io
-        - host: hm-oebs-api-proxy.dev-fss-pub.nais.io
+        - host: {{oebs_api_proxy}}
     inbound:
       rules:
         - application: hm-oversikt-frontend

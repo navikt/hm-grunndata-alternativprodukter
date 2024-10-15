@@ -1,0 +1,17 @@
+{
+  "disk_tier": "db-custom-2-7680",
+  "disk_size": 20,
+  "min_replicas": 2,
+  "max_replicas": 2,
+  "ingress": [
+    "https://hm-alternativprodukter.nav.no"
+  ],
+  "cookie_domain": "finnhjelpemiddel.nav.no",
+  "swagger_enabled": false,
+  "schedulers_enabled": true,
+  "java_opts": "-Xms256m -Xmx2048m -XX:+UseG1GC",
+  "oebs_api_proxy": "hm-oebs-api-proxy.prod-fss-pub.nais.io",
+  "env": {
+    "AZURE_SCOPE_OEBS_PROXY": "api://prod-fss.teamdigihot.hm-oebs-api-proxy/.default"
+  }
+}
