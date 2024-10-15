@@ -9,7 +9,6 @@ on:
       - "docker-compose**"
     branches:
       - main
-      - lagerstatus
 
 jobs:
   call-workflow:
