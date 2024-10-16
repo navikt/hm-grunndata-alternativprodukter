@@ -3,9 +3,6 @@
   "disk_size": 20,
   "min_replicas": 2,
   "max_replicas": 2,
-  "ingress": [
-    "https://hm-alternativprodukter.nav.no"
-  ],
   "cookie_domain": "finnhjelpemiddel.nav.no",
   "swagger_enabled": false,
   "schedulers_enabled": true,
