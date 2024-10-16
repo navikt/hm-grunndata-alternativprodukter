@@ -8,10 +8,6 @@ metadata:
 spec:
   image: {{ image }}
   port: 8080
-  ingresses:
-  {{#each ingress as |url|}}
-     - {{url}}
-  {{/each}}
   liveness:
     path: /internal/isAlive
     initialDelay: 20
