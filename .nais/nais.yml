@@ -69,5 +69,3 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
-          namespace: teamdigihot
-          cluster: dev-gcp
