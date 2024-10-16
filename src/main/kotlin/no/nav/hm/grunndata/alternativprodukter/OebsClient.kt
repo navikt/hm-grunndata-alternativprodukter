@@ -5,7 +5,7 @@ import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.serde.annotation.Serdeable
 
-@Client("https://hm-oebs-api-proxy.dev-fss-pub.nais.io")
+@Client("https://\${oebs.url}")
 interface OebsClient {
 
     @Get(value = "/lager/alle-sentraler/{hmsNr}")

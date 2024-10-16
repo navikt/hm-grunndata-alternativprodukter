@@ -20,6 +20,7 @@ open class AlternativeProductsService(
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
         val authToken = azureAdClient.getToken(azureBody)
 
+        LOG.info("url: https://\${oebs.url}")
 
         return AlternativeProductsResponse(
             ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
