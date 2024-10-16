@@ -5,7 +5,7 @@ import io.micronaut.http.annotation.Header
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.serde.annotation.Serdeable
 
-@Client("https://\${oebs.url}")
+@Client("\${oebs.url}")
 interface OebsClient {
 
     @Get(value = "/lager/alle-sentraler/{hmsNr}")

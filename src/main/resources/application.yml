@@ -99,4 +99,4 @@ azure:
     type: client_credentials
 
 oebs:
-  url: ${OEBS_API_PROXY}
+  url: https://${OEBS_API_PROXY}

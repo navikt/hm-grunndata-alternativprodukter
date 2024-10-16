@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter
 
+import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -19,8 +20,6 @@ open class AlternativeProductsService(
     suspend fun getAlternativeProducts(hmsArtnr: String): AlternativeProductsResponse {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
         val authToken = azureAdClient.getToken(azureBody)
-
-        LOG.info("url: https://\${oebs.url}")
 
         return AlternativeProductsResponse(
             ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
