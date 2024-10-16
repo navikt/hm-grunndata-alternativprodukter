@@ -97,3 +97,6 @@ azure:
   endpoint: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:`localhost`}
   grant:
     type: client_credentials
+
+oebs:
+  url: ${OEBS_API_PROXY}
