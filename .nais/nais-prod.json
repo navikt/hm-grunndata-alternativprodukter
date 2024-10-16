@@ -1,8 +1,8 @@
 {
-  "disk_tier": "db-custom-2-7680",
-  "disk_size": 20,
-  "min_replicas": 2,
-  "max_replicas": 2,
+  "disk_tier": "db-custom-1-3840",
+  "disk_size": 10,
+  "min_replicas": 1,
+  "max_replicas": 1,
   "cookie_domain": "finnhjelpemiddel.nav.no",
   "swagger_enabled": false,
   "schedulers_enabled": true,
