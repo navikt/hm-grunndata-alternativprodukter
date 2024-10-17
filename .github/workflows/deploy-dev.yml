@@ -1,4 +1,4 @@
-name: build-deploy
+name: build-deploy-dev
 on:
   push:
     paths-ignore:
@@ -11,7 +11,7 @@ on:
       - main
 
 jobs:
-  call-workflow-dev:
+  call-workflow:
     permissions:
       contents: write
       id-token: write
@@ -27,16 +27,3 @@ jobs:
       DRAFTS_MAX: 50
     secrets:
       NAIS_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-  
-  call-workflow-prod:
-    needs: call-workflow-dev
-    permissions:
-      contents: write
-      id-token: write
-      security-events: write
-      actions: read
-    uses: navikt/pam-deploy/.github/workflows/deploy-prod.yml@v7
-    with:
-      NAIS_RESOURCE: ".nais/nais.yml"
-      NAIS_VARS: ".nais/nais-prod.json"
-      TEAM: "teamdigihot"
