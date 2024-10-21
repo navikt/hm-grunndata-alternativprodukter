@@ -27,6 +27,8 @@ New mappings may be added to the database by adding new files to the `src/main/r
 The files should be named `V<version-number>_<filename>.xlsx` and have the following format. The version number should
 be increased by one for each new file.
 
+The new file must also be added to the enum: SubstituteFiles.kt
+
 ### Grouping products
 
 HMS numbers that should be grouped together should be in subsequent rows without any empty rows in between.
