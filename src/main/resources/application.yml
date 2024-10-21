@@ -14,6 +14,10 @@ micronaut:
     io:
       type: fixed
       nThreads: 100
+  caches:
+    warehouse-stock:
+      charset: 'UTF-8'
+      expire-after-write: 1h
   metrics:
     enabled: true
     sensitive: false
