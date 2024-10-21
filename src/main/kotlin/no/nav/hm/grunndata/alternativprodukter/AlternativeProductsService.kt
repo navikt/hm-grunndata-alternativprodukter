@@ -18,7 +18,7 @@ open class AlternativeProductsService(
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
         return AlternativeProductsResponse(
             ProductStock(hmsArtnr,oebsService.getWarehouseStock(hmsArtnr)),
-            alternatives.map { ProductStock(it, oebsService.getWarehouseStock(hmsArtnr)) }
+            alternatives.map { ProductStock(it, oebsService.getWarehouseStock(it)) }
         )
     }
 
