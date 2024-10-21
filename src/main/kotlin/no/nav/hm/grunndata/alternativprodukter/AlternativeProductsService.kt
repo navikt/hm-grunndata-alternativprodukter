@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.alternativprodukter
 
-import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -8,9 +7,7 @@ import java.util.UUID
 @Singleton
 open class AlternativeProductsService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
-    private val oebsClient: OebsClient,
-    private val azureAdClient: AzureAdClient,
-    private val azureBody: AzureBody
+    private val oebsService: OebsService,
 ) {
 
     companion object {
@@ -19,11 +16,9 @@ open class AlternativeProductsService(
 
     suspend fun getAlternativeProducts(hmsArtnr: String): AlternativeProductsResponse {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
-        val authToken = azureAdClient.getToken(azureBody)
-
         return AlternativeProductsResponse(
-            ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
-            alternatives.map { ProductStock(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
+            ProductStock(hmsArtnr,oebsService.getWarehouseStock(hmsArtnr)),
+            alternatives.map { ProductStock(it, oebsService.getWarehouseStock(hmsArtnr)) }
         )
     }
 
@@ -37,7 +32,7 @@ open class AlternativeProductsService(
             }
         }
 
-    fun deleteAlternativeProducts(hmsArtnrList: List<String>) {
+    suspend fun deleteAlternativeProducts(hmsArtnrList: List<String>) {
         require(hmsArtnrList.size >= 2) { "List must contain at least two elements for there to be a mapping" }
 
         generateMappingList(hmsArtnrList).forEach { (first, second) ->
@@ -47,7 +42,7 @@ open class AlternativeProductsService(
         }
     }
 
-    fun saveAlternativeProducts(hmsArtnrList: List<String>) {
+    suspend fun saveAlternativeProducts(hmsArtnrList: List<String>) {
         require(hmsArtnrList.size >= 2) { "List must contain at least two elements for there to be a mapping" }
 
         generateMappingList(hmsArtnrList).forEach { (first, second) ->

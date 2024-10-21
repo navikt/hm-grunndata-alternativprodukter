@@ -5,15 +5,20 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.slf4j.LoggerFactory
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
     private val AlternativeProductsService: AlternativeProductsService,
 ) {
+    companion object {
+        private val LOG = LoggerFactory.getLogger(AlternativeProductsController::class.java)
+    }
+
     @Get("/{hmsArtNr}")
     suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<AlternativeProductsResponse> {
-
+        LOG.debug("Getting alternative products for hmsArtNr: $hmsArtNr")
         return HttpResponse.ok(
             AlternativeProductsService.getAlternativeProducts(hmsArtNr),
         )

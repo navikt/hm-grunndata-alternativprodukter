@@ -5,11 +5,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.UUID
+import kotlinx.coroutines.runBlocking
 
 @MicronautTest
 class HmsArtnrMappingRepositoryTest(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository) {
     @Test
-    fun `insertMapping should add new mapping`() {
+    fun `insertMapping should add new mapping`() = runBlocking {
         hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), "123456", "654321")
         val read = hmsArtnrMappingRepository.findBySourceHmsArtnr("123456")
         assertEquals(1, read.size)
@@ -17,7 +18,7 @@ class HmsArtnrMappingRepositoryTest(private val hmsArtnrMappingRepository: HmsAr
     }
 
     @Test
-    fun `insert and read mappings`() {
+    fun `insert and read mappings`() = runBlocking {
         hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), "123456", "654321")
         hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), "123456", "765432")
         val read = hmsArtnrMappingRepository.findBySourceHmsArtnr("123456")
@@ -25,7 +26,7 @@ class HmsArtnrMappingRepositoryTest(private val hmsArtnrMappingRepository: HmsAr
     }
 
     @Test
-    fun `findBySourceHmsArtnr should return empty list if no mapping found`() {
+    fun `findBySourceHmsArtnr should return empty list if no mapping found`() = runBlocking {
         val read = hmsArtnrMappingRepository.findBySourceHmsArtnr("999999")
         assertTrue(read.isEmpty())
     }
