@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.alternativprodukter
 
-import io.micronaut.context.annotation.Value
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -25,6 +24,13 @@ open class AlternativeProductsService(
             ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
             alternatives.map { ProductStock(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
         )
+    }
+
+    suspend fun getStockAndAlternatives(hmsArtNr: String): ProductStockAlternatives {
+        val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
+        val authToken = azureAdClient.getToken(azureBody)
+        val productStock =  ProductStock(hmsArtNr, oebsClient.getWarehouseStock(hmsArtNr, "Bearer ${authToken.access_token}"))
+        return ProductStockAlternatives(productStock, alternatives)
     }
 
     private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> =
@@ -56,4 +62,5 @@ open class AlternativeProductsService(
             } ?: hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), first, second)
         }
     }
+
 }
