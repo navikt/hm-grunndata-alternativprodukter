@@ -69,3 +69,4 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
+        - application: hm-grunndata-index
