@@ -1,1 +1,1 @@
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO cloudsqliamuser;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO cloudsqliamuser;
