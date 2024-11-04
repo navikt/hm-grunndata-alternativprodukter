@@ -42,4 +42,5 @@ class ExcelParserTest {
             assertTrue(it.size > 1)
         }
     }
+
 }
