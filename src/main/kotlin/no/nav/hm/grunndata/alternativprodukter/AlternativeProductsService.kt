@@ -22,6 +22,13 @@ open class AlternativeProductsService(
         )
     }
 
+    suspend fun getStockAndAlternatives(hmsArtNr: String): ProductStockAlternatives {
+        val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
+        val authToken = azureAdClient.getToken(azureBody)
+        val productStock =  ProductStock(hmsArtNr, oebsClient.getWarehouseStock(hmsArtNr, "Bearer ${authToken.access_token}"))
+        return ProductStockAlternatives(productStock, alternatives)
+    }
+
     private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> =
         hmsArtnrList.indices.flatMap { i ->
             hmsArtnrList.indices.mapNotNull { j ->
@@ -51,4 +58,5 @@ open class AlternativeProductsService(
             } ?: hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), first, second)
         }
     }
+
 }

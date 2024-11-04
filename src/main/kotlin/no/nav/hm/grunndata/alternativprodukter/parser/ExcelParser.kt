@@ -10,7 +10,7 @@ class ExcelParser {
     @Throws(IOException::class)
     fun readExcel(inputStream: InputStream): ParseResult {
         val workbook: Workbook = XSSFWorkbook(inputStream)
-        val sheet = workbook.getSheetAt(0)
+        val sheet = workbook.getSheetAt(1)
         val addGroups: MutableList<List<String>> = ArrayList()
         val currentAddGroup: MutableList<String> = ArrayList()
 
