@@ -17,7 +17,7 @@ micronaut:
   caches:
     warehouse-stock:
       charset: 'UTF-8'
-      expire-after-write: 30m
+      expire-after-write: 10m
   metrics:
     enabled: true
     sensitive: false
