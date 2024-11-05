@@ -43,4 +43,13 @@ class ExcelParserTest {
         }
     }
 
+    @Test
+    fun `reads Excel without exception`() {
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V5_stoler_med_oppreisingsfunksjon.xlsx")
+        val excelParser = ExcelParser()
+        val parseResult = excelParser.readExcel(inputStream)
+        assertTrue(parseResult.addGroups.isNotEmpty())
+    }
+
 }
