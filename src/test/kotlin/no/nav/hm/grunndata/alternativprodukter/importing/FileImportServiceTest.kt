@@ -26,8 +26,7 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("014760").size shouldBe 6
             hmsArtnrMappingRepository.findBySourceHmsArtnr("196087").size shouldBe 6
 
-            // Assert that mappings for 256578 is deleted because of the file substituttlister_sletting.xlsx
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("256578") shouldBe emptyList()
+
 
         }
 

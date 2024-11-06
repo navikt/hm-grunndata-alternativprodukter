@@ -9,22 +9,33 @@ import io.swagger.v3.oas.annotations.tags.Tag
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
-    private val AlternativeProductsService: AlternativeProductsService,
+    private val alternativeProductsService: AlternativeProductsService,
 ) {
     @Get("/{hmsArtNr}")
     suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<AlternativeProductsResponse> {
 
         return HttpResponse.ok(
-            AlternativeProductsService.getAlternativeProducts(hmsArtNr),
+            alternativeProductsService.getAlternativeProducts(hmsArtNr),
         )
     }
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
-            AlternativeProductsService.getStockAndAlternatives(hmsArtNr),
+            alternativeProductsService.getStockAndAlternatives(hmsArtNr),
         )
     }
+
+    @Get("/simple/{hmsArtNr}")
+    suspend fun getAlternativeProductsWithoutStock(hmsArtNr: String): HttpResponse<List<String>> {
+
+        return HttpResponse.ok(
+            alternativeProductsService.getAlternativeProductsWithoutStock(hmsArtNr),
+        )
+    }
+
 }
+
+
 
 @Serdeable
 data class AlternativeProductsResponse(val original: ProductStock, val alternatives: List<ProductStock>)

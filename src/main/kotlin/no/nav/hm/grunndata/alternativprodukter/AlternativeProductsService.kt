@@ -26,6 +26,10 @@ open class AlternativeProductsService(
         )
     }
 
+    suspend fun getAlternativeProductsWithoutStock(hmsArtnr: String): List<String> {
+        return hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
+    }
+
     suspend fun getStockAndAlternatives(hmsArtNr: String): ProductStockAlternatives {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
         val authToken = azureAdClient.getToken(azureBody)
