@@ -29,6 +29,11 @@ be increased by one for each new file.
 
 The new file must also be added to the enum: SubstituteFiles.kt
 
+### Preparing the file
+
+Rows separating groups of products can not be empty or the parser will not "see them", this can be solved by i.e. adding
+a random character in column A of the empty rows.
+
 ### Grouping products
 
 HMS numbers that should be grouped together should be in subsequent rows without any empty rows in between.
