@@ -11,18 +11,18 @@ interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, U
     @Query(
         """INSERT INTO hms_artnr_mapping (id, source_hms_artnr, target_hms_artnr) VALUES (:id, :sourceHmsArtnr, :targetHmsArtnr)""",
     )
-    fun insertMapping(
+    suspend fun insertMapping(
         id: UUID,
         sourceHmsArtnr: String,
         targetHmsArtnr: String,
     )
 
     @Query("""DELETE FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr AND target_hms_artnr = :targetHmsArtnr""")
-    fun deleteMapping(sourceHmsArtnr: String, targetHmsArtnr: String)
+    suspend fun deleteMapping(sourceHmsArtnr: String, targetHmsArtnr: String)
 
     @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr""")
-    fun findBySourceHmsArtnr(sourceHmsArtnr: String): List<HmsArtnrMapping>
+    suspend fun findBySourceHmsArtnr(sourceHmsArtnr: String): List<HmsArtnrMapping>
 
     @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr AND target_hms_artnr = :targetHmsArtnr""")
-    fun findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr: String, targetHmsArtnr: String): HmsArtnrMapping?
+    suspend fun findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr: String, targetHmsArtnr: String): HmsArtnrMapping?
 }
