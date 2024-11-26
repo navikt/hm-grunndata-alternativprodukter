@@ -58,7 +58,10 @@ open class AlternativeProductsService(
     }
 
     fun saveAlternativeProducts(hmsArtnrList: List<String>) {
-        require(hmsArtnrList.size >= 2) { "List must contain at least two elements for there to be a mapping" }
+        if(hmsArtnrList.size == 1) {
+            LOG.warn("List must contain at least two elements for there to be a mapping")
+            return
+        }
 
         generateMappingList(hmsArtnrList).forEach { (first, second) ->
             hmsArtnrMappingRepository.findBySourceHmsArtnrAndTargetHmsArtnr(first, second)?.let {

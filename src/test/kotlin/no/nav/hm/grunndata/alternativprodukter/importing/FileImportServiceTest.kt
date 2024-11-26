@@ -19,12 +19,20 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFilesTest.values().map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 3
+            fileImportHistoryRepository.findAll().toList().size shouldBe 4
 
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 2
 
             hmsArtnrMappingRepository.findBySourceHmsArtnr("014760").size shouldBe 6
             hmsArtnrMappingRepository.findBySourceHmsArtnr("196087").size shouldBe 6
+
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("267614").size shouldBe 1
+
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("301304").size shouldBe 0
+
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("286501").size shouldBe 4
+
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("292363").size shouldBe 1
 
 
 

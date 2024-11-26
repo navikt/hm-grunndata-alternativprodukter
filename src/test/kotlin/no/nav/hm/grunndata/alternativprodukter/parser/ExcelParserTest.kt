@@ -27,4 +27,14 @@ class ExcelParserTest {
         assertEquals(10, parseResult.addGroups.size )
     }
 
+    @Test
+    fun `reads kalendere file without exception`() {
+        val inputStream =
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V3_test_kalendere.xlsx")
+        val excelParser = ExcelParser()
+        val parseResult = excelParser.readExcel(inputStream)
+        assertTrue(parseResult.addGroups.isNotEmpty())
+        assertEquals(28, parseResult.addGroups.size )
+    }
+
 }
