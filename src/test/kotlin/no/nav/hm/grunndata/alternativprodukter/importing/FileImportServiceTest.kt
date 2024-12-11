@@ -18,38 +18,40 @@ class FileImportServiceTest(
     fun `importNewFiles should import new files and store handled filename`() {
 
         runBlocking {
-            fileImportService.importNewMappings(SubstituteFilesTest.values().map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 8
+            fileImportService.importNewMappings(SubstituteFiles.values().map { it.fileName })
+            fileImportHistoryRepository.findAll().toList().size shouldBe 7
 
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 2
+            // Personløftere
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("211366").size shouldBe 5
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("148028").size shouldBe 11
 
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("014760").size shouldBe 6
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("196087").size shouldBe 6
+            // Stoler med oppreisingsfunksjon
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("296150").size shouldBe 3
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("240534").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("296285").size shouldBe 5
 
+            // Kalendere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("267614").size shouldBe 2
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("313805").size shouldBe 2
-
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("301304").size shouldBe 0
-
             hmsArtnrMappingRepository.findBySourceHmsArtnr("286501").size shouldBe 4
-
             hmsArtnrMappingRepository.findBySourceHmsArtnr("292363").size shouldBe 1
 
+            // Varmehjelpemidler
             hmsArtnrMappingRepository.findBySourceHmsArtnr("252780").size shouldBe 3
-
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("252771").size shouldBe 1
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("252891").size shouldBe 1
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("252930").size shouldBe 1
 
             // Arbeidsstoler
             hmsArtnrMappingRepository.findBySourceHmsArtnr("323899").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("268728").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("324130").size shouldBe 1
 
-            //Syn
+            // Syn
             hmsArtnrMappingRepository.findBySourceHmsArtnr("291885").size shouldBe 1
             hmsArtnrMappingRepository.findBySourceHmsArtnr("194564").size shouldBe 9
             hmsArtnrMappingRepository.findBySourceHmsArtnr("233032").size shouldBe 2
 
-            //Ganghjelpemidler
+            // Ganghjelpemidler
             hmsArtnrMappingRepository.findBySourceHmsArtnr("177946").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("214762").size shouldBe 6
             hmsArtnrMappingRepository.findBySourceHmsArtnr("313241").size shouldBe 1
