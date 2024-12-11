@@ -6,4 +6,6 @@ enum class SubstituteFiles(val fileName: String) {
     V3_KALENDERE("V3_kalendere_1.xlsx"),
     V4_VARMEHJELPEMIDLER("V4_varmehjelpemidler.xlsx"),
     V5_ARBEIDSSTOLER("V5_arbeidsstoler.xlsx"),
+    V6_SYN("V6_syn.xlsx"),
+    V7_GANGHJELPEMIDLER("V7_ganghjelpemidler.xlsx")
 }
