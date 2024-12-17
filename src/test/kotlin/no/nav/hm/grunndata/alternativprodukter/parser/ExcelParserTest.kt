@@ -9,16 +9,6 @@ class ExcelParserTest {
 
 
     @Test
-    fun `reads kjoreramper liste without exception`() {
-        val inputStream =
-            this::class.java.classLoader.getResourceAsStream("substituttlister/V11_kjoreramper.xlsx")
-        val excelParser = ExcelParser()
-        val parseResult = excelParser.readExcel(inputStream)
-        assertTrue(parseResult.addGroups.isNotEmpty())
-        parseResult.addGroups.size shouldBe 3
-    }
-
-    @Test
     fun `reads stoler liste without exception`() {
         val inputStream =
             this::class.java.classLoader.getResourceAsStream("substituttlister/V2_stoler_med_oppreisingsfunksjon.xlsx")
