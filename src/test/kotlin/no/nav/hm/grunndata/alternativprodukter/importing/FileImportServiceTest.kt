@@ -19,7 +19,7 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFiles.values().map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 9
+            fileImportHistoryRepository.findAll().toList().size shouldBe 12
 
             // Personløftere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
@@ -65,6 +65,23 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("301993").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("301573").size shouldBe 9
             hmsArtnrMappingRepository.findBySourceHmsArtnr("304603").size shouldBe 7
+
+            // Vogner
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("325239").size shouldBe 9
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("324995").size shouldBe 17
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("286056").size shouldBe 7
+
+            // Kjøreramper
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("14112").size shouldBe 1
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("297070").size shouldBe 14
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("297095").size shouldBe 3
+
+            // Ståstativ, trenings og aktiviseringshjelpemidler
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("327685").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("292303").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("327660").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("328007").size shouldBe 1
+
 
 
         }
