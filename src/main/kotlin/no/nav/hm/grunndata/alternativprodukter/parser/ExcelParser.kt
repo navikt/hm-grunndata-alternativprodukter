@@ -25,12 +25,15 @@ class ExcelParser {
                 isFirstRow = false
                 continue
             }
-            val cell = row.getCell(3) // Column D
+            val cell = row.getCell(3) // Column D hmsArtNr
             val removeCell = row.getCell(6) // Column G
-            if (cell != null && cell.toString().trim { it <= ' ' }.isNotEmpty()) {
+            if (cell != null && cell.toString().replace("\\s", "").isNotBlank()) {
                 var cellValue = cell.toString()
                 if (cellValue.endsWith(".0")) {
                     cellValue = cellValue.substring(0, cellValue.length - 2)
+                }
+                if (cellValue.length<6) {
+                    throw IllegalArgumentException("Invalid hmsArtNr length less than 6: $cellValue")
                 }
                 if (removeCell != null && removeCell.toString().trim().equals("x", ignoreCase = true)) {
                     currentRemoveGroup.add(cellValue)

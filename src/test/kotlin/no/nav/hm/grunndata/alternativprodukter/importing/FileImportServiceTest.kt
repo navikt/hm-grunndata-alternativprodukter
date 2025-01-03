@@ -72,7 +72,7 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("286056").size shouldBe 7
 
             // Kjøreramper
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("14112").size shouldBe 1
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("014112").size shouldBe 1
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297070").size shouldBe 14
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297095").size shouldBe 3
 

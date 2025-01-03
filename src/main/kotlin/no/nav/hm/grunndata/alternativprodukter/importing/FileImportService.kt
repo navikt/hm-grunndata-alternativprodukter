@@ -63,6 +63,7 @@ open class FileImportService(
                 }
 
                 fileImportHistoryRepository.save(FileImportHistory(filename = fileName))
+
             }
         }
 
