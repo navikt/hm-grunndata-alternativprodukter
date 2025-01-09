@@ -19,7 +19,7 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFiles.values().map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 14
+            fileImportHistoryRepository.findAll().toList().size shouldBe 15
 
             // Personløftere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
@@ -87,9 +87,13 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("311846").size shouldBe 4
             hmsArtnrMappingRepository.findBySourceHmsArtnr("311636").size shouldBe 8
 
-            //kjøreposer
+            //Kjøreposer
             hmsArtnrMappingRepository.findBySourceHmsArtnr("322327").size shouldBe 6
             hmsArtnrMappingRepository.findBySourceHmsArtnr("100812").size shouldBe 4
+
+            //Madrasser
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("313971").size shouldBe 4
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("314075").size shouldBe 8
 
 
         }
