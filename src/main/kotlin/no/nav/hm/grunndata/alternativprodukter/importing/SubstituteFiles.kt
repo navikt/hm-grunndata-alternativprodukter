@@ -11,7 +11,7 @@ enum class SubstituteFiles(val fileName: String) {
     V8_MANUELLE_RULLESTOLER_DK6("V8_manuelle_rullestoler_DK6.xlsx"),
     V9_ERS("V9_ers.xlsx"),
     V10_VOGNER("V10_vogner.xlsx"),
-    V11_KJORERAMPER("V11_kjoreramper.xlsx"),
+    V11_KJORERAMPER("V11_kjoreramper_2.xlsx"),
     V12_STAASTATIV_TRENINGS_AKTIVISERING("V12_staastativ_trenings_aktiviseringshjelpemidler.xlsx"),
     V13_SENGER("V13_senger.xlsx"),
     V14_KJOREPOSER("V14_kjoreposer_og_regncape.xlsx"),

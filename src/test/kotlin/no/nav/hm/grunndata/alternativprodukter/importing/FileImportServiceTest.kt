@@ -18,7 +18,7 @@ class FileImportServiceTest(
     fun `importNewFiles should import new files and store handled filename`() {
 
         runBlocking {
-            fileImportService.importNewMappings(SubstituteFiles.values().map { it.fileName })
+            fileImportService.importNewMappings(SubstituteFiles.entries.map { it.fileName })
             fileImportHistoryRepository.findAll().toList().size shouldBe 15
 
             // Personløftere
@@ -75,6 +75,7 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("014112").size shouldBe 1
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297070").size shouldBe 14
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297095").size shouldBe 3
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("297075").size shouldBe 3
 
             // Ståstativ, trenings og aktiviseringshjelpemidler
             hmsArtnrMappingRepository.findBySourceHmsArtnr("327685").size shouldBe 2
