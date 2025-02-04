@@ -104,6 +104,7 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("230747").size shouldBe 3
             hmsArtnrMappingRepository.findBySourceHmsArtnr("326350").size shouldBe 7
             hmsArtnrMappingRepository.findBySourceHmsArtnr("324159").size shouldBe 6
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("325317").size shouldBe 3
 
         }
 
