@@ -52,6 +52,7 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("233032").size shouldBe 2
 
             // Ganghjelpemidler
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("147600").size shouldBe 1
             hmsArtnrMappingRepository.findBySourceHmsArtnr("177946").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("214762").size shouldBe 6
             hmsArtnrMappingRepository.findBySourceHmsArtnr("313241").size shouldBe 1

@@ -36,9 +36,9 @@ class ExcelParser {
                     throw IllegalArgumentException("Invalid hmsArtNr length less than 6: $cellValue")
                 }
                 if (removeCell != null && removeCell.toString().trim().equals("x", ignoreCase = true)) {
-                    currentRemoveGroup.add(cellValue)
+                    currentRemoveGroup.add(cellValue.trim())
                 } else {
-                    currentAddGroup.add(cellValue)
+                    currentAddGroup.add(cellValue.trim())
                 }
             } else {
                 if (currentAddGroup.isNotEmpty()) {
