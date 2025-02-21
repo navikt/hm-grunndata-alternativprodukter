@@ -3,6 +3,10 @@ package no.nav.hm.grunndata.alternativprodukter
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import java.util.UUID
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 
 @Singleton
 open class AlternativeProductsService(
@@ -37,6 +41,12 @@ open class AlternativeProductsService(
         return ProductStockAlternatives(productStock, alternatives)
     }
 
+    fun getAlternativeMappings() = flow<HmsArtnrMappingDto> {
+        hmsArtnrMappingRepository.findAll().collect {
+            mapping -> emit(mapping.toDto())
+        }
+    }
+
     private fun generateMappingList(hmsArtnrList: List<String>): List<Pair<String, String>> =
         hmsArtnrList.indices.flatMap { i ->
             hmsArtnrList.indices.mapNotNull { j ->
@@ -47,7 +57,7 @@ open class AlternativeProductsService(
             }
         }
 
-    fun deleteAlternativeProducts(hmsArtnrList: List<String>) {
+    suspend fun deleteAlternativeProducts(hmsArtnrList: List<String>) {
         require(hmsArtnrList.size >= 2) { "List must contain at least two elements for there to be a mapping" }
 
         generateMappingList(hmsArtnrList).forEach { (first, second) ->
@@ -57,7 +67,7 @@ open class AlternativeProductsService(
         }
     }
 
-    fun saveAlternativeProducts(hmsArtnrList: List<String>) {
+    suspend fun saveAlternativeProducts(hmsArtnrList: List<String>) {
         if(hmsArtnrList.size == 1) {
             LOG.warn("List must contain at least two elements for there to be a mapping")
             return

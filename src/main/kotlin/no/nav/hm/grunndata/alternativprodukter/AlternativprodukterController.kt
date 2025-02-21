@@ -3,8 +3,12 @@ package no.nav.hm.grunndata.alternativprodukter
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.QueryValue
 import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
@@ -31,6 +35,10 @@ class AlternativeProductsController(
         return HttpResponse.ok(
             alternativeProductsService.getAlternativeProductsWithoutStock(hmsArtNr),
         )
+    }
+    @Get("/mappings")
+    fun getAlternativeMappings(): Flow<HmsArtnrMappingDto> {
+        return alternativeProductsService.getAlternativeMappings().flowOn(Dispatchers.IO)
     }
 
 }

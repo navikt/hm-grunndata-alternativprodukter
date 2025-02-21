@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.alternativprodukter
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
+import io.micronaut.serde.annotation.Serdeable
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -13,3 +14,11 @@ data class HmsArtnrMapping(
     val targetHmsArtnr: String,
     val created: LocalDateTime = LocalDateTime.now(),
 )
+
+@Serdeable
+data class HmsArtnrMappingDto(
+    val sourceHmsArtnr: String,
+    val targetHmsArtnr: String,
+)
+
+fun HmsArtnrMapping.toDto() = HmsArtnrMappingDto(sourceHmsArtnr, targetHmsArtnr)
