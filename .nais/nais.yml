@@ -50,7 +50,7 @@ spec:
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter-db
-        type: POSTGRES_14
+        type: POSTGRES_15
         tier: {{ disk_tier }}
         diskType: SSD
         highAvailability: true
