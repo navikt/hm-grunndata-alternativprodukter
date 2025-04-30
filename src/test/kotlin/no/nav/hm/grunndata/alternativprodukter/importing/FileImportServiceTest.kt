@@ -19,7 +19,7 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFiles.entries.map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 21
+            fileImportHistoryRepository.findAll().toList().size shouldBe 22
 
             // Personløftere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
@@ -126,6 +126,11 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("294635").size shouldBe 1
             hmsArtnrMappingRepository.findBySourceHmsArtnr("295083").size shouldBe 3
             hmsArtnrMappingRepository.findBySourceHmsArtnr("294670").size shouldBe 2
+
+            // Hjelpemidler for overflytting, vending og posisjonering
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("311964").size shouldBe 1
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("164188").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("311970").size shouldBe 3
         }
 
 
