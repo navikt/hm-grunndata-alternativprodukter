@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.alternativprodukter.alternativ.HmsArtnrMappingRepository
+import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingRepository
 
 @MicronautTest
 class HmsArtnrMappingRepositoryTest(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository) {

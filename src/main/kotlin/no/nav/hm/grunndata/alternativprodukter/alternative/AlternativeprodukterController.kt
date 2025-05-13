@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter.alternativ
+package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller

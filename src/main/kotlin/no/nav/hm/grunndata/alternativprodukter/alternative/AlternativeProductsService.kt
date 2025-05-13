@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter.alternativ
+package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import jakarta.inject.Singleton
 import java.util.UUID
