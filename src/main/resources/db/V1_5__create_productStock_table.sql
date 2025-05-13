@@ -1,8 +1,10 @@
 CREATE TABLE IF NOT EXISTS product_stock(
     id UUID NOT NULL PRIMARY KEY,
     hms_artnr VARCHAR(255) NOT NULL,
-    warehouse_stock_response JSONB NOT NULL default '[]',
+    status VARCHAR(255) NOT NULL,
+    oebs_stock_response JSONB NOT NULL default '[]',
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expired TIMESTAMP,
     UNIQUE (hms_artnr)
 )

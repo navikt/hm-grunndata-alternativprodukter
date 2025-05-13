@@ -11,8 +11,8 @@ class ProductStockController(private val productStockService: ProductStockServic
 
     @Get("/{enhet}/{hmsArtNr}")
     fun getStockByEnhetAndHmsArtNr(enhet: String, hmsArtNr: String): ProductStock  {
-        val filtered = productStockService.findByHmsArtnr(hmsArtNr).warehouseStockResponse.filter { it.organisasjons_navn == enhet }
-        return ProductStock( hmsArtnr=hmsArtNr, warehouseStockResponse = filtered)
+        val filtered = productStockService.findByHmsArtnr(hmsArtNr).oebsStockResponse.filter { it.organisasjons_navn == enhet }
+        return ProductStock( hmsArtnr=hmsArtNr, oebsStockResponse = filtered)
     }
 
 }

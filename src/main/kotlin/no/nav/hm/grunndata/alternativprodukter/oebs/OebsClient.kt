@@ -9,11 +9,11 @@ import io.micronaut.serde.annotation.Serdeable
 interface OebsClient {
 
     @Get(value = "/lager/alle-sentraler/{hmsNr}")
-    suspend fun getWarehouseStock(hmsNr: String, @Header authorization: String): List<WarehouseStockResponse>
+    suspend fun getWarehouseStock(hmsNr: String, @Header authorization: String): List<OebsStockResponse>
 }
 
 @Serdeable
-data class WarehouseStockResponse(
+data class OebsStockResponse(
     val antallPåLager: Int,
     val erPåLager: Boolean,
     val organisasjons_id: Int,

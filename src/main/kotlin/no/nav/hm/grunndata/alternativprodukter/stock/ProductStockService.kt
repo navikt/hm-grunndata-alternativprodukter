@@ -27,9 +27,9 @@ open class ProductStockService(private val productStockRepository: ProductStockR
         productStock ?: run {
             LOG.info("Product stock not found in database, fetching from OEBS")
             val authToken = azureAdClient.getToken(azureBody)
-            val oebsStock = ProductStock(hmsArtnr = hmsArtnr, warehouseStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}"))
+            val oebsStock = ProductStock(hmsArtnr = hmsArtnr, oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}"))
             val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
-                productStockRepository.update(it.copy(updated = LocalDateTime.now(), warehouseStockResponse = oebsStock.warehouseStockResponse))
+                productStockRepository.update(it.copy(updated = LocalDateTime.now(), oebsStockResponse = oebsStock.oebsStockResponse))
             } ?: productStockRepository.save(oebsStock)
             saved
         }

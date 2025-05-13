@@ -13,7 +13,7 @@ class ProductStockRepositoryTest(private val productStockRepository: ProductStoc
     fun testProductStockRepository() {
         ProductStock(
             hmsArtnr = "123456",
-            warehouseStockResponse = emptyList(),
+            oebsStockResponse = emptyList(),
         ).let { productStock ->
             runBlocking {
                 productStockRepository.save(productStock)
