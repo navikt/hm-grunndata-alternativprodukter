@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.alternativprodukter.HmsArtnrMappingRepository
+import no.nav.hm.grunndata.alternativprodukter.alternativ.HmsArtnrMappingRepository
 import org.junit.jupiter.api.Test
 
 @MicronautTest

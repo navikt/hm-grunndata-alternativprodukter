@@ -1,44 +1,31 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.alternativ
 
 import jakarta.inject.Singleton
-import org.slf4j.LoggerFactory
 import java.util.UUID
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockService
+import org.slf4j.LoggerFactory
 
 @Singleton
 open class AlternativeProductsService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
-    private val oebsClient: OebsClient,
-    private val azureAdClient: AzureAdClient,
-    private val azureBody: AzureBody
+    private val productStockService: ProductStockService
 ) {
 
     companion object {
         private val LOG = LoggerFactory.getLogger(AlternativeProductsService::class.java)
     }
 
-    suspend fun getAlternativeProducts(hmsArtnr: String): AlternativeProductsResponse {
-        val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
-        val authToken = azureAdClient.getToken(azureBody)
-
-        return AlternativeProductsResponse(
-            ProductStock(hmsArtnr, oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")),
-            alternatives.map { ProductStock(it, oebsClient.getWarehouseStock(it, "Bearer ${authToken.access_token}")) }
-        )
-    }
 
     suspend fun getAlternativeProductsWithoutStock(hmsArtnr: String): List<String> {
         return hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
     }
 
-    suspend fun getStockAndAlternatives(hmsArtNr: String): ProductStockAlternatives {
+    fun getStockAndAlternatives(hmsArtNr: String): ProductStockAlternatives = runBlocking {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
-        val authToken = azureAdClient.getToken(azureBody)
-        val productStock =  ProductStock(hmsArtNr, oebsClient.getWarehouseStock(hmsArtNr, "Bearer ${authToken.access_token}"))
-        return ProductStockAlternatives(productStock, alternatives)
+        val productStock = productStockService.findByHmsArtnr(hmsArtNr)
+        ProductStockAlternatives(productStock, alternatives)
     }
 
     fun getAlternativeMappings() = flow<HmsArtnrMappingDto> {

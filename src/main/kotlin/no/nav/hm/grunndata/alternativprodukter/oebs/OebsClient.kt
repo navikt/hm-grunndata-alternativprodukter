@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.oebs
 
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
@@ -14,8 +14,8 @@ interface OebsClient {
 
 @Serdeable
 data class WarehouseStockResponse(
+    val antallPåLager: Int,
     val erPåLager: Boolean,
-
     val organisasjons_id: Int,
     val organisasjons_navn: String,
     val artikkelnummer: String,

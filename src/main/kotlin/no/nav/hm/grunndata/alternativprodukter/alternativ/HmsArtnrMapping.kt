@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.alternativ
 
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
