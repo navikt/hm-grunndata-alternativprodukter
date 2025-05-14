@@ -17,14 +17,13 @@ open class ProductStockService(private val productStockRepository: ProductStockR
 ) {
 
     @Cacheable("product-stock")
-    open fun findByHmsArtnr(hmsArtnr: String): ProductStock = runBlocking {
+    open fun findByHmsArtnr(hmsArtnr: String): ProductStockDTO = runBlocking {
         val productStock = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
             if (it.updated.isBefore(LocalDateTime.now().minusMinutes(5))) {
                 it
             }
             else null
-        }
-        productStock ?: run {
+        } ?: run {
             LOG.info("Product stock not found in database, fetching from OEBS")
             val authToken = azureAdClient.getToken(azureBody)
             val oebsStock = ProductStock(hmsArtnr = hmsArtnr, oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}"))
@@ -33,7 +32,9 @@ open class ProductStockService(private val productStockRepository: ProductStockR
             } ?: productStockRepository.save(oebsStock)
             saved
         }
+        productStock.toDTO()
     }
+
 
     companion object {
         private val LOG = LoggerFactory.getLogger(ProductStockService::class.java)

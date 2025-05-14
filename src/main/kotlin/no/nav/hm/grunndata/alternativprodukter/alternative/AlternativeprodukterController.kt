@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
@@ -38,4 +39,4 @@ class AlternativeProductsController(
 }
 
 @Serdeable
-data class ProductStockAlternatives(val original: ProductStock, val alternatives: List<String>)
+data class ProductStockAlternatives(val original: ProductStockDTO, val alternatives: List<String>)

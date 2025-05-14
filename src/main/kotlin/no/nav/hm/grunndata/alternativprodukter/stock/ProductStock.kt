@@ -25,6 +25,49 @@ enum class ProductStockStatus {
     ACTIVE, INACTIVE
 }
 
+data class ProductStockDTO(
+    val id: UUID,
+    val hmsArtnr: String,
+    val status: ProductStockStatus,
+    val stockQuantity: List<StockQuantity>,
+    val updated: LocalDateTime = LocalDateTime.now()
+)
 
+data class StockQuantity(
+    val inStock: Boolean,
+    val amountInStock: Int,
+    val location: String,
+    val available: Int,
+    val reserved: Int,
+    val needNotified: Int,
+    val orders: Int,
+    val request: Int,
+    val minmax: Boolean,
+    val updated: LocalDateTime = LocalDateTime.now()
+)
+
+fun ProductStock.toDTO(): ProductStockDTO {
+    return ProductStockDTO(
+        id = id,
+        hmsArtnr = hmsArtnr,
+        status = status,
+        stockQuantity =  oebsStockResponse.map { it.toDTO() },
+        updated = updated
+    )
+}
+
+fun OebsStockResponse.toDTO(): StockQuantity {
+    return StockQuantity(
+        inStock = erPåLager,
+        amountInStock = antallPåLager,
+        location = organisasjons_navn.substring(4),
+        available = tilgjengelig,
+        reserved = reservert,
+        needNotified = behovsmeldt,
+        orders = bestillinger,
+        request = anmodning,
+        minmax = minmax
+    )
+}
 
 

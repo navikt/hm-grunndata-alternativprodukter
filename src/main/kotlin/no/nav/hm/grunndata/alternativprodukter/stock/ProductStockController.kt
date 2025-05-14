@@ -7,12 +7,13 @@ import io.micronaut.http.annotation.Get
 class ProductStockController(private val productStockService: ProductStockService) {
 
     @Get("/{hmsArtNr}")
-    fun getStockByHmsArtNr(hmsArtNr: String): ProductStock = productStockService.findByHmsArtnr(hmsArtNr)
+    fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO = productStockService.findByHmsArtnr(hmsArtNr)
 
-    @Get("/{enhet}/{hmsArtNr}")
-    fun getStockByEnhetAndHmsArtNr(enhet: String, hmsArtNr: String): ProductStock  {
-        val filtered = productStockService.findByHmsArtnr(hmsArtNr).oebsStockResponse.filter { it.organisasjons_navn == enhet }
-        return ProductStock( hmsArtnr=hmsArtNr, oebsStockResponse = filtered)
+    @Get("/{location}/{hmsArtNr}")
+    fun getStockByEnhetAndHmsArtNr(location: String, hmsArtNr: String): ProductStockDTO  {
+        val productStock = productStockService.findByHmsArtnr(hmsArtNr)
+        val filtered = productStock.stockQuantity.filter { it.location == location }
+        return productStock.copy(stockQuantity = filtered)
     }
 
 }
