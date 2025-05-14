@@ -1,27 +1,22 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.QueryValue
 import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
     private val alternativeProductsService: AlternativeProductsService,
 ) {
-    @Get("/{hmsArtNr}")
-    suspend fun getAlternativeProducts(hmsArtNr: String): HttpResponse<AlternativeProductsResponse> {
 
-        return HttpResponse.ok(
-            alternativeProductsService.getAlternativeProducts(hmsArtNr),
-        )
-    }
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
@@ -43,13 +38,5 @@ class AlternativeProductsController(
 
 }
 
-
-
 @Serdeable
-data class AlternativeProductsResponse(val original: ProductStock, val alternatives: List<ProductStock>)
-
-@Serdeable
-data class ProductStock(val hmsArtNr: String, val warehouseStock: List<WarehouseStockResponse>)
-
-@Serdeable
-data class ProductStockAlternatives(val original: ProductStock, val alternatives: List<String>)
+data class ProductStockAlternatives(val original: ProductStockDTO, val alternatives: List<String>)

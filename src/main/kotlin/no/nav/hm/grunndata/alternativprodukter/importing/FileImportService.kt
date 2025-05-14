@@ -5,7 +5,7 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
-import no.nav.hm.grunndata.alternativprodukter.AlternativeProductsService
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductsService
 import no.nav.hm.grunndata.alternativprodukter.parser.ExcelParser
 import org.slf4j.LoggerFactory
 

@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.oebs
 
 import io.micronaut.context.annotation.Value
 import io.micronaut.core.annotation.Introspected

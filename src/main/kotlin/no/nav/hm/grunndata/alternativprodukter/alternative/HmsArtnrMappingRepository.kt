@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.alternativprodukter
+package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import io.micronaut.data.annotation.Query
 import io.micronaut.data.jdbc.annotation.JdbcRepository
