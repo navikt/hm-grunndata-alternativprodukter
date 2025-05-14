@@ -29,7 +29,7 @@ open class ProductStockService(
                 it
             } else null
         } ?: run {
-            LOG.info("Product stock not found in database, fetching from OEBS")
+            LOG.info("Fetching from OEBS for $hmsArtnr")
             val authToken = azureAdClient.getToken(azureBody)
             val oebsStock = ProductStock(
                 hmsArtnr = hmsArtnr,
