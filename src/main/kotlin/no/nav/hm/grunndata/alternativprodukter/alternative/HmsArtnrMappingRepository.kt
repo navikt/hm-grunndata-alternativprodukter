@@ -8,6 +8,7 @@ import java.util.UUID
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
 interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, UUID> {
+
     @Query(
         """INSERT INTO hms_artnr_mapping (id, source_hms_artnr, target_hms_artnr) VALUES (:id, :sourceHmsArtnr, :targetHmsArtnr)""",
     )
@@ -25,4 +26,7 @@ interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, U
 
     @Query("""SELECT * FROM hms_artnr_mapping WHERE source_hms_artnr = :sourceHmsArtnr AND target_hms_artnr = :targetHmsArtnr""")
     suspend fun findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr: String, targetHmsArtnr: String): HmsArtnrMapping?
+
+    suspend fun findDistinctSourceHmsArtnr(): Set<String>
+
 }
