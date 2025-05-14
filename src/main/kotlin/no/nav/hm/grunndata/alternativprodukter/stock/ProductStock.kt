@@ -1,9 +1,11 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
 import io.micronaut.data.model.DataType
+import io.micronaut.serde.annotation.Serdeable
 import java.time.LocalDateTime
 import java.util.UUID
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
@@ -25,6 +27,7 @@ enum class ProductStockStatus {
     ACTIVE, INACTIVE
 }
 
+@Serdeable
 data class ProductStockDTO(
     val id: UUID,
     val hmsArtnr: String,
@@ -33,6 +36,7 @@ data class ProductStockDTO(
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
+@Serdeable
 data class StockQuantity(
     val inStock: Boolean,
     val amountInStock: Int,

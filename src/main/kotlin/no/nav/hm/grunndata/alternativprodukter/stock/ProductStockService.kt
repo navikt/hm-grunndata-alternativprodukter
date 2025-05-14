@@ -1,5 +1,7 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
+import io.micronaut.cache.CacheConfiguration
+import io.micronaut.cache.annotation.CacheConfig
 import io.micronaut.cache.annotation.Cacheable
 import jakarta.inject.Singleton
 import java.time.LocalDateTime
@@ -10,25 +12,36 @@ import no.nav.hm.grunndata.alternativprodukter.oebs.OebsClient
 import org.slf4j.LoggerFactory
 
 @Singleton
-open class ProductStockService(private val productStockRepository: ProductStockRepository,
-                          private val oebsClient: OebsClient,
-                          private val azureAdClient: AzureAdClient,
-                          private val azureBody: AzureBody
+open class ProductStockService(
+    private val productStockRepository: ProductStockRepository,
+    private val oebsClient: OebsClient,
+    private val azureAdClient: AzureAdClient,
+    private val azureBody: AzureBody,
+    private val micronautCacheConfig: CacheConfiguration
 ) {
 
     @Cacheable("product-stock")
     open fun findByHmsArtnr(hmsArtnr: String): ProductStockDTO = runBlocking {
+        LOG.info("Finding stock for $hmsArtnr")
         val productStock = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
-            if (it.updated.isBefore(LocalDateTime.now().minusMinutes(5))) {
+            val cacheTime = LocalDateTime.now().minusMinutes(micronautCacheConfig.expireAfterWrite.get().toMinutes())
+            if (it.updated.isAfter(cacheTime)) {
                 it
-            }
-            else null
+            } else null
         } ?: run {
             LOG.info("Product stock not found in database, fetching from OEBS")
             val authToken = azureAdClient.getToken(azureBody)
-            val oebsStock = ProductStock(hmsArtnr = hmsArtnr, oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}"))
+            val oebsStock = ProductStock(
+                hmsArtnr = hmsArtnr,
+                oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
+            )
             val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
-                productStockRepository.update(it.copy(updated = LocalDateTime.now(), oebsStockResponse = oebsStock.oebsStockResponse))
+                productStockRepository.update(
+                    it.copy(
+                        updated = LocalDateTime.now(),
+                        oebsStockResponse = oebsStock.oebsStockResponse
+                    )
+                )
             } ?: productStockRepository.save(oebsStock)
             saved
         }

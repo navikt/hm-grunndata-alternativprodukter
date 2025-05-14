@@ -39,7 +39,7 @@ micronaut:
   caches:
     product-stock:
       enabled: true
-      expire-after-write: 5m
+      expire-after-write: ${OEBS_CACHE_TTL:5m}
   http:
     client:
       connect-timeout: 10s
