@@ -42,8 +42,7 @@ data class StockQuantity(
     val needNotified: Int,
     val orders: Int,
     val request: Int,
-    val minmax: Boolean,
-    val updated: LocalDateTime = LocalDateTime.now()
+    val minmax: Boolean
 )
 
 fun ProductStock.toDTO(): ProductStockDTO {
