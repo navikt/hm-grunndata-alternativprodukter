@@ -105,3 +105,6 @@ azure:
 oebs:
   url: https://${OEBS_API_PROXY}
 
+grunndata:
+  index:
+    url: ${GRUNNDATA_INDEX_URL:`https://hm-grunndata-index`}

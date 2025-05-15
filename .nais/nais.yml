@@ -63,6 +63,8 @@ spec:
         cascadingDelete: false
   accessPolicy:
     outbound:
+      rules:
+        - application: hm-grunndata-index
       external:
         - host: navikt.github.io
         - host: {{oebs_api_proxy}}
