@@ -33,6 +33,8 @@ spec:
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"
+    - name: GRUNNDATA_INDEX_URL
+      value: "http://hm-grunndata-index"
     - name: SCHEDULERS_ENABLED
       value: "{{ swagger_enabled }}"
     - name: SWAGGER_ENABLED

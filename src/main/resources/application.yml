@@ -107,4 +107,4 @@ oebs:
 
 grunndata:
   index:
-    url: ${GRUNNDATA_INDEX_URL:`https://hm-grunndata-index`}
+    url: ${GRUNNDATA_INDEX_URL:`http://localhost:8100`}
