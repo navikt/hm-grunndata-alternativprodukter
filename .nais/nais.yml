@@ -30,6 +30,9 @@ spec:
   azure:
     application:
       enabled: true
+  openSearch:
+    access: admin
+    instance: grunndata
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"

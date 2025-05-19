@@ -21,6 +21,11 @@ val poiVersion = "5.3.0"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 val micrometerRegistryPrometheusVersion = "1.9.1"
+val openSearchJavaClientVersion = "2.24.0"
+val httpClient5= "5.4.4"
+val rapidsRiversVersion = "202410290928"
+val grunndataDtoVersion = "202504011524"
+val leaderElectionVersion = "202405151234"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -46,6 +51,12 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     runtimeOnly("org.yaml:snakeyaml")
+
+    implementation("org.opensearch.client:opensearch-java:$openSearchJavaClientVersion")
+    implementation("org.apache.httpcomponents.client5:httpclient5:$httpClient5")
+    implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
+    implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
+    implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
 
     implementation("org.apache.logging.log4j:log4j-core:2.24.1")
 
