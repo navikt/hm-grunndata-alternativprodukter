@@ -1,14 +1,10 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
-import io.micronaut.data.model.Page
 import io.micronaut.http.MediaType.APPLICATION_JSON
 import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.QueryValue
 import io.micronaut.http.client.annotation.Client
-import java.util.UUID
-import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 
-@Client("\${grunndata.register.url}")
+@Client("\${grunndata.db.url}")
 interface TechLabelApiClient {
 
     @Get(uri = "/api/v1/techlabels", consumes = [APPLICATION_JSON])

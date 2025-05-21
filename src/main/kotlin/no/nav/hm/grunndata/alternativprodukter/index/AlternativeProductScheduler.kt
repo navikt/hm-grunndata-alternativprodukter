@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton

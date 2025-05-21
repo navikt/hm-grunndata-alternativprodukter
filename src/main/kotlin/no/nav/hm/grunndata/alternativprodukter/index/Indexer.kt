@@ -1,29 +1,19 @@
 package no.nav.hm.grunndata.alternativprodukter.index
 
 
-import java.io.StringReader
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.UUID
 import org.opensearch.client.opensearch.OpenSearchClient
 import org.opensearch.client.opensearch._types.Refresh
 import org.opensearch.client.opensearch._types.mapping.TypeMapping
-import org.opensearch.client.opensearch.core.BulkRequest
-import org.opensearch.client.opensearch.core.BulkResponse
-import org.opensearch.client.opensearch.core.CountRequest
-import org.opensearch.client.opensearch.core.DeleteRequest
-import org.opensearch.client.opensearch.core.DeleteResponse
+import org.opensearch.client.opensearch.core.*
 import org.opensearch.client.opensearch.core.bulk.BulkOperation
 import org.opensearch.client.opensearch.core.bulk.IndexOperation
-import org.opensearch.client.opensearch.indices.CreateIndexRequest
-import org.opensearch.client.opensearch.indices.ExistsAliasRequest
+import org.opensearch.client.opensearch.indices.*
 import org.opensearch.client.opensearch.indices.ExistsRequest
-import org.opensearch.client.opensearch.indices.GetAliasRequest
-import org.opensearch.client.opensearch.indices.IndexSettings
-import org.opensearch.client.opensearch.indices.UpdateAliasesRequest
 import org.opensearch.client.opensearch.indices.update_aliases.ActionBuilders
 import org.slf4j.LoggerFactory
+import java.io.StringReader
+import java.time.LocalDate
+import java.util.*
 
 abstract class Indexer(private val client: OpenSearchClient,
                        private val settings: String,
@@ -144,10 +134,4 @@ abstract class Indexer(private val client: OpenSearchClient,
             LOG.info("Aliases is pointing to ${getAlias().toJsonString()}")
         }
     }
-}
-
-fun createIndexName(type: IndexType): String = "${type.name}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"))}"
-
-enum class IndexType {
-    products, alternative_products, external_products, suppliers, agreements, news
 }

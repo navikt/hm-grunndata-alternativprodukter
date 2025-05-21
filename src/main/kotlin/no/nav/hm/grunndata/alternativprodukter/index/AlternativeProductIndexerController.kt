@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.http.annotation.*
 import io.micronaut.scheduling.TaskExecutors
@@ -12,20 +12,10 @@ class AlternativeProductIndexerController(private val alternativeProductIndexer:
         private val LOG = LoggerFactory.getLogger(AlternativeProductIndexerController::class.java)
     }
 
-    @Post("/")
-    fun indexAlternativeProducts(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) {
-        alternativeProductIndexer.reIndex(alias)
-    }
-
     @Post("/hmsNr/{hmsNr}")
     fun indexAlternativeProductsByHmsNr(hmsNr: String) {
         LOG.info("reIndex alternative products by hmsNr: $hmsNr")
         alternativeProductIndexer.reIndexByHmsNr(hmsNr)
-    }
-
-    @Post("/isoCategory/{isoCategory}")
-    fun indexAlternativeProductsByCategory(isoCategory:String) {
-        alternativeProductIndexer.reIndexByIsoCategory(isoCategory)
     }
 
     @Put("/alias/{indexName}")

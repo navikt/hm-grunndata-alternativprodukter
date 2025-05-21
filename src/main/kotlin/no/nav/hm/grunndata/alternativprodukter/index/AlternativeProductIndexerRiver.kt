@@ -1,4 +1,4 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.Context
@@ -7,7 +7,6 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.KafkaRapid
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.River
-import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.rapidDTOVersion

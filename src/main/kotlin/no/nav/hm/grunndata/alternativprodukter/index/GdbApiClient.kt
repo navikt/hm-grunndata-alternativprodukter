@@ -58,6 +58,4 @@ interface GdbApiClient {
     @Get(uri = "/api/v1/isocategories", consumes = [APPLICATION_JSON])
     fun retrieveIsoCategories(): List<IsoCategoryDTO>
 
-
-
 }

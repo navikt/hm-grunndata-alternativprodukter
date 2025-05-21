@@ -1,11 +1,9 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.core.annotation.Introspected
 import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
-import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
-import no.nav.hm.grunndata.alternativprodukter.index.SearchDoc
 
 @Introspected
 data class AlternativeProductDoc(

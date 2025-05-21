@@ -1,5 +1,7 @@
-package no.nav.hm.grunndata.index.alternative_product
+package no.nav.hm.grunndata.alternativprodukter.index
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import java.time.LocalDateTime
 import java.util.UUID
@@ -46,6 +48,7 @@ class TechLabelService(
 
 }
 
+@Serdeable
 data class TechLabelDTO(
     val id: UUID,
     val identifier: String,
