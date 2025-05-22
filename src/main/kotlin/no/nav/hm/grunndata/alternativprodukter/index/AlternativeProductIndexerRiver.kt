@@ -44,12 +44,12 @@ class AlternativeProductIndexerRiver(
         if (dtoVersion > rapidDTOVersion) LOG.warn("this event dto version $dtoVersion is newer than our version: $rapidDTOVersion")
         val dto = objectMapper.treeToValue(packet["payload"], ProductRapidDTO::class.java)
         if (dto.status == ProductStatus.DELETED) {
-            //LOG.info("deleting product id: ${dto.id} hmsnr: ${dto.hmsArtNr}")
-            //alternativeProductIndexer.delete(dto.id)
+            LOG.info("deleting product id: ${dto.id} hmsnr: ${dto.hmsArtNr}")
+            alternativeProductIndexer.delete(dto.id)
         }
         else {
-//            LOG.info("indexing product id: ${dto.id} hmsnr: ${dto.hmsArtNr}, " +
-//                    "disabled until we get wareHouseStock calls sorted out from oebs")
+            LOG.info("indexing product id: ${dto.id} hmsnr: ${dto.hmsArtNr}, " +
+                    "disabled until we get wareHouseStock calls sorted out from oebs")
         }
     }
 }

@@ -17,7 +17,7 @@ open class AlternativeProductScheduler(private val alternativeProductIndexer: Al
     @LeaderOnly
     @Scheduled(cron = "0 0 1 * * *")
     open fun runReIndexAlternativeProducts() {
-        //LOG.info("Running re-index scheduler of alternative products")
-        //alternativeProductIndexer.reIndexAllDinstinctHmsNr()
+        LOG.info("Running re-index scheduler of alternative products")
+        alternativeProductIndexer.reIndexAllDinstinctHmsNr()
     }
 }
