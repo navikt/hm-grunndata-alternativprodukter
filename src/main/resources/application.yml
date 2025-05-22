@@ -125,3 +125,6 @@ kafka:
   keystorePassword: ${KAFKA_CREDSTORE_PASSWORD:}
   health:
     enabled: false
+
+rapidsandrivers:
+  enabled: ${RAPIDSANDRIVERS_ENABLED:false}
