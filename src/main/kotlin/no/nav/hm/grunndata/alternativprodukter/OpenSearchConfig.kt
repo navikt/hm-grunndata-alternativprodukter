@@ -1,13 +1,11 @@
-package no.nav.hm.grunndata.alternativprodukter.index
+package no.nav.hm.grunndata.alternativprodukter
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.context.annotation.ConfigurationProperties
 import io.micronaut.context.annotation.Factory
 import jakarta.inject.Singleton
-import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
-import javax.net.ssl.X509TrustManager
 import org.apache.hc.client5.http.auth.AuthScope
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials
 import org.apache.hc.client5.http.impl.async.HttpAsyncClientBuilder
