@@ -108,8 +108,6 @@ oebs:
 grunndata:
   db:
     url: ${GRUNNDATA_DB_URL:`http://localhost:8080`}
-  index:
-    url: ${GRUNNDATA_INDEX_URL:`http://localhost:8100`}
 
 opensearch:
   password: ${OPEN_SEARCH_PASSWORD:admin}

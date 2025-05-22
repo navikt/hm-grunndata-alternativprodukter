@@ -6,9 +6,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 
 @Controller("/stock")
-class ProductStockController(private val productStockService: ProductStockService, private val indexClient: IndexClient) {
+class ProductStockController(private val productStockService: ProductStockService, private val indexer: AlternativeProductIndexer) {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -16,8 +17,7 @@ class ProductStockController(private val productStockService: ProductStockServic
     fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO  {
         val productStockDTO =  productStockService.findByHmsArtnr(hmsArtNr)
         coroutineScope.launch {
-            // not optimal, but works for now.
-            indexClient.indexAlternativeProductsByHmsNr(hmsArtNr)
+            indexer.reIndexByHmsNr(hmsArtNr)
         }
         return productStockDTO
     }
@@ -27,7 +27,7 @@ class ProductStockController(private val productStockService: ProductStockServic
         val productStock = productStockService.findByHmsArtnr(hmsArtNr)
         val filtered = productStock.stockQuantity.filter { it.location == location }
         coroutineScope.launch {
-            indexClient.indexAlternativeProductsByHmsNr(hmsArtNr)
+            indexer.reIndexByHmsNr(hmsArtNr)
         }
         return productStock.copy(stockQuantity = filtered)
     }

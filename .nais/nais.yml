@@ -41,8 +41,6 @@ spec:
       value: "org.postgresql.Driver"
     - name: RAPIDSANDRIVERS_ENABLED
       value: "{{ rapidsandrivers_enabled }}"
-    - name: GRUNNDATA_INDEX_URL
-      value: "http://hm-grunndata-index"
     - name: GRUNNDATA_DB_URL
       value: "http://hm-grunndata-db"
     - name: SCHEDULERS_ENABLED

@@ -29,11 +29,11 @@ class AlternativeProductIndexer(
         LOG.info("Reindexing all distinct hmsNr: ${hmsNrs.size}")
         val mappedDoc = mutableListOf<AlternativeProductDoc>()
         hmsNrs.forEach { hmsNr ->
-            gdbApiClient.findProductByHmsArtNr(hmsNr).let {
+            gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     mappedDoc.add(it.toDoc(isoCategoryService, techLabelService, alternativProdukterClient))
                 }
-            }
+            } ?: LOG.warn("No product found for hmsNr: $hmsNr")
             if (mappedDoc.size > 1000) {
                 index(mappedDoc)
                 mappedDoc.clear()
@@ -46,7 +46,7 @@ class AlternativeProductIndexer(
 
     fun reIndexByHmsNr(hmsNr: String) {
         LOG.info("Reindexing hmsNr: $hmsNr")
-        gdbApiClient.findProductByHmsArtNr(hmsNr).let {
+        gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
             if (it.status != ProductStatus.DELETED) {
                 index(listOf(it.toDoc(isoCategoryService, techLabelService, alternativProdukterClient)))
             }
