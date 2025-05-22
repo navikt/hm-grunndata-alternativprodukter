@@ -33,15 +33,20 @@ spec:
   openSearch:
     access: admin
     instance: grunndata
+  kafka:
+    pool: {{ kafka_cluster }}
+  leaderElection: true
   env:
     - name: DB_DRIVER
       value: "org.postgresql.Driver"
+    - name: RAPIDSANDRIVERS_ENABLED
+      value: "{{ rapidsandrivers_enabled }}"
     - name: GRUNNDATA_INDEX_URL
       value: "http://hm-grunndata-index"
     - name: SCHEDULERS_ENABLED
-      value: "{{ swagger_enabled }}"
-    - name: SWAGGER_ENABLED
       value: "{{ schedulers_enabled }}"
+    - name: SWAGGER_ENABLED
+      value: "{{ swagger_enabled }}"
     - name: SERVER_PORT
       value: "8080"
     - name: JDK_JAVA_OPTIONS
@@ -69,7 +74,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: hm-grunndata-index
+        - application: hm-grunndata-db
       external:
         - host: navikt.github.io
         - host: {{oebs_api_proxy}}
