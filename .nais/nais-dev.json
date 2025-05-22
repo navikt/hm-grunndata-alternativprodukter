@@ -6,6 +6,8 @@
   "cookie_domain": "dev.nav.no",
   "swagger_enabled": true,
   "schedulers_enabled": true,
+  "kafka_cluster": "nav-dev",
+  "rapidsandrivers_enabled": true,
   "java_opts": "-Xms128m -Xmx1500m -XX:+UseG1GC",
   "oebs_api_proxy": "hm-oebs-api-proxy.dev-fss-pub.nais.io",
   "env": {

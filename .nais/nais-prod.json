@@ -6,6 +6,8 @@
   "cookie_domain": "finnhjelpemiddel.nav.no",
   "swagger_enabled": false,
   "schedulers_enabled": true,
+  "kafka_cluster": "nav-prod",
+  "rapidsandrivers_enabled": true,
   "java_opts": "-Xms256m -Xmx2048m -XX:+UseG1GC",
   "oebs_api_proxy": "hm-oebs-api-proxy.prod-fss-pub.nais.io",
   "env": {
