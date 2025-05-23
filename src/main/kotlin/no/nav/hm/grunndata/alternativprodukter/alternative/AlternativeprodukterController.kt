@@ -8,19 +8,18 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
-    private val alternativeProductsService: AlternativeProductsService,
+    private val alternativeProductService: AlternativeProductService,
 ) {
 
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
-            alternativeProductsService.getStockAndAlternatives(hmsArtNr),
+            alternativeProductService.getStockAndAlternatives(hmsArtNr),
         )
     }
 
@@ -28,12 +27,12 @@ class AlternativeProductsController(
     suspend fun getAlternativeProductsWithoutStock(hmsArtNr: String): HttpResponse<List<String>> {
 
         return HttpResponse.ok(
-            alternativeProductsService.getAlternativeProductsWithoutStock(hmsArtNr),
+            alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr),
         )
     }
     @Get("/mappings")
     fun getAlternativeMappings(): Flow<HmsArtnrMappingDto> {
-        return alternativeProductsService.getAlternativeMappings().flowOn(Dispatchers.IO)
+        return alternativeProductService.getAlternativeMappings().flowOn(Dispatchers.IO)
     }
 
 }

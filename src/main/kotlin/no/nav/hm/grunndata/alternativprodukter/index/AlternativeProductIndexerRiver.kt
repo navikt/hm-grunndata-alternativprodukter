@@ -20,10 +20,8 @@ import org.slf4j.LoggerFactory
 class AlternativeProductIndexerRiver(
     river: RiverHead,
     private val objectMapper: ObjectMapper,
-    private val alternativeProductIndexer: AlternativeProductIndexer,
-    private val isoCategoryService: IsoCategoryService,
-    private val techLabelService: TechLabelService,
-    private val alternativeProdukterClient: AlternativProdukterClient
+    private val alternativeProductIndexer: AlternativeProductIndexer
+
 ): River.PacketListener {
     companion object {
         private val LOG = LoggerFactory.getLogger(AlternativeProductIndexerRiver::class.java)

@@ -8,13 +8,13 @@ import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockService
 import org.slf4j.LoggerFactory
 
 @Singleton
-open class AlternativeProductsService(
+open class AlternativeProductService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
     private val productStockService: ProductStockService
 ) {
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(AlternativeProductsService::class.java)
+        private val LOG = LoggerFactory.getLogger(AlternativeProductService::class.java)
     }
 
 

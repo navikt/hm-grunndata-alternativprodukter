@@ -5,14 +5,14 @@ import jakarta.transaction.Transactional
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
-import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductsService
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductService
 import no.nav.hm.grunndata.alternativprodukter.parser.ExcelParser
 import org.slf4j.LoggerFactory
 
 @Singleton
 open class FileImportService(
     private val fileImportHistoryRepository: FileImportHistoryRepository,
-    private val alternativeProductsService: AlternativeProductsService
+    private val alternativeProductService: AlternativeProductService
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(FileImportService::class.java)
@@ -55,11 +55,11 @@ open class FileImportService(
                 val parseResult = ExcelParser().readExcel(inputStream)
 
                 parseResult.addGroups.map { addGroup ->
-                    alternativeProductsService.saveAlternativeProducts(addGroup)
+                    alternativeProductService.saveAlternativeProducts(addGroup)
                 }
 
                 parseResult.removeGroups.map { removeGroup ->
-                    alternativeProductsService.deleteAlternativeProducts(removeGroup)
+                    alternativeProductService.deleteAlternativeProducts(removeGroup)
                 }
 
                 fileImportHistoryRepository.save(FileImportHistory(filename = fileName))
