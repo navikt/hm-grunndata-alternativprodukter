@@ -19,7 +19,7 @@ class AlternativeProductsController(
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
-            alternativeProductService.getStockAndAlternatives(hmsArtNr),
+            alternativeProductService.getStockAndAlternativesFromOebs(hmsArtNr),
         )
     }
 
@@ -36,6 +36,7 @@ class AlternativeProductsController(
     }
 
 }
+
 
 @Serdeable
 data class ProductStockAlternatives(val original: ProductStockDTO, val alternatives: List<String>)

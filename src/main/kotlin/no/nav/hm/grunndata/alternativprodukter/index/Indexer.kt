@@ -29,7 +29,7 @@ abstract class Indexer(private val client: OpenSearchClient,
         try {
             initAlias()
         } catch (e: Exception) {
-            LOG.error("Trying to init alias ${aliasName}, failed! OpenSearch might not be ready ${e.message}, will wait 10s and retry")
+            LOG.error("Trying to init alias ${this@Indexer.aliasName}, failed! OpenSearch might not be ready ${e.message}, will wait 10s and retry")
             Thread.sleep(10000)
             initAlias()
         }
@@ -42,24 +42,24 @@ abstract class Indexer(private val client: OpenSearchClient,
             val aliasResponse = getAlias()
             val indices = aliasResponse.result().keys
             indices.forEach { index ->
-                val removeAction = ActionBuilders.remove().index(index).alias(aliasName).build()
+                val removeAction = ActionBuilders.remove().index(index).alias(this@Indexer.aliasName).build()
                 updateAliasesRequestBuilder.actions { it.remove(removeAction) }
             }
         }
-        val addAction = ActionBuilders.add().index(indexName).alias(aliasName).build()
+        val addAction = ActionBuilders.add().index(indexName).alias(this@Indexer.aliasName).build()
         updateAliasesRequestBuilder.actions { it.add(addAction) }
         val updateAliasesRequest = updateAliasesRequestBuilder.build()
         val ack = client.indices().updateAliases(updateAliasesRequest).acknowledged()
-        LOG.info("update for alias $aliasName and pointing to $indexName with status: $ack")
+        LOG.info("update for alias ${this@Indexer.aliasName} and pointing to $indexName with status: $ack")
         return ack
     }
 
 
     fun existsAlias()
-        = client.indices().existsAlias(ExistsAliasRequest.Builder().name(aliasName).build()).value()
+        = client.indices().existsAlias(ExistsAliasRequest.Builder().name(this@Indexer.aliasName).build()).value()
 
     fun getAlias()
-        = client.indices().getAlias(GetAliasRequest.Builder().name(aliasName).build())
+        = client.indices().getAlias(GetAliasRequest.Builder().name(this@Indexer.aliasName).build())
 
     fun createIndex(indexName: String, settings: String, mapping: String): Boolean {
         val mapper = client._transport().jsonpMapper()
@@ -76,12 +76,12 @@ abstract class Indexer(private val client: OpenSearchClient,
     }
 
     fun index(doc: SearchDoc): BulkResponse {
-        return index(doc, aliasName)
+        return index(doc, this@Indexer.aliasName)
     }
 
     fun index(docs: List<SearchDoc>): BulkResponse {
-        LOG.info("indexing ${docs.size} docs to $aliasName")
-        return index(docs, aliasName)
+        LOG.info("indexing ${docs.size} docs to ${this@Indexer.aliasName}")
+        return index(docs, this@Indexer.aliasName)
     }
 
     fun index(doc: SearchDoc, indexName: String): BulkResponse {
@@ -109,7 +109,7 @@ abstract class Indexer(private val client: OpenSearchClient,
     }
 
     fun delete(id: UUID): DeleteResponse {
-        return delete(id.toString(), aliasName)
+        return delete(id.toString(), this@Indexer.aliasName)
     }
 
     fun delete(id: String, indexName: String): DeleteResponse {
@@ -120,12 +120,12 @@ abstract class Indexer(private val client: OpenSearchClient,
     fun indexExists(indexName: String):Boolean =
         client.indices().exists(ExistsRequest.Builder().index(indexName).build()).value()
 
-    fun docCount(): Long = client.count(CountRequest.Builder().index(aliasName).build()).count()
+    fun docCount(): Long = client.count(CountRequest.Builder().index(this@Indexer.aliasName).build()).count()
 
     private fun initAlias() {
         if (!existsAlias()) {
-            LOG.warn("alias $aliasName is not pointing any index")
-            val indexName = "${aliasName}_${LocalDate.now()}"
+            LOG.warn("alias ${this@Indexer.aliasName} is not pointing any index")
+            val indexName = "${this@Indexer.aliasName}_${LocalDate.now()}"
             LOG.info("Creating index $indexName")
             createIndex(indexName,settings, mapping)
             updateAlias(indexName)

@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.core.annotation.Introspected
 import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductService
+import no.nav.hm.grunndata.alternativprodukter.alternative.ProductStockAlternatives
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.StockQuantity
 import no.nav.hm.grunndata.rapid.dto.*
@@ -166,46 +167,38 @@ fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     published = published ?: LocalDateTime.now()
 )
 
+fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: ProductStockAlternatives): AlternativeProductDoc {
+        val (onlyActiveAgreements, previousAgreements) =
+            agreements.partition {
+                it.published!!.isBefore(LocalDateTime.now())
+                        && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE
+            }
+        return AlternativeProductDoc(id = id.toString(),
+            supplier = ProductSupplier(
+                id = supplier.id.toString(), identifier = supplier.identifier, name = supplier.name
+            ),
+            title = title,
+            articleName = articleName,
+            attributes = attributes.toDoc(),
+            status = status,
+            hmsArtNr = hmsArtNr,
+            supplierRef = supplierRef,
+            isoCategory = isoCategory,
+            isoCategoryTitle = iso?.isoTitle,
+            isoCategoryTitleShort = iso?.isoTitleShort,
+            isoCategoryText = iso?.isoText,
+            isoCategoryTextShort = iso?.isoTextShort,
+            seriesId = seriesUUID.toString(),
+            data = techData,
+            media = media.map { it.toDoc() }.sortedBy { it.priority },
+            created = created,
+            updated = updated,
+            expired = expired,
+            agreements = onlyActiveAgreements.map { it.toDoc() },
+            hasAgreement = onlyActiveAgreements.isNotEmpty(),
+            alternativeFor = productStockAlternatives.alternatives.map { it }.toSet(),
+            wareHouseStock = productStockAlternatives.original.stockQuantity.map { it.toDoc(productStockAlternatives.original)}
+        )
+    }
 
-fun ProductRapidDTO.toDoc(
-    isoCategoryService: IsoCategoryService,
-    alternativeProductService: AlternativeProductService
-): AlternativeProductDoc = try {
-    val (onlyActiveAgreements, previousAgreements) =
-        agreements.partition {
-            it.published!!.isBefore(LocalDateTime.now())
-                    && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE
-        }
-    val productStockAlternatives = alternativeProductService.getStockAndAlternatives(hmsArtNr!!)
-    val iso = isoCategoryService.lookUpCode(isoCategory)
-    AlternativeProductDoc(id = id.toString(),
-        supplier = ProductSupplier(
-            id = supplier.id.toString(), identifier = supplier.identifier, name = supplier.name
-        ),
-        title = title,
-        articleName = articleName,
-        attributes = attributes.toDoc(),
-        status = status,
-        hmsArtNr = hmsArtNr,
-        supplierRef = supplierRef,
-        isoCategory = isoCategory,
-        isoCategoryTitle = iso?.isoTitle,
-        isoCategoryTitleShort = iso?.isoTitleShort,
-        isoCategoryText = iso?.isoText,
-        isoCategoryTextShort = iso?.isoTextShort,
-        seriesId = seriesUUID.toString(),
-        data = techData,
-        media = media.map { it.toDoc() }.sortedBy { it.priority },
-        created = created,
-        updated = updated,
-        expired = expired,
-        agreements = onlyActiveAgreements.map { it.toDoc() },
-        hasAgreement = onlyActiveAgreements.isNotEmpty(),
-        alternativeFor = productStockAlternatives.alternatives.map { it }.toSet(),
-        wareHouseStock = productStockAlternatives.original.stockQuantity.map { it.toDoc(productStockAlternatives.original)}
-    )
-} catch (e: Exception) {
-    println("ERROR: $isoCategory")
-    throw e
-}
 
