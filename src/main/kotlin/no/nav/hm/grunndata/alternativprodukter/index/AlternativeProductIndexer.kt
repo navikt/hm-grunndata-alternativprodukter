@@ -10,6 +10,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import org.opensearch.client.opensearch.OpenSearchClient
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 @Singleton
@@ -18,7 +19,6 @@ class AlternativeProductIndexer(
     private val isoCategoryService: IsoCategoryService,
     private val alternativeProductService: AlternativeProductService,
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
-    private val productStockRepository: ProductStockRepository,
     private val client: OpenSearchClient
 ) : Indexer(client, settings, mapping, aliasName) {
     companion object {
@@ -56,7 +56,7 @@ class AlternativeProductIndexer(
     // this fetch from our database only
     suspend fun reIndexAllProductStock() {
         val alternativsProductStock = alternativeProductService.getStockAndAlternativesFromDB()
-        val newIndexName = "${aliasName}_${LocalDateTime.now()}"
+        val newIndexName = "${aliasName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))}"
         createIndex(indexName = newIndexName,settings = settings, mapping = mapping)
         val mappedDoc = mutableListOf<AlternativeProductDoc>()
         alternativsProductStock.forEach { productStock -> gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtnr)?.let {
@@ -76,7 +76,7 @@ class AlternativeProductIndexer(
     }
 
     // this fetch from oebs
-    fun reIndexByHmsNr(hmsNr: String) {
+    suspend fun reIndexByHmsNr(hmsNr: String) {
         LOG.info("Reindexing hmsNr: $hmsNr")
         gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
             if (it.status != ProductStatus.DELETED) {
