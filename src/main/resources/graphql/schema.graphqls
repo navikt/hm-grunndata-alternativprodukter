@@ -1,0 +1,35 @@
+type Query {
+    alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
+}
+
+type AlternativeProduct {
+    id: String!
+    hmsArtNr: String!
+    title: String!
+    articleName: String!
+    supplier: Supplier!
+    isoCategory: String!
+    media: [Media!]!
+    wareHouseStock: [WareHouseStock!]!
+}
+
+type Media {
+    uri: String!
+    type: String!
+    priority: Int
+    text: String!
+}
+
+type WareHouseStock {
+    location: String!
+    available: Int
+    reserved: Int
+    needNotified: Int
+    minmax: Boolean!
+    updated: String!
+}
+
+type Supplier {
+    id: String!
+    name: String!
+}

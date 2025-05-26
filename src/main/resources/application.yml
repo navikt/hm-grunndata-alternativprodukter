@@ -77,6 +77,7 @@ jackson:
   bean-introspection-module: true
   serialization:
     indentOutput: true
+  serialization-inclusion: always
 
 datasources:
   default:
@@ -126,3 +127,7 @@ kafka:
 
 rapidsandrivers:
   enabled: ${RAPIDSANDRIVERS_ENABLED:false}
+
+graphql:
+  graphiql:
+    enabled: true

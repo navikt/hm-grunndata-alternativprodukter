@@ -23,8 +23,10 @@ class SearchApi(
     @Post(uris = ["/alternative_products/_search{?params*}"])
     fun searchAlternativesWithBody(@QueryValue params: Map<String, String>?, @Body body: String): HttpResponse<String> {
         LOG.info("Got body request for alternatives")
-        return HttpResponse.ok(searchService.searchWithBody(SearchService.Companion.ALTERNATIVES, params?: emptyMap(), body))
+        val response = searchService.searchWithBody(SearchService.Companion.ALTERNATIVES, params?: emptyMap(), body)
+        return HttpResponse.ok(response)
     }
+
 
 
 }

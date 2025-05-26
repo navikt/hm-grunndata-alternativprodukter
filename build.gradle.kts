@@ -66,6 +66,8 @@ dependencies {
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:202405140823")
 
+    implementation("io.micronaut.graphql:micronaut-graphql")
+
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")

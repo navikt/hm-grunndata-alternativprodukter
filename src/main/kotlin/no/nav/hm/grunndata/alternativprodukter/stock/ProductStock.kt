@@ -46,7 +46,8 @@ data class StockQuantity(
     val needNotified: Int,
     val orders: Int,
     val request: Int,
-    val minmax: Boolean
+    val minmax: Boolean,
+    val updated: LocalDateTime
 )
 
 fun ProductStock.toDTO(): ProductStockDTO {
@@ -54,12 +55,12 @@ fun ProductStock.toDTO(): ProductStockDTO {
         id = id,
         hmsArtnr = hmsArtnr,
         status = status,
-        stockQuantity =  oebsStockResponse.map { it.toDTO() },
+        stockQuantity =  oebsStockResponse.map { it.toDTO(this.updated) },
         updated = updated
     )
 }
 
-fun OebsStockResponse.toDTO(): StockQuantity {
+fun OebsStockResponse.toDTO(updated: LocalDateTime): StockQuantity {
     return StockQuantity(
         inStock = erPåLager,
         amountInStock = antallPåLager,
@@ -69,7 +70,8 @@ fun OebsStockResponse.toDTO(): StockQuantity {
         needNotified = behovsmeldt,
         orders = bestillinger,
         request = anmodning,
-        minmax = minmax
+        minmax = minmax,
+        updated = updated
     )
 }
 
