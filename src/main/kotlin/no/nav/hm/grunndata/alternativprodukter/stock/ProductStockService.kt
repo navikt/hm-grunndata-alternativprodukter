@@ -4,6 +4,7 @@ import io.micronaut.cache.CacheConfiguration
 import io.micronaut.cache.annotation.CacheConfig
 import io.micronaut.cache.annotation.Cacheable
 import jakarta.inject.Singleton
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.alternativprodukter.oebs.AzureAdClient
@@ -31,18 +32,21 @@ open class ProductStockService(
         } ?: run {
             LOG.info("Fetching from OEBS for $hmsArtnr")
             val authToken = azureAdClient.getToken(azureBody)
-            val oebsStock = ProductStock(
-                hmsArtnr = hmsArtnr,
-                oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
-            )
-            val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
-                productStockRepository.update(
-                    it.copy(
-                        updated = LocalDateTime.now(),
-                        oebsStockResponse = oebsStock.oebsStockResponse
-                    )
+            val oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
+            val saved: ProductStock =  if (oebsStockResponse.isNotEmpty()) {
+                val oebsStock = ProductStock(
+                    hmsArtnr = hmsArtnr,
+                    oebsStockResponse = oebsStockResponse
                 )
-            } ?: productStockRepository.save(oebsStock)
+                productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
+                    productStockRepository.update(
+                        it.copy(
+                            updated = LocalDateTime.now(),
+                            oebsStockResponse = oebsStock.oebsStockResponse
+                        )
+                    )
+                } ?: productStockRepository.save(oebsStock)
+            } else throw RuntimeException("No stock found for $hmsArtnr")
             saved
         }
         productStock.toDTO()

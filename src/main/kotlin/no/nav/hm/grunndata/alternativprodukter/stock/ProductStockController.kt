@@ -4,7 +4,6 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 
@@ -14,7 +13,7 @@ class ProductStockController(private val productStockService: ProductStockServic
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     @Get("/{hmsArtNr}")
-    fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO  {
+    fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO {
         val productStockDTO =  productStockService.findByHmsArtnr(hmsArtNr)
         coroutineScope.launch {
             indexer.reIndexByHmsNr(hmsArtNr)
@@ -23,13 +22,13 @@ class ProductStockController(private val productStockService: ProductStockServic
     }
 
     @Get("/{location}/{hmsArtNr}")
-    fun getStockByEnhetAndHmsArtNr(location: String, hmsArtNr: String): ProductStockDTO  {
+    fun getStockByEnhetAndHmsArtNr(location: String, hmsArtNr: String): ProductStockDTO {
         val productStock = productStockService.findByHmsArtnr(hmsArtNr)
-        val filtered = productStock.stockQuantity.filter { it.location == location }
+        val filtered = productStock.warehouseStock.filter { it.location == location }
         coroutineScope.launch {
             indexer.reIndexByHmsNr(hmsArtNr)
         }
-        return productStock.copy(stockQuantity = filtered)
+        return productStock.copy(warehouseStock = filtered)
     }
 
     companion object {

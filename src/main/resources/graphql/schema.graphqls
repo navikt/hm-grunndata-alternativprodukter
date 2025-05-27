@@ -1,5 +1,6 @@
 type Query {
     alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
+    productStock(hmsnr: String!): ProductStock!
 }
 
 type AlternativeProduct {
@@ -32,4 +33,12 @@ type WareHouseStock {
 type Supplier {
     id: String!
     name: String!
+}
+
+type ProductStock {
+    id: String!
+    hmsArtnr: String!
+    status: String!
+    warehouseStock: [WareHouseStock!]!
+    updated: String!
 }

@@ -1,10 +1,9 @@
 package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.core.annotation.Introspected
-import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductService
 import no.nav.hm.grunndata.alternativprodukter.alternative.ProductStockAlternatives
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
-import no.nav.hm.grunndata.alternativprodukter.stock.StockQuantity
+import no.nav.hm.grunndata.alternativprodukter.stock.WarehouseStock
 import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
@@ -106,29 +105,6 @@ fun Attributes.toDoc(): AttributesDoc {
 }
 
 @Introspected
-data class WareHouseStock(
-    val erPåLager: Boolean,
-    val organisasjons_id: Long,
-    val organisasjons_navn: String,
-    val artikkelnummer: String,
-    val artikkelid: Long,
-    val fysisk: Int,
-    val tilgjengeligatt: Int,
-    val tilgjengeligroo: Int,
-    val tilgjengelig: Int,
-    val behovsmeldt: Int,
-    val reservert: Int,
-    val restordre: Int,
-    val bestillinger: Int,
-    val anmodning: Int,
-    val intanmodning: Int,
-    val forsyning: Int,
-    val sortiment: Boolean,
-    val lagervare: Boolean,
-    val minmax: Boolean
-)
-
-@Introspected
 data class WareHouseStockDoc(
     val location: String,
     val available: Int,
@@ -138,7 +114,7 @@ data class WareHouseStockDoc(
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
-fun StockQuantity.toDoc(dto: ProductStockDTO): WareHouseStockDoc = WareHouseStockDoc(
+fun WarehouseStock.toDoc(dto: ProductStockDTO): WareHouseStockDoc = WareHouseStockDoc(
     location = location,
     available = available,
     reserved = reserved,
@@ -197,7 +173,7 @@ fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: Product
             agreements = onlyActiveAgreements.map { it.toDoc() },
             hasAgreement = onlyActiveAgreements.isNotEmpty(),
             alternativeFor = productStockAlternatives.alternatives.map { it }.toSet(),
-            wareHouseStock = productStockAlternatives.original.stockQuantity.map { it.toDoc(productStockAlternatives.original)}
+            wareHouseStock = productStockAlternatives.original.warehouseStock.map { it.toDoc(productStockAlternatives.original)}
         )
     }
 

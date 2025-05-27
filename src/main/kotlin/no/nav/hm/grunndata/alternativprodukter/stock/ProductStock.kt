@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
@@ -32,12 +31,12 @@ data class ProductStockDTO(
     val id: UUID,
     val hmsArtnr: String,
     val status: ProductStockStatus,
-    val stockQuantity: List<StockQuantity>,
+    val warehouseStock: List<WarehouseStock>,
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
 @Serdeable
-data class StockQuantity(
+data class WarehouseStock(
     val inStock: Boolean,
     val amountInStock: Int,
     val location: String,
@@ -55,13 +54,13 @@ fun ProductStock.toDTO(): ProductStockDTO {
         id = id,
         hmsArtnr = hmsArtnr,
         status = status,
-        stockQuantity =  oebsStockResponse.map { it.toDTO(this.updated) },
+        warehouseStock =  oebsStockResponse.map { it.toDTO(this.updated) },
         updated = updated
     )
 }
 
-fun OebsStockResponse.toDTO(updated: LocalDateTime): StockQuantity {
-    return StockQuantity(
+fun OebsStockResponse.toDTO(updated: LocalDateTime): WarehouseStock {
+    return WarehouseStock(
         inStock = erPåLager,
         amountInStock = antallPåLager,
         location = organisasjons_navn.substring(4),
