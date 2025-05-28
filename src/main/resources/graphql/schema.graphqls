@@ -7,11 +7,14 @@ type AlternativeProduct {
     id: String!
     hmsArtNr: String!
     title: String!
+    seriesId: String!
     articleName: String!
     supplier: Supplier!
     isoCategory: String!
     media: [Media!]!
-    wareHouseStock: [WareHouseStock!]!
+    hasAgreement: Boolean!
+    agreements: [Agreement]
+    wareHouseStock: [WareHouseStock]
 }
 
 type Media {
@@ -33,6 +36,19 @@ type WareHouseStock {
 type Supplier {
     id: String!
     name: String!
+}
+
+type Agreement {
+    id: String!
+    title: String!
+    label: String
+    rank: Int!
+    postNr: Int
+    postTitle: String!
+    postId: String!
+    refNr: String!
+    published: String
+    expired: String
 }
 
 type ProductStock {
