@@ -36,7 +36,7 @@ open class AlternativeProductService(
     suspend fun getStockAndAlternativesFromDB(): List<ProductStockAlternatives>  {
         val productStock = productStockRepository.findAll().map { it.toDTO() }.toList()
         return productStock.map { productStock ->
-            val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(productStock.hmsArtnr).map { it.targetHmsArtnr }
+            val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(productStock.hmsArtNr).map { it.targetHmsArtnr }
             ProductStockAlternatives(productStock, alternatives)
         }
     }

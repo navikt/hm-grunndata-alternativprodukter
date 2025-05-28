@@ -53,7 +53,7 @@ type Agreement {
 
 type ProductStock {
     id: String!
-    hmsArtnr: String!
+    hmsArtNr: String!
     status: String!
     warehouseStock: [WareHouseStock!]!
     updated: String!

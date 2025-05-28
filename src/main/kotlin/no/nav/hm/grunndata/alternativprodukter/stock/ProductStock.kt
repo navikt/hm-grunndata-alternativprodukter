@@ -29,7 +29,7 @@ enum class ProductStockStatus {
 @Serdeable
 data class ProductStockDTO(
     val id: UUID,
-    val hmsArtnr: String,
+    val hmsArtNr: String,
     val status: ProductStockStatus,
     val warehouseStock: List<WarehouseStock>,
     val updated: LocalDateTime = LocalDateTime.now()
@@ -52,7 +52,7 @@ data class WarehouseStock(
 fun ProductStock.toDTO(): ProductStockDTO {
     return ProductStockDTO(
         id = id,
-        hmsArtnr = hmsArtnr,
+        hmsArtNr = hmsArtnr,
         status = status,
         warehouseStock =  oebsStockResponse.map { it.toDTO(this.updated) },
         updated = updated

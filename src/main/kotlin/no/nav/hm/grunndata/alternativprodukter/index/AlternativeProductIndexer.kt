@@ -2,10 +2,8 @@ package no.nav.hm.grunndata.alternativprodukter.index
 
 
 import jakarta.inject.Singleton
-import kotlinx.coroutines.flow.toList
 import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductService
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingRepository
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import org.opensearch.client.opensearch.OpenSearchClient
@@ -59,12 +57,12 @@ class AlternativeProductIndexer(
         val newIndexName = "${aliasName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))}"
         createIndex(indexName = newIndexName,settings = settings, mapping = mapping)
         val mappedDoc = mutableListOf<AlternativeProductDoc>()
-        alternativsProductStock.forEach { productStock -> gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtnr)?.let {
+        alternativsProductStock.forEach { productStock -> gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
                     mappedDoc.add(it.toDoc(iso, productStock))
                 }
-            } ?: LOG.warn("No product found for hmsNr: ${productStock.original.hmsArtnr}")
+            } ?: LOG.warn("No product found for hmsNr: ${productStock.original.hmsArtNr}")
             if (mappedDoc.size > 1000) {
                 index(mappedDoc, newIndexName)
                 mappedDoc.clear()
