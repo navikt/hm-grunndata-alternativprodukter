@@ -73,13 +73,15 @@ class AlternativeProductIndexer(
         }
     }
 
-    // this fetch from oebs
+    // this fetch from database
     suspend fun reIndexByHmsNr(hmsNr: String) {
         LOG.info("Reindexing hmsNr: $hmsNr")
         gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
             if (it.status != ProductStatus.DELETED) {
                 val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
-                index(listOf(it.toDoc(iso, alternativeProductService.getStockAndAlternativesFromOebs(hmsNr))))
+                alternativeProductService.getStockAndAlternativesFromDB(hmsNr)?.let {alternatives ->
+                    index(listOf(it.toDoc(iso,alternatives )))
+                }
             }
         }
     }
