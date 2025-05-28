@@ -131,3 +131,6 @@ rapidsandrivers:
 graphql:
   graphiql:
     enabled: true
+
+elector:
+  path: ${ELECTOR_PATH:localhost}

@@ -25,7 +25,7 @@ val openSearchJavaClientVersion = "2.24.0"
 val httpClient5= "5.4.4"
 val rapidsRiversVersion = "202410290928"
 val grunndataDtoVersion = "202504011524"
-val leaderElectionVersion = "202405151234"
+val leaderElectionVersion = "202405291312"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -64,7 +64,7 @@ dependencies {
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
     implementation("io.micronaut:micronaut-management")
 
-    implementation("com.github.navikt:hm-micronaut-leaderelection:202405140823")
+    implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
     implementation("io.micronaut.graphql:micronaut-graphql")
 
