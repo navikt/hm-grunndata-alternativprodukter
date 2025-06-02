@@ -82,3 +82,7 @@ spec:
       rules:
         - application: hm-oversikt-frontend
         - application: hm-grunndata-index
+  observability:
+    logging:
+      destinations:
+        - id: loki
