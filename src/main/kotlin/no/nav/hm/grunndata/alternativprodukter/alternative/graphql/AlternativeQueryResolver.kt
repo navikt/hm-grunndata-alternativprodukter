@@ -30,13 +30,11 @@ class AlternativeQueryResolver(private val searchService: SearchService,
         return hits.map { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java)  }
     }
 
-    fun getProductStock(hmsnr: String): ProductStockDTO? {
+    fun getProductStock(hmsnr: String): ProductStockDTO {
         LOG.debug("Getting stock for $hmsnr")
         val productStockDTO = productStockService.findByHmsArtnr(hmsnr)
-        if (productStockDTO!=null) {
-            coroutineScope.launch {
-                indexer.reIndexByHmsNr(hmsnr)
-            }
+        coroutineScope.launch {
+            indexer.reIndexByHmsNr(hmsnr)
         }
         return productStockDTO
     }

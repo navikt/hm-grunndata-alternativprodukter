@@ -27,10 +27,10 @@ open class AlternativeProductService(
         return hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
     }
 
-    fun getStockAndAlternativesFromOebs(hmsArtNr: String): ProductStockAlternatives? = runBlocking {
+    fun getStockAndAlternativesFromOebs(hmsArtNr: String): ProductStockAlternatives = runBlocking {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
-       productStockService.findByHmsArtnr(hmsArtNr)?.let {
-            ProductStockAlternatives(it, alternatives) }
+        val productStock = productStockService.findByHmsArtnr(hmsArtNr)
+        ProductStockAlternatives(productStock, alternatives)
     }
 
     suspend fun getStockAndAlternativesFromDB(): List<ProductStockAlternatives>  {

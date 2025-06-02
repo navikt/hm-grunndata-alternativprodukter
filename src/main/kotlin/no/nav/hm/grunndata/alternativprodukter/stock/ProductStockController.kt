@@ -13,27 +13,22 @@ class ProductStockController(private val productStockService: ProductStockServic
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     @Get("/{hmsArtNr}")
-    fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO? {
+    fun getStockByHmsArtNr(hmsArtNr: String): ProductStockDTO {
         val productStockDTO =  productStockService.findByHmsArtnr(hmsArtNr)
-        if (productStockDTO!=null) {
-            coroutineScope.launch {
-                indexer.reIndexByHmsNr(hmsArtNr)
-            }
+        coroutineScope.launch {
+            indexer.reIndexByHmsNr(hmsArtNr)
         }
         return productStockDTO
     }
 
     @Get("/{location}/{hmsArtNr}")
-    fun getStockByEnhetAndHmsArtNr(location: String, hmsArtNr: String): ProductStockDTO? {
+    fun getStockByEnhetAndHmsArtNr(location: String, hmsArtNr: String): ProductStockDTO {
         val productStock = productStockService.findByHmsArtnr(hmsArtNr)
-        if (productStock != null) {
-            val filtered = productStock.warehouseStock.filter { it.location == location }
-            coroutineScope.launch {
-                indexer.reIndexByHmsNr(hmsArtNr)
-            }
-           return productStock.copy(warehouseStock = filtered)
+        val filtered = productStock.warehouseStock.filter { it.location == location }
+        coroutineScope.launch {
+            indexer.reIndexByHmsNr(hmsArtNr)
         }
-        return null
+        return productStock.copy(warehouseStock = filtered)
     }
 
     companion object {
