@@ -33,20 +33,18 @@ open class ProductStockService(
             LOG.info("Fetching from OEBS for $hmsArtnr")
             val authToken = azureAdClient.getToken(azureBody)
             val oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
-            val saved: ProductStock =  if (oebsStockResponse.isNotEmpty()) {
-                val oebsStock = ProductStock(
-                    hmsArtnr = hmsArtnr,
-                    oebsStockResponse = oebsStockResponse
-                )
-                productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
+            val oebsStock = ProductStock(
+                hmsArtnr = hmsArtnr,
+                oebsStockResponse = oebsStockResponse
+            )
+            val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
                     productStockRepository.update(
                         it.copy(
                             updated = LocalDateTime.now(),
                             oebsStockResponse = oebsStock.oebsStockResponse
                         )
                     )
-                } ?: productStockRepository.save(oebsStock)
-            } else throw RuntimeException("No stock found for $hmsArtnr")
+            } ?: productStockRepository.save(oebsStock)
             saved
         }
         productStock.toDTO()
