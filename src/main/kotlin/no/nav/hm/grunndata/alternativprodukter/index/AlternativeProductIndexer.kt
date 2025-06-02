@@ -38,7 +38,9 @@ class AlternativeProductIndexer(
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
                     val productStockAlternatives = alternativeProductService.getStockAndAlternativesFromOebs(hmsNr)
-                    mappedDoc.add(it.toDoc(iso, productStockAlternatives))
+                    if (productStockAlternatives != null) {
+                        mappedDoc.add(it.toDoc(iso, productStockAlternatives))
+                    }
                 }
             } ?: LOG.warn("No product found for hmsNr: $hmsNr")
             if (mappedDoc.size > 1000) {

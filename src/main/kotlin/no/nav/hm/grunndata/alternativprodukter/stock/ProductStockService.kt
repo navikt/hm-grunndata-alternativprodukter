@@ -22,7 +22,7 @@ open class ProductStockService(
 ) {
 
     @Cacheable("product-stock")
-    open fun findByHmsArtnr(hmsArtnr: String): ProductStockDTO = runBlocking {
+    open fun findByHmsArtnr(hmsArtnr: String): ProductStockDTO? = runBlocking {
         LOG.info("Finding stock for $hmsArtnr")
         val productStock = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
             val cacheTime = LocalDateTime.now().minusMinutes(micronautCacheConfig.expireAfterWrite.get().toMinutes())
@@ -33,7 +33,7 @@ open class ProductStockService(
             LOG.info("Fetching from OEBS for $hmsArtnr")
             val authToken = azureAdClient.getToken(azureBody)
             val oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
-            val saved: ProductStock =  if (oebsStockResponse.isNotEmpty()) {
+            val saved: ProductStock? =  if (oebsStockResponse.isNotEmpty()) {
                 val oebsStock = ProductStock(
                     hmsArtnr = hmsArtnr,
                     oebsStockResponse = oebsStockResponse
@@ -46,10 +46,10 @@ open class ProductStockService(
                         )
                     )
                 } ?: productStockRepository.save(oebsStock)
-            } else throw RuntimeException("No stock found for $hmsArtnr")
+            } else null
             saved
         }
-        productStock.toDTO()
+        productStock?.toDTO()
     }
 
 
