@@ -16,9 +16,9 @@ open class AlternativeProductScheduler(private val alternativeProductIndexer: Al
 
 
     @LeaderOnly
-    @Scheduled(cron = "5 10 * * *")
+    @Scheduled(cron = "0 * * * * *")
     open fun runReIndexAlternativeProducts() = runBlocking {
         LOG.info("Running re-index scheduler of alternative products")
-        alternativeProductIndexer.reIndexAllProductStock()
+        //alternativeProductIndexer.reIndexAllProductStock()
     }
 }

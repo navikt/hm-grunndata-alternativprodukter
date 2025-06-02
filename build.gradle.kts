@@ -20,12 +20,11 @@ val kotlinVersion=project.properties.get("kotlinVersion")
 val poiVersion = "5.4.1"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
-val micrometerRegistryPrometheusVersion = "1.9.1"
 val openSearchJavaClientVersion = "2.24.0"
 val httpClient5= "5.4.4"
 val rapidsRiversVersion = "202410290928"
 val grunndataDtoVersion = "202504011524"
-val leaderElectionVersion = "202506020951"
+val leaderElectionVersion = "202506021153"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
