@@ -12,6 +12,6 @@
   "oebs_api_proxy": "hm-oebs-api-proxy.dev-fss-pub.nais.io",
   "env": {
     "AZURE_SCOPE_OEBS_PROXY": "api://dev-fss.teamdigihot.hm-oebs-api-proxy/.default",
-    "OEBS_CACHE_TTL": "60m"
+    "OEBS_CACHE_TTL": "5m"
   }
 }
