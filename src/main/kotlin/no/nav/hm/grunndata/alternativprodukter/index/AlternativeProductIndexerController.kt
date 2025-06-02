@@ -35,4 +35,9 @@ class AlternativeProductIndexerController(private val alternativeProductIndexer:
         alternativeProductIndexer.reIndexAllProductStock()
     }
 
+    @Post("/reIndexAllDistinctHmsNr")
+    fun reIndexAllDistinctHmsNr() = runBlocking {
+        alternativeProductIndexer.reIndexAllDinstinctHmsNr()
+    }
+
 }
