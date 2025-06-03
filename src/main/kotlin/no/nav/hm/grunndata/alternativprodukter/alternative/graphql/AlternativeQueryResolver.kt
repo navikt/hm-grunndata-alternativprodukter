@@ -26,8 +26,12 @@ class AlternativeQueryResolver(private val searchService: SearchService,
         LOG.debug("Query: $body")
         val response = searchService.searchWithBody(index = ALTERNATIVES, params = emptyMap(), body = body )
         val json =  objectMapper.readTree(response)
-        val hits = json.get("hits").get("hits")
-        return hits.map { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java)  }
+        val hits = json.get("hits")?.get("hits")
+        if (hits!=null) {
+            return hits.map { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java) }
+        }
+        LOG.info("No hits found for $hmsNrs")
+        return emptyList()
     }
 
     fun getProductStock(hmsnr: String): ProductStockDTO {
