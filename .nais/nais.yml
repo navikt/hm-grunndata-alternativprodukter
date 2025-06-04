@@ -87,3 +87,4 @@ spec:
       rules:
         - application: hm-oversikt-frontend
         - application: hm-grunndata-index
+        - application: hotsak-frontend
