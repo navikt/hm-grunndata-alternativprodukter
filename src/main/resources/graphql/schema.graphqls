@@ -11,6 +11,7 @@ type AlternativeProduct {
     articleName: String!
     supplier: Supplier!
     isoCategory: String!
+    alternativeFor: [String!]!
     media: [Media!]!
     hasAgreement: Boolean!
     agreements: [Agreement]
