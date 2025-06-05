@@ -16,9 +16,9 @@ data class HmsArtnrMapping(
 )
 
 @Serdeable
-data class HmsArtnrMappingDto(
+data class HmsArtnrMappingInputDTO(
     val sourceHmsArtnr: String,
     val targetHmsArtnr: String,
 )
 
-fun HmsArtnrMapping.toDto() = HmsArtnrMappingDto(sourceHmsArtnr, targetHmsArtnr)
+fun HmsArtnrMapping.toDto() = HmsArtnrMappingInputDTO(sourceHmsArtnr, targetHmsArtnr)

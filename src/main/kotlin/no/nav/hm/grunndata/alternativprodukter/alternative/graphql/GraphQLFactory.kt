@@ -20,7 +20,10 @@ class GraphQLFactory {
 
     @Bean
     @Singleton
-    fun graphQL(resourceResolver: ResourceResolver, graphQLDataFetchers: GraphQLDataFetchers): GraphQL {
+    fun graphQL(resourceResolver: ResourceResolver,
+                graphQLDataFetchers: GraphQLDataFetchers,
+                hmsArtnrMappingDataFetchers: HmsArtnrMappingDataFetchers
+                ): GraphQL {
         val schemaParser = SchemaParser()
 
         val typeRegistry = TypeDefinitionRegistry()
@@ -32,6 +35,13 @@ class GraphQLFactory {
                 .type(TypeRuntimeWiring.newTypeWiring("Query")
                     .dataFetcher("alternativeProducts", graphQLDataFetchers.getAlternativeProductsDataFetcher())
                     .dataFetcher("productStock", graphQLDataFetchers.getProductStockDataFetcher())
+                    .dataFetcher("getHmsArtnrMappingsById", hmsArtnrMappingDataFetchers.getHmsArtnrMappingById())
+                    .dataFetcher("getHmsArtnrMappingBySourceHmsArtnr", hmsArtnrMappingDataFetchers.getHmsArtnrMappingBySourceHmsArtnr())
+                )
+                .type(TypeRuntimeWiring.newTypeWiring("Mutation")
+                    .dataFetcher("createHmsArtnrMapping", hmsArtnrMappingDataFetchers.createHmsArtnrMappingDataFetcher())
+                    .dataFetcher("updateHmsArtnrMapping", hmsArtnrMappingDataFetchers.updateHmsArtnrMappingDataFetcher())
+                    .dataFetcher("deleteHmsArtnrMapping", hmsArtnrMappingDataFetchers.deleteHmsArtnrMappingDataFetcher())
                 )
                 .build()
             val schemaGenerator = SchemaGenerator()

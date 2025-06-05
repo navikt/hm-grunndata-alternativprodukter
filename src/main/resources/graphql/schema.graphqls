@@ -1,6 +1,8 @@
 type Query {
     alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
     productStock(hmsnr: String!): ProductStock!
+    getHmsArtnrMappingsById(id: String!): HmsArtnrMapping
+    getHmsArtnrMappingBySourceHmsArtnr(sourceHmsArtnr: String!): [HmsArtnrMapping!]!
 }
 
 type AlternativeProduct {
@@ -58,4 +60,22 @@ type ProductStock {
     status: String!
     warehouseStock: [WareHouseStock!]!
     updated: String!
+}
+
+input HmsArtnrMappingInput {
+    sourceHmsArtnr: String!
+    targetHmsArtnr: String!
+}
+
+type HmsArtnrMapping {
+    id: String!
+    sourceHmsArtnr: String!
+    targetHmsArtnr: String!
+    created: String!
+}
+
+type Mutation {
+    createHmsArtnrMapping(input: HmsArtnrMappingInput!): HmsArtnrMapping!
+    updateHmsArtnrMapping(id: String!, input: HmsArtnrMappingInput!): HmsArtnrMapping!
+    deleteHmsArtnrMapping(id: String!): Boolean!
 }

@@ -49,7 +49,7 @@ open class AlternativeProductService(
         return null
     }
 
-    fun getAlternativeMappings() = flow<HmsArtnrMappingDto> {
+    fun getAlternativeMappings() = flow<HmsArtnrMappingInputDTO> {
         hmsArtnrMappingRepository.findAll().collect {
             mapping -> emit(mapping.toDto())
         }
