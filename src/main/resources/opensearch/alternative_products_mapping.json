@@ -151,9 +151,6 @@
     "wareHouseStock": {
       "type": "nested",
       "properties": {
-        "locationId": {
-          "type": "keyword"
-        },
         "location": {
           "type": "keyword"
         },
