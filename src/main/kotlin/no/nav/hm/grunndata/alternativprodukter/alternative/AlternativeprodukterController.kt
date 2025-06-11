@@ -31,7 +31,7 @@ class AlternativeProductsController(
         )
     }
     @Get("/mappings")
-    fun getAlternativeMappings(): Flow<HmsArtnrMappingDto> {
+    fun getAlternativeMappings(): Flow<HmsArtnrMappingInputDTO> {
         return alternativeProductService.getAlternativeMappings().flowOn(Dispatchers.IO)
     }
 

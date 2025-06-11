@@ -106,6 +106,7 @@ fun Attributes.toDoc(): AttributesDoc {
 
 @Introspected
 data class WareHouseStockDoc(
+    val locationId: Int,
     val location: String,
     val available: Int,
     val reserved: Int,
@@ -115,6 +116,7 @@ data class WareHouseStockDoc(
 )
 
 fun WarehouseStock.toDoc(dto: ProductStockDTO): WareHouseStockDoc = WareHouseStockDoc(
+    locationId = locationId,
     location = location,
     available = available,
     reserved = reserved,

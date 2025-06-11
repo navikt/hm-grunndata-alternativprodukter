@@ -4,7 +4,6 @@ import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductDoc
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 
 
