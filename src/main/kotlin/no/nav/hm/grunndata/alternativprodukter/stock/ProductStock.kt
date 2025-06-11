@@ -39,6 +39,7 @@ data class ProductStockDTO(
 data class WarehouseStock(
     val inStock: Boolean,
     val amountInStock: Int,
+    val locationId: Int,
     val location: String,
     val available: Int,
     val reserved: Int,
@@ -63,6 +64,7 @@ fun OebsStockResponse.toDTO(updated: LocalDateTime): WarehouseStock {
     return WarehouseStock(
         inStock = erPåLager,
         amountInStock = antallPåLager,
+        locationId = organisasjons_id,
         location = organisasjons_navn.substring(4),
         available = tilgjengelig,
         reserved = reservert,
