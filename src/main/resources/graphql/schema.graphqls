@@ -28,6 +28,7 @@ type Media {
 }
 
 type WareHouseStock {
+    locationId: Int
     location: String!
     available: Int
     reserved: Int
