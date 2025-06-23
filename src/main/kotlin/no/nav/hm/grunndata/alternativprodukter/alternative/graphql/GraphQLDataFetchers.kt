@@ -27,9 +27,9 @@ class GraphQLDataFetchers(private val alternativeQueryResolver: AlternativeQuery
 
     fun getProductStocksDataFetcher(): DataFetcher<List<ProductStockDTO>> {
         return DataFetcher { dataFetchingEnvironment: DataFetchingEnvironment ->
-            val hmsNrs: Set<String> =  dataFetchingEnvironment.getArgument("hmsnrs") ?: emptySet()
+            val hmsNrs: List<String> =  dataFetchingEnvironment.getArgument("hmsnrs") ?: emptyList()
             val enhetnr: String = dataFetchingEnvironment.getArgument("enhetnr") ?: ""
-            alternativeQueryResolver.getProductStocks(hmsNrs, enhetnr)
+            alternativeQueryResolver.getProductStocks(hmsNrs.toSet(), enhetnr)
         }
     }
 
