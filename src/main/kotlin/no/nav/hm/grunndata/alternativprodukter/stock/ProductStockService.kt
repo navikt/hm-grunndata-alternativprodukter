@@ -3,7 +3,6 @@ package no.nav.hm.grunndata.alternativprodukter.stock
 import io.micronaut.cache.CacheConfiguration
 import io.micronaut.cache.annotation.Cacheable
 import jakarta.inject.Singleton
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.alternativprodukter.oebs.AzureAdClient
@@ -50,10 +49,10 @@ open class ProductStockService(
         productStock.toDTO()
     }
 
-    open fun findByHmsnrsAndEnhet(hmsnrs: Set<String>, enhet: String): List<ProductStockDTO> = runBlocking {
+    open fun findByHmsnrsAndEnhet(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> = runBlocking {
         LOG.info("Finding stock for ${hmsnrs} products")
         val authToken = azureAdClient.getToken(azureBody)
-        val oebsStockResponse = oebsClient.getWarehouseStockForCentral(enhetnr = enhet, hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
+        val oebsStockResponse = oebsClient.getWarehouseStockForCentral(enhetnr = enhetnr, hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
             authorization = "Bearer ${authToken.access_token}")
         val productStocks  = oebsStockResponse.map { stock ->
             ProductStock(

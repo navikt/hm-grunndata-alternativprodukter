@@ -1,7 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.micronaut.http.HttpStatus
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,9 +42,9 @@ class AlternativeQueryResolver(private val searchService: SearchService,
         return productStockDTO
     }
 
-    fun getProductStocks(hmsnrs: Set<String>, enhet: String): List<ProductStockDTO> {
-        LOG.debug("Getting stocks for $hmsnrs and enhet $enhet")
-        val productStockDTO = productStockService.findByHmsnrsAndEnhet(hmsnrs, enhet)
+    fun getProductStocks(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> {
+        LOG.debug("Getting stocks for $hmsnrs and enhet $enhetnr")
+        val productStockDTO = productStockService.findByHmsnrsAndEnhet(hmsnrs, enhetnr)
         return productStockDTO
     }
 
