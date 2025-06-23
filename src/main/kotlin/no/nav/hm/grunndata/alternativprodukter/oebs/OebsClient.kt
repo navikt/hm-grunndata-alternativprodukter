@@ -1,7 +1,9 @@
 package no.nav.hm.grunndata.alternativprodukter.oebs
 
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
+import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.serde.annotation.Serdeable
 
@@ -10,7 +12,20 @@ interface OebsClient {
 
     @Get(value = "/lager/alle-sentraler/{hmsNr}")
     suspend fun getWarehouseStock(hmsNr: String, @Header authorization: String): List<OebsStockResponse>
+
+    @Post(value = "/lager/sentral/enhet/{enhetnr}", consumes = ["application/json"])
+    suspend fun getWarehouseStockForCentral(
+        enhetnr: String,
+        @Body hmsnrs: HmsnrsDTO,
+        @Header authorization: String
+    ): List<OebsStockResponse>
+
 }
+
+@Serdeable
+data class HmsnrsDTO(
+    val hmsnrs: Set<String>,
+)
 
 @Serdeable
 data class OebsStockResponse(

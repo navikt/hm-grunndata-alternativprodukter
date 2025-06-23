@@ -35,6 +35,7 @@ class GraphQLFactory {
                 .type(TypeRuntimeWiring.newTypeWiring("Query")
                     .dataFetcher("alternativeProducts", graphQLDataFetchers.getAlternativeProductsDataFetcher())
                     .dataFetcher("productStock", graphQLDataFetchers.getProductStockDataFetcher())
+                    .dataFetcher("productStocks", graphQLDataFetchers.getProductStocksDataFetcher())
                     .dataFetcher("getHmsArtnrMappingsById", hmsArtnrMappingDataFetchers.getHmsArtnrMappingById())
                     .dataFetcher("getHmsArtnrMappingBySourceHmsArtnr", hmsArtnrMappingDataFetchers.getHmsArtnrMappingBySourceHmsArtnr())
                 )

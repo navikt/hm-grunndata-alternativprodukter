@@ -43,6 +43,12 @@ class AlternativeQueryResolver(private val searchService: SearchService,
         return productStockDTO
     }
 
+    fun getProductStocks(hmsnrs: Set<String>, enhet: String): List<ProductStockDTO> {
+        LOG.debug("Getting stocks for $hmsnrs and enhet $enhet")
+        val productStockDTO = productStockService.findByHmsnrsAndEnhet(hmsnrs, enhet)
+        return productStockDTO
+    }
+
     companion object {
         private val LOG = org.slf4j.LoggerFactory.getLogger(AlternativeQueryResolver::class.java)
     }
