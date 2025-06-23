@@ -26,4 +26,6 @@ enum class SubstituteFiles(val fileName: String) {
     V23_ARBEIDSSTOLER_OPPDATERT("V23_arbeidsstoler_oppdatert.xlsx"),
     V24_HYGIENE("V24_hygiene.xlsx"),
     V25_LOFTEPLATTFOMER_I_TRAPP("V25_lofteplattformer_og_hjelpemiddel_i_trapp.xlsx"),
+    V26_STOLER_MED_OPPREISINGSFUNKSJON("V26_stoler_med_oppreisfunksjon_oppdatert.xlsx"),
+    V27_VARSLING_ALTERNATIV_PRODUKTER("V27_varsling_alternative_produkter.xlsx"),
 }

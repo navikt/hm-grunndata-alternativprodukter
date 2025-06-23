@@ -19,7 +19,7 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFiles.entries.map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 25
+            fileImportHistoryRepository.findAll().toList().size shouldBe 27
 
             // Personløftere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
@@ -27,9 +27,9 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("148028").size shouldBe 11
 
             // Stoler med oppreisingsfunksjon
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("296150").size shouldBe 3
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("296150").size shouldBe 4
             hmsArtnrMappingRepository.findBySourceHmsArtnr("240534").size shouldBe 2
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("296285").size shouldBe 5
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("296285").size shouldBe 8
 
             // Kalendere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("267614").size shouldBe 2
@@ -138,6 +138,11 @@ class FileImportServiceTest(
             // Hygiene
             hmsArtnrMappingRepository.findBySourceHmsArtnr("269836").size shouldBe 2
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297571").size shouldBe 2
+
+            // Varsling
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("700141").size shouldBe 10
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("189374").size shouldBe 3
+
 
         }
 
