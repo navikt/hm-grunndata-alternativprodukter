@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
+import io.micrometer.core.annotation.Timed
 import io.micronaut.cache.CacheConfiguration
 import io.micronaut.cache.annotation.Cacheable
 import jakarta.inject.Singleton
@@ -49,10 +50,26 @@ open class ProductStockService(
         productStock.toDTO()
     }
 
+    @Timed(value = "findByHmsnrsAndEnhet", description = "Time taken to find product stock list of hmsnrs and enhet")
     open fun findByHmsnrsAndEnhet(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> = runBlocking {
-        LOG.info("Finding stock for ${hmsnrs} products")
+        LOG.info("Finding stock for ${hmsnrs} products and enhet $enhetnr")
         val authToken = azureAdClient.getToken(azureBody)
         val oebsStockResponse = oebsClient.getWarehouseStockForCentral(enhetnr = enhetnr, hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
+            authorization = "Bearer ${authToken.access_token}")
+        val productStocks  = oebsStockResponse.map { stock ->
+            ProductStock(
+                hmsArtnr = stock.artikkelnummer,
+                oebsStockResponse = listOf(stock)
+            )
+        }
+        productStocks.map { it.toDTO() }
+    }
+
+    @Timed(value = "findByHmsnrs", description = "Time taken to find product stock list of hmsnrs")
+    open fun findByHmsnrs(hmsnrs: Set<String>): List<ProductStockDTO> = runBlocking {
+        LOG.info("Finding stock for ${hmsnrs} products")
+        val authToken = azureAdClient.getToken(azureBody)
+        val oebsStockResponse = oebsClient.getWarehouseStocks(hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
             authorization = "Bearer ${authToken.access_token}")
         val productStocks  = oebsStockResponse.map { stock ->
             ProductStock(

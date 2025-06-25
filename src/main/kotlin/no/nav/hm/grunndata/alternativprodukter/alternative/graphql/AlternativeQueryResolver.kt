@@ -42,9 +42,14 @@ class AlternativeQueryResolver(private val searchService: SearchService,
         return productStockDTO
     }
 
-    fun getProductStocks(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> {
+    fun getProductStocksByEnhetNr(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> {
         LOG.info("Getting stocks for $hmsnrs and enhet $enhetnr")
         return productStockService.findByHmsnrsAndEnhet(hmsnrs, enhetnr)
+    }
+
+    fun getProductStocks(hmsnrs: Set<String>): List<ProductStockDTO> {
+        LOG.info("Getting stocks for $hmsnrs")
+        return productStockService.findByHmsnrs(hmsnrs)
     }
 
     companion object {

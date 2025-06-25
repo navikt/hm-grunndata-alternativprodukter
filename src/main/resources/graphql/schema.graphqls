@@ -2,6 +2,7 @@ type Query {
     alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
     productStock(hmsnr: String!): ProductStock!
     productStocks(hmsnrs: [String!]!, enhetnr: String!): [ProductStock!]!
+    productStocksAllLocations(hmsnrs: [String!]!): [ProductStock!]!
     getHmsArtnrMappingsById(id: String!): HmsArtnrMapping
     getHmsArtnrMappingBySourceHmsArtnr(sourceHmsArtnr: String!): [HmsArtnrMapping!]!
 }

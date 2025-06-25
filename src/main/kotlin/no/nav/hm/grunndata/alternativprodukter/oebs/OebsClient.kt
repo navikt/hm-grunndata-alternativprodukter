@@ -20,6 +20,12 @@ interface OebsClient {
         @Header authorization: String
     ): List<OebsStockResponse>
 
+    @Post(value = "/lager/alle-sentraler", consumes = ["application/json"])
+    suspend fun getWarehouseStocks(
+        @Body hmsnrs: HmsnrsDTO,
+        @Header authorization: String
+    ): List<OebsStockResponse>
+
 }
 
 @Serdeable
