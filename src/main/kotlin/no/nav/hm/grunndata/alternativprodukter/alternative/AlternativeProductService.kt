@@ -3,19 +3,11 @@ package no.nav.hm.grunndata.alternativprodukter.alternative
 import jakarta.inject.Singleton
 import java.util.UUID
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockService
-import no.nav.hm.grunndata.alternativprodukter.stock.toDTO
 import org.slf4j.LoggerFactory
 
 @Singleton
 open class AlternativeProductService(
     private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
-    private val productStockService: ProductStockService,
-    private val productStockRepository: ProductStockRepository
 ) {
 
     companion object {
@@ -27,27 +19,6 @@ open class AlternativeProductService(
         return hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
     }
 
-    fun getStockAndAlternativesFromOebs(hmsArtNr: String): ProductStockAlternatives = runBlocking {
-        val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
-        val productStock = productStockService.findByHmsArtnr(hmsArtNr)
-        ProductStockAlternatives(productStock, alternatives)
-    }
-
-    suspend fun getStockAndAlternativesFromDB(): List<ProductStockAlternatives>  {
-        val productStock = productStockRepository.findAll().map { it.toDTO() }.toList()
-        return productStock.map { productStock ->
-            val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(productStock.hmsArtNr).map { it.targetHmsArtnr }
-            ProductStockAlternatives(productStock, alternatives)
-        }
-    }
-
-    suspend fun getStockAndAlternativesFromDB(hmsArtNr: String): ProductStockAlternatives? {
-        productStockRepository.findByHmsArtnr(hmsArtNr)?.let { productStock ->
-            val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtNr).map { it.targetHmsArtnr }
-            return ProductStockAlternatives(productStock.toDTO(), alternatives)
-        }
-        return null
-    }
 
     fun getAlternativeMappings() = flow<HmsArtnrMappingInputDTO> {
         hmsArtnrMappingRepository.findAll().collect {

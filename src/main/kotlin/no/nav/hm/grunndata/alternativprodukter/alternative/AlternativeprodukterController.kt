@@ -14,12 +14,13 @@ import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
+    private val alternativeAndProductStockService: AlternativeAndProductStockService
 ) {
 
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
-            alternativeProductService.getStockAndAlternativesFromOebs(hmsArtNr),
+            //alternativeAndProductStockService.getStockAndAlternativesFromOebs(hmsArtNr),
         )
     }
 

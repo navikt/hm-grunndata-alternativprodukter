@@ -4,17 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import no.nav.hm.grunndata.alternativprodukter.alternative.SearchService
 import no.nav.hm.grunndata.alternativprodukter.alternative.SearchService.Companion.ALTERNATIVES
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductDoc
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockService
+import no.nav.hm.grunndata.alternativprodukter.stock.FetchOebsAndIndexProductStockComponent
 
 @Singleton
 class AlternativeQueryResolver(private val searchService: SearchService,
-                               private val productStockService: ProductStockService,
+                               private val fetchOebsAndIndexProductStockComponent: FetchOebsAndIndexProductStockComponent,
                                private val indexer: AlternativeProductIndexer,
                                private val objectMapper: ObjectMapper) {
 
@@ -35,21 +34,18 @@ class AlternativeQueryResolver(private val searchService: SearchService,
 
     fun getProductStock(hmsnr: String): ProductStockDTO {
         LOG.debug("Getting stock for $hmsnr")
-        val productStockDTO = productStockService.findByHmsArtnr(hmsnr)
-        coroutineScope.launch {
-            indexer.reIndexByHmsNr(hmsnr)
-        }
+        val productStockDTO = fetchOebsAndIndexProductStockComponent.findByHmsArtnr(hmsnr)
         return productStockDTO
     }
 
     fun getProductStocksByEnhetNr(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> {
         LOG.info("Getting stocks for $hmsnrs and enhet $enhetnr")
-        return productStockService.findByHmsnrsAndEnhet(hmsnrs, enhetnr)
+        return fetchOebsAndIndexProductStockComponent.findByHmsnrsAndEnhet(hmsnrs, enhetnr)
     }
 
     fun getProductStocks(hmsnrs: Set<String>): List<ProductStockDTO> {
         LOG.info("Getting stocks for $hmsnrs")
-        return productStockService.findByHmsnrs(hmsnrs)
+        return fetchOebsAndIndexProductStockComponent.findByHmsnrs(hmsnrs)
     }
 
     companion object {

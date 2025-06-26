@@ -37,7 +37,7 @@ class AlternativeProductIndexerController(private val alternativeProductIndexer:
 
     @Post("/reIndexAllDistinctHmsNr")
     fun reIndexAllDistinctHmsNr() = runBlocking {
-        alternativeProductIndexer.reIndexAllDinstinctHmsNr()
+        //alternativeProductIndexer.reIndexAllDinstinctHmsNr()
     }
 
 }

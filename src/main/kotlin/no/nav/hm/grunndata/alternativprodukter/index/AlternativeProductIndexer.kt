@@ -2,7 +2,7 @@ package no.nav.hm.grunndata.alternativprodukter.index
 
 
 import jakarta.inject.Singleton
-import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductService
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeAndProductStockService
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingRepository
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
@@ -15,8 +15,7 @@ import java.time.format.DateTimeFormatter
 class AlternativeProductIndexer(
     private val gdbApiClient: GdbApiClient,
     private val isoCategoryService: IsoCategoryService,
-    private val alternativeProductService: AlternativeProductService,
-    private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
+    private val alternativeAndProductStockService: AlternativeAndProductStockService,
     private val client: OpenSearchClient
 ) : Indexer(client, settings, mapping, aliasName) {
     companion object {
@@ -28,36 +27,16 @@ class AlternativeProductIndexer(
 
     }
 
-    // this fetch from oebs
-    suspend fun reIndexAllDinstinctHmsNr() {
-        val hmsNrs = hmsArtnrMappingRepository.findDistinctSourceHmsArtnr()
-        LOG.info("Reindexing all distinct hmsNr: ${hmsNrs.size}")
-        val mappedDoc = mutableListOf<AlternativeProductDoc>()
-        hmsNrs.forEach { hmsNr ->
-            gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
-                if (it.status != ProductStatus.DELETED) {
-                    val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
-                    val productStockAlternatives = alternativeProductService.getStockAndAlternativesFromOebs(hmsNr)
-                    mappedDoc.add(it.toDoc(iso, productStockAlternatives))
-                }
-            } ?: LOG.warn("No product found for hmsNr: $hmsNr")
-            if (mappedDoc.size > 1000) {
-                index(mappedDoc)
-                mappedDoc.clear()
-            }
-        }
-        if (mappedDoc.isNotEmpty()) {
-            index(mappedDoc)
-        }
-    }
+
 
     // this fetch from our database only
     suspend fun reIndexAllProductStock() {
-        val alternativsProductStock = alternativeProductService.getStockAndAlternativesFromDB()
+        val alternativsProductStock = alternativeAndProductStockService.getStockAndAlternativesFromDB()
         val newIndexName = "${aliasName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))}"
-        createIndex(indexName = newIndexName,settings = settings, mapping = mapping)
+        createIndex(indexName = newIndexName, settings = settings, mapping = mapping)
         val mappedDoc = mutableListOf<AlternativeProductDoc>()
-        alternativsProductStock.forEach { productStock -> gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtNr)?.let {
+        alternativsProductStock.forEach { productStock ->
+            gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
                     mappedDoc.add(it.toDoc(iso, productStock))
@@ -79,10 +58,32 @@ class AlternativeProductIndexer(
         gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
             if (it.status != ProductStatus.DELETED) {
                 val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
-                alternativeProductService.getStockAndAlternativesFromDB(hmsNr)?.let {alternatives ->
-                    index(listOf(it.toDoc(iso,alternatives )))
+                alternativeAndProductStockService.getStockAndAlternativesFromDB(hmsNr)?.let { alternatives ->
+                    index(listOf(it.toDoc(iso, alternatives)))
                 }
             }
+        }
+    }
+
+    suspend fun reIndexByHmsNrs(hmsNrs: Set<String>) {
+        LOG.info("Reindexing hmsNrs: $hmsNrs")
+        val mappedDoc = mutableListOf<AlternativeProductDoc>()
+        hmsNrs.forEach { hmsNr ->
+            gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
+                if (it.status != ProductStatus.DELETED) {
+                    val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
+                    alternativeAndProductStockService.getStockAndAlternativesFromDB(hmsNr)?.let { alternatives ->
+                        mappedDoc.add(it.toDoc(iso, alternatives))
+                    }
+                }
+            } ?: LOG.warn("No product found for hmsNr: $hmsNr")
+            if (mappedDoc.size > 1000) {
+                index(mappedDoc)
+                mappedDoc.clear()
+            }
+        }
+        if (mappedDoc.isNotEmpty()) {
+            index(mappedDoc)
         }
     }
 }
