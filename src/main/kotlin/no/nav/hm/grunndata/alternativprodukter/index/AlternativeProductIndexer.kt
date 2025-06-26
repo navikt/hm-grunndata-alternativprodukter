@@ -3,7 +3,6 @@ package no.nav.hm.grunndata.alternativprodukter.index
 
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeAndProductStockService
-import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingRepository
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.slf4j.LoggerFactory
 import org.opensearch.client.opensearch.OpenSearchClient
@@ -27,9 +26,6 @@ class AlternativeProductIndexer(
 
     }
 
-
-
-    // this fetch from our database only
     suspend fun reIndexAllProductStock() {
         val alternativsProductStock = alternativeAndProductStockService.getStockAndAlternativesFromDB()
         val newIndexName = "${aliasName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))}"
@@ -52,7 +48,6 @@ class AlternativeProductIndexer(
         }
     }
 
-    // this fetch from database
     suspend fun reIndexByHmsNr(hmsNr: String) {
         LOG.info("Reindexing hmsNr: $hmsNr")
         gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
@@ -80,8 +75,7 @@ class AlternativeProductIndexer(
             } ?: LOG.warn("No product found for hmsNr: $hmsNr")
         }
         if (mappedDoc.isNotEmpty()) {
-            //val response = index(mappedDoc)
-            //LOG.info("Got response from indexing: ${response.errors()}")
+            index(mappedDoc)
         }
     }
 }

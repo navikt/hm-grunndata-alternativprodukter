@@ -45,11 +45,13 @@ micronaut:
       connect-timeout: 10s
       read-timeout: 60s
       event-loop-group: http
+      connect-ttl: 60s
   netty:
     event-loops:
       http:
         num-threads: 25
         prefer-native-transport: true
+
   router:
     static-resources:
       swagger:

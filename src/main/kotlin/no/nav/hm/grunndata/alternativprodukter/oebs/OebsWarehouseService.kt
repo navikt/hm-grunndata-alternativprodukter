@@ -3,8 +3,8 @@ package no.nav.hm.grunndata.alternativprodukter.oebs
 import jakarta.inject.Singleton
 
 @Singleton
-class OebsWarehouseService( private val azureBody: AzureBody,
-                            private val oebsClient: OebsClient,
+class OebsWarehouseService(private val azureBody: AzureBody,
+                           private val oebsClient: OebsClient,
                            private val azureAdClient: AzureAdClient) {
 
     var tokenCached: TokenCached = TokenCached(
