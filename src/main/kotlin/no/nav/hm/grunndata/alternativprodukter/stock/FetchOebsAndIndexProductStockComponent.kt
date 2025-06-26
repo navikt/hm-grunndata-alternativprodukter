@@ -1,5 +1,7 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
+import io.micrometer.core.annotation.Counted
+import io.micrometer.core.annotation.Timed
 import jakarta.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -9,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
+import org.checkerframework.checker.units.qual.C
 import org.slf4j.LoggerFactory
 
 @Singleton
@@ -20,6 +23,8 @@ open class FetchOebsAndIndexProductStockComponent(
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
+    @Timed("findByHmsArtnr")
+    @Counted("findByHmsArtnr.count")
     open fun findByHmsArtnr(hmsArtnr: String): ProductStockDTO = runBlocking {
         LOG.info("Fetching from OEBS for $hmsArtnr")
 
@@ -34,7 +39,8 @@ open class FetchOebsAndIndexProductStockComponent(
         productStock.toDTO()
     }
 
-
+    @Timed("findByHmsnrsAndEnhet")
+    @Counted("findByHmsnrsAndEnhet.count")
     open fun findByHmsnrsAndEnhet(hmsnrs: Set<String>, enhetnr: String): List<ProductStockDTO> = runBlocking {
         LOG.info("Fetching from OEBS for ${hmsnrs} products and enhet $enhetnr")
         val oebsStockResponseList = oebsWarehouseService.getWarehouseStockForCentral(
@@ -64,6 +70,8 @@ open class FetchOebsAndIndexProductStockComponent(
         }
     }
 
+    @Timed("findByHmsnrs")
+    @Counted("findByHmsnrs.count")
     open fun findByHmsnrs(hmsnrs: Set<String>): List<ProductStockDTO> = runBlocking {
         LOG.info("Fetching from OEBS for ${hmsnrs} products")
         val oebsStockResponseList = oebsWarehouseService.getWarehouseStocks(
