@@ -12,6 +12,7 @@ import no.nav.hm.grunndata.alternativprodukter.index.toDoc
 import no.nav.hm.grunndata.alternativprodukter.oebs.AzureAdClient
 import no.nav.hm.grunndata.alternativprodukter.oebs.AzureBody
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsClient
+import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 
 @Singleton
@@ -19,9 +20,7 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
                                          private val gdbApiClient: GdbApiClient,
                                          private val isoCategoryService: IsoCategoryService,
                                          private val productStockRepository: ProductStockRepository,
-                                         private val oebsClient: OebsClient,
-                                         private val azureAdClient: AzureAdClient,
-                                         private val azureBody: AzureBody,
+                                         private val oebsWarehouseService: OebsWarehouseService,
                                          private val indexer: AlternativeProductIndexer){
 
 
@@ -50,8 +49,7 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
     fun getStockAndAlternativesFromOebs(hmsArtnr: String): ProductStockAlternatives = runBlocking {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
         LOG.info("Fetching from OEBS for $hmsArtnr")
-        val authToken = azureAdClient.getToken(azureBody)
-        val oebsStockResponse = oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${authToken.access_token}")
+        val oebsStockResponse = oebsWarehouseService.getWarehouseStockSingle(hmsArtnr)
         val productStock = ProductStock(
             hmsArtnr = hmsArtnr,
             oebsStockResponse = oebsStockResponse

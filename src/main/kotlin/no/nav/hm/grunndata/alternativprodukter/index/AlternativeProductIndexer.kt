@@ -59,7 +59,8 @@ class AlternativeProductIndexer(
             if (it.status != ProductStatus.DELETED) {
                 val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
                 alternativeAndProductStockService.getStockAndAlternativesFromDB(hmsNr)?.let { alternatives ->
-                    index(listOf(it.toDoc(iso, alternatives)))
+                    val response = index(listOf(it.toDoc(iso, alternatives)))
+                    LOG.info("Got response from indexing: ${response.errors()}")
                 }
             }
         }
@@ -77,13 +78,10 @@ class AlternativeProductIndexer(
                     }
                 }
             } ?: LOG.warn("No product found for hmsNr: $hmsNr")
-            if (mappedDoc.size > 1000) {
-                index(mappedDoc)
-                mappedDoc.clear()
-            }
         }
         if (mappedDoc.isNotEmpty()) {
-            index(mappedDoc)
+            //val response = index(mappedDoc)
+            //LOG.info("Got response from indexing: ${response.errors()}")
         }
     }
 }
