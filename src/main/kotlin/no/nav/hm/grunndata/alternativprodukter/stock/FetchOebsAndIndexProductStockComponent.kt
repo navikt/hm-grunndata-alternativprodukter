@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
-import org.checkerframework.checker.units.qual.C
 import org.slf4j.LoggerFactory
 
 @Singleton
@@ -60,11 +59,13 @@ open class FetchOebsAndIndexProductStockComponent(
     private fun validateProductStocks(productStocks: List<ProductStock>, hmsnrs: Set<String>) {
         if (productStocks.isEmpty()) {
             LOG.warn("No product stocks found for $hmsnrs")
-        } else {
-            LOG.info("Found ${productStocks.size} product stocks for the given HMS numbers")
+        } else if (productStocks.size != hmsnrs.size) {
+            LOG.warn("Found ${productStocks.size} product stocks for the given HMS numbers ${hmsnrs.size}")
+        } else if (productStocks.size > 20) {
+            LOG.warn("Found more than 20 this might cause a performance issue")
         }
         productStocks.forEach { stock ->
-           if (stock.hmsArtnr !in hmsnrs) {
+            if (stock.hmsArtnr !in hmsnrs) {
                 throw Throwable("Product stock with HMS number ${stock.hmsArtnr} not found in the provided HMS numbers: $hmsnrs")
             }
         }
@@ -84,6 +85,7 @@ open class FetchOebsAndIndexProductStockComponent(
                 oebsStockResponse = group.value
             )
         }
+        validateProductStocks(productStocks, hmsnrs)
         coroutineScope.launch {
             saveAndReindex(productStocks)
         }
@@ -92,7 +94,7 @@ open class FetchOebsAndIndexProductStockComponent(
 
     suspend fun saveAndReindex(oebsStocks: List<ProductStock>) {
         LOG.info("Saving and reindexing ${oebsStocks.size} product stocks")
-        val hmsnrs = oebsStocks.map  { oebsStock ->
+        val hmsnrs = oebsStocks.map { oebsStock ->
             val saved = productStockRepository.findByHmsArtnr(oebsStock.hmsArtnr)?.let {
                 productStockRepository.update(
                     it.copy(
