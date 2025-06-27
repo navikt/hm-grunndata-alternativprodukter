@@ -35,7 +35,6 @@ class OebsWarehouseService(private val azureBody: AzureBody,
     }
 
     suspend fun getAccessToken(): String {
-        LOG.debug("current token expires at: ${tokenCached.expires}, current time: ${System.currentTimeMillis()}")
         if (tokenCached.isExpired()) {
             LOG.debug("Token expired, fetching new token")
             tokenCached = TokenCached(azureAdToken = azureAdClient.getToken(azureBody))

@@ -62,7 +62,7 @@ micronaut:
         mapping: /swagger-ui/**
   task:
     scheduling:
-      enabled: ${SCHEDULING_ENABLED:true}
+      enabled: ${SCHEDULERS_ENABLED:false}
 endpoints:
   metrics:
     enabled: true

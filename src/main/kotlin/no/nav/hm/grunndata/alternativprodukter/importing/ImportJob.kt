@@ -17,7 +17,7 @@ open class ImportJob(
     }
 
     @LeaderOnly
-    @Scheduled(initialDelay = "10s")
+    @Scheduled(fixedDelay = "60s")
     open fun importNewAlternativeProductMappings() {
         runBlocking {
             try {
