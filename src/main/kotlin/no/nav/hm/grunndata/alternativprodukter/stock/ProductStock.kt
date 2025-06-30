@@ -47,8 +47,12 @@ data class WarehouseStock(
     val orders: Int,
     val request: Int,
     val minmax: Boolean,
-    val updated: LocalDateTime
-)
+    val updated: LocalDateTime,
+    val backOrders: Int,
+    val intRequest: Int,
+    val physical: Int,
+
+    )
 
 fun ProductStock.toDTO(): ProductStockDTO {
     return ProductStockDTO(
@@ -70,8 +74,11 @@ fun OebsStockResponse.toDTO(updated: LocalDateTime): WarehouseStock {
         reserved = reservert,
         needNotified = behovsmeldt,
         orders = bestillinger,
+        backOrders = restordre,
         request = anmodning,
+        intRequest = intanmodning,
         minmax = minmax,
+        physical = fysisk,
         updated = updated
     )
 }

@@ -169,6 +169,27 @@
         "minmax": {
           "type": "boolean"
         },
+        "inStock": {
+          "type": "boolean"
+        },
+        "amountInStock": {
+          "type": "long"
+        },
+        "orders": {
+          "type": "long"
+        },
+        "backOrders": {
+          "type": "long"
+        },
+        "request": {
+          "type": "long"
+        },
+        "intRequqest": {
+          "type": "long"
+        },
+        "physical": {
+          "type": "Long"
+        },
         "updated": {
           "type": "date",
           "format": "strict_date_optional_time"

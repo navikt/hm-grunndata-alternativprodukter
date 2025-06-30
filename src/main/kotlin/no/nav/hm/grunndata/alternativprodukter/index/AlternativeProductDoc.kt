@@ -108,10 +108,18 @@ fun Attributes.toDoc(): AttributesDoc {
 data class WareHouseStockDoc(
     val locationId: Int,
     val location: String,
+    val amountInStock: Int,
     val available: Int,
     val reserved: Int,
     val needNotified: Int,
     val minmax: Boolean,
+    val backOrders: Int,
+    val intRequest: Int,
+    val request: Int,
+    val orders: Int,
+    val inStock: Boolean,
+    val physical: Int,
+
     val updated: LocalDateTime = LocalDateTime.now()
 )
 
@@ -119,9 +127,16 @@ fun WarehouseStock.toDoc(dto: ProductStockDTO): WareHouseStockDoc = WareHouseSto
     locationId = locationId,
     location = location,
     available = available,
+    amountInStock = amountInStock,
     reserved = reserved,
     needNotified = needNotified,
     minmax = minmax,
+    backOrders = backOrders,
+    request = request,
+    intRequest = intRequest,
+    orders = orders,
+    physical = physical,
+    inStock = inStock,
     updated = dto.updated
 )
 

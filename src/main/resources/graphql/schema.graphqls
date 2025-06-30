@@ -30,13 +30,20 @@ type Media {
 }
 
 type WareHouseStock {
-    locationId: Int
+    locationId: Int!
     location: String!
-    available: Int
-    reserved: Int
-    needNotified: Int
+    available: Int!
+    reserved: Int!
+    needNotified: Int!
     minmax: Boolean!
     updated: String!
+    inStock: Boolean!
+    amountInStock: Int!
+    orders: Int!
+    request: Int!
+    backOrders: Int!
+    intRequest: Int!
+    physical: Int!
 }
 
 type Supplier {
