@@ -44,6 +44,7 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
         if (mappedDoc.isNotEmpty()) {
             indexer.index(mappedDoc)
         }
+        LOG.info("Reindexing all distinct hmsNr finished")
     }
 
     fun getStockAndAlternativesFromOebs(hmsArtnr: String): ProductStockAlternatives = runBlocking {
@@ -51,8 +52,6 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
         val oebsStockResponse = oebsWarehouseService.getWarehouseStockSingle(hmsArtnr)
         if (oebsStockResponse.isEmpty()) {
             LOG.warn("No stock found for hmsArtnr: $hmsArtnr")
-        } else {
-            LOG.info("Found stock for hmsArtnr: $hmsArtnr with quantity: ${oebsStockResponse.first().antallPåLager}")
         }
         val productStock = ProductStock(
             hmsArtnr = hmsArtnr,
@@ -61,7 +60,7 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
         val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
             productStockRepository.update(productStock)
         } ?: productStockRepository.save(productStock)
-
+        LOG.info("Saved product stock for hmsArtnr: ${saved.hmsArtnr} with updated timestamp: ${saved.updated}")
         ProductStockAlternatives(saved.toDTO(), alternatives)
     }
 
