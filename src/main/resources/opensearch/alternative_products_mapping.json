@@ -146,7 +146,7 @@
       "format": "strict_date_optional_time"
     },
     "alternativeFor": {
-          "type": "keyword"
+      "type": "keyword"
     },
     "wareHouseStock": {
       "type": "nested",
@@ -184,11 +184,11 @@
         "request": {
           "type": "long"
         },
-        "intRequqest": {
+        "intRequest": {
           "type": "long"
         },
         "physical": {
-          "type": "Long"
+          "type": "long"
         },
         "updated": {
           "type": "date",
