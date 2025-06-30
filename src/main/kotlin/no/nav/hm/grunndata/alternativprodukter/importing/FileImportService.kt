@@ -31,11 +31,8 @@ open class FileImportService(
             }
 
             val importedFiles = fileImportHistoryRepository.findAll().toList().map { it.filename }
-            LOG.info("Found ${importedFiles.size} previously imported files: $importedFiles")
             val filesToImport = importFiles.filter { it !in importedFiles }
-            LOG.info("Found ${filesToImport.size} imported files")
             if (filesToImport.isEmpty()) {
-                LOG.info("No new files to import")
                 return@withContext
             } else {
                 LOG.info("Found ${filesToImport.size} new files to import")

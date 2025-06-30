@@ -46,6 +46,7 @@ class AlternativeProductIndexer(
         if (mappedDoc.isNotEmpty()) {
             index(mappedDoc, newIndexName)
         }
+        LOG.info("reIndexAllProductStock finished with index: $newIndexName")
     }
 
     suspend fun reIndexByHmsNr(hmsNr: String) {

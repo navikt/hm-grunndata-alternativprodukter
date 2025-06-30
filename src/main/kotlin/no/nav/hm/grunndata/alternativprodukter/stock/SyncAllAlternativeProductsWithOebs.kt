@@ -48,8 +48,12 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
 
     fun getStockAndAlternativesFromOebs(hmsArtnr: String): ProductStockAlternatives = runBlocking {
         val alternatives = hmsArtnrMappingRepository.findBySourceHmsArtnr(hmsArtnr).map { it.targetHmsArtnr }
-        LOG.info("Fetching from OEBS for $hmsArtnr")
         val oebsStockResponse = oebsWarehouseService.getWarehouseStockSingle(hmsArtnr)
+        if (oebsStockResponse.isEmpty()) {
+            LOG.warn("No stock found for hmsArtnr: $hmsArtnr")
+        } else {
+            LOG.info("Found stock for hmsArtnr: $hmsArtnr with quantity: ${oebsStockResponse.first().antallPåLager}")
+        }
         val productStock = ProductStock(
             hmsArtnr = hmsArtnr,
             oebsStockResponse = oebsStockResponse
