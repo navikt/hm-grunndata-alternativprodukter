@@ -5,6 +5,7 @@ import io.micronaut.context.annotation.Replaces
 import io.mockk.coEvery
 import io.mockk.mockk
 import jakarta.inject.Singleton
+import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
 import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
@@ -85,5 +86,9 @@ class MockFactory {
     @Singleton
     @Replaces
     fun mockOebsWarehouseService(): OebsWarehouseService = mockk<OebsWarehouseService>(relaxed = true)
+
+    @Singleton
+    @Replaces
+    fun mockIndexer(): AlternativeProductIndexer = mockk<AlternativeProductIndexer>(relaxed = true)
 
 }
