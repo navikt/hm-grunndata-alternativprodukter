@@ -25,6 +25,7 @@ val httpClient5= "5.4.4"
 val rapidsRiversVersion = "202410290928"
 val grunndataDtoVersion = "202504011524"
 val leaderElectionVersion = "202506021230"
+val mockkVersion = "1.13.4"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -72,9 +73,14 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 
 }
 
+allOpen {
+    annotation("jakarta.inject.Singleton")
+    // Add other annotations as needed
+}
 
 application {
     mainClass = "no.nav.hm.grunndata.alternativprodukter.Application"
@@ -108,6 +114,8 @@ tasks.test {
         showStackTraces = true
     }
 }
+
+
 
 micronaut {
     runtime("netty")

@@ -9,9 +9,6 @@ import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
 import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.alternativprodukter.index.toDoc
-import no.nav.hm.grunndata.alternativprodukter.oebs.AzureAdClient
-import no.nav.hm.grunndata.alternativprodukter.oebs.AzureBody
-import no.nav.hm.grunndata.alternativprodukter.oebs.OebsClient
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import java.time.LocalDateTime

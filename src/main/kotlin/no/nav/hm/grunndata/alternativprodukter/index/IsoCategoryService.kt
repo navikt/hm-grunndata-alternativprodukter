@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 
 @Singleton
-class IsoCategoryService(gdbApiClient: GdbApiClient) {
+class IsoCategoryService(private val gdbApiClient: GdbApiClient) {
 
     private val isoCategories: Map<String, IsoCategoryDTO> = runBlocking {
         gdbApiClient.retrieveIsoCategories().associateBy { it.isoCode }
@@ -23,23 +23,6 @@ class IsoCategoryService(gdbApiClient: GdbApiClient) {
 
     fun lookUpCode(isoCode: String): IsoCategoryDTO? = isoCategories[isoCode]
 
-    fun retrieveAllCategories(): List<IsoCategoryDTO> = isoCategories.values.toList()
-
-    fun getHigherLevelsInBranch(isoCode: String): List<IsoCategoryDTO> {
-        val cat = isoCategories[isoCode]
-        if (cat==null) LOG.warn("IsoCode: $isoCode not found!")
-        return isoCategories.values.filter { isoCode.startsWith(it.isoCode) }
-    }
-
-    fun getClosestLevelInBranch(isoCode: String): IsoCategoryDTO? {
-        isoCategories.values.sortedByDescending { it.isoLevel }.forEach {
-            if (isoCode.startsWith(it.isoCode)) {
-                LOG.info("matched $isoCode with: ${it.isoCode} ${it.isoTitle} ${it.isoLevel}")
-                return it
-            }
-        }
-        return null
-    }
 
 }
 

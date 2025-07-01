@@ -13,7 +13,7 @@ class TechLabelService(
     private val techLabelClient: TechLabelApiClient
 )  {
 
-    private var techLabelsByIso: Map<String, List<TechLabelDTO>>
+    private var techLabelsByIso: Map<String, List<TechLabelDTO>> = emptyMap()
 
     companion object {
         private val LOG = LoggerFactory.getLogger(TechLabelService::class.java)
