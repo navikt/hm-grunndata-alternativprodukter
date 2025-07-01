@@ -14,6 +14,7 @@ import no.nav.hm.grunndata.alternativprodukter.oebs.AzureBody
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsClient
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import java.time.LocalDateTime
 
 @Singleton
 class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
@@ -58,7 +59,10 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
             oebsStockResponse = oebsStockResponse
         )
         val saved = productStockRepository.findByHmsArtnr(hmsArtnr)?.let {
-            productStockRepository.update(productStock)
+            productStockRepository.update(it.copy(
+                status = productStock.status,
+                oebsStockResponse = oebsStockResponse,
+                updated = LocalDateTime.now()))
         } ?: productStockRepository.save(productStock)
         LOG.info("Saved product stock for hmsArtnr: ${saved.hmsArtnr} with updated timestamp: ${saved.updated}")
         ProductStockAlternatives(saved.toDTO(), alternatives)
