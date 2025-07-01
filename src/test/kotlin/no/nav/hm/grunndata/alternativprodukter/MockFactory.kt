@@ -8,6 +8,7 @@ import jakarta.inject.Singleton
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
 import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
+import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
@@ -85,7 +86,33 @@ class MockFactory {
 
     @Singleton
     @Replaces
-    fun mockOebsWarehouseService(): OebsWarehouseService = mockk<OebsWarehouseService>(relaxed = true)
+    fun mockOebsWarehouseService(): OebsWarehouseService = mockk<OebsWarehouseService>(relaxed = true).apply {
+        val stockResponse = OebsStockResponse(
+        erPåLager = true,
+        antallPåLager = 1,
+        organisasjons_id = 1,
+        organisasjons_navn = "Mock Location",
+        fysisk = 1,
+        minmax = true,
+        anmodning = 0,
+        intanmodning = 0,
+        forsyning = 0,
+        lagervare = true,
+        tilgjengeligatt = 0,
+        tilgjengeligroo = 0,
+        tilgjengelig = 0,
+        behovsmeldt = 0,
+        reservert = 0,
+        restordre = 0,
+        bestillinger = 0,
+        sortiment = true,
+        artikkelid = 1234,
+        artikkelnummer = sourceHmsNr
+        )
+        coEvery { getWarehouseStocks(setOf(sourceHmsNr)) } returns listOf(stockResponse)
+        coEvery { getWarehouseStockSingle(sourceHmsNr) } returns listOf(stockResponse)
+        coEvery { getWarehouseStockForCentral(setOf(sourceHmsNr), enhetnr = "1000") } returns listOf(stockResponse)
+    }
 
     @Singleton
     @Replaces
