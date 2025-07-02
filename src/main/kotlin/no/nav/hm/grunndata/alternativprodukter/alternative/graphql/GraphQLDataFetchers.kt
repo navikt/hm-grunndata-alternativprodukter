@@ -17,6 +17,15 @@ class GraphQLDataFetchers(private val alternativeQueryResolver: AlternativeQuery
         }
     }
 
+    fun getAlternativeProductsPageDataFetcher(): DataFetcher<AlternativeProductsPage> {
+        return DataFetcher { dataFetchingEnvironment: DataFetchingEnvironment ->
+            val hmsArtnr: List<String> =  dataFetchingEnvironment.getArgument("hmsnrs") ?: emptyList()
+            val from: Int = dataFetchingEnvironment.getArgument("from") ?: 0
+            val size: Int = dataFetchingEnvironment.getArgument("size") ?: 1000
+            alternativeQueryResolver.searchAlternativeProductsPage(hmsArtnr, from, size)
+        }
+    }
+
     fun getProductStockDataFetcher(): DataFetcher<ProductStockDTO> {
         return DataFetcher {
             dataFetchingEnvironment: DataFetchingEnvironment ->

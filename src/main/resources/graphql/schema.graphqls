@@ -1,5 +1,6 @@
 type Query {
     alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
+    alternativeProductsPage(hmsnrs: [String!]!, from: Int, size: Int): AlternativeProductPage!
     productStock(hmsnr: String!): ProductStock!
     productStocks(hmsnrs: [String!]!, enhetnr: String!): [ProductStock!]!
     productStocksAllLocations(hmsnrs: [String!]!): [ProductStock!]!
@@ -20,6 +21,13 @@ type AlternativeProduct {
     hasAgreement: Boolean!
     agreements: [Agreement]
     wareHouseStock: [WareHouseStock]
+}
+
+type AlternativeProductPage {
+    content: [AlternativeProduct!]!
+    total: Int!
+    from: Int!
+    size: Int!
 }
 
 type Media {

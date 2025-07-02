@@ -51,7 +51,6 @@ data class WarehouseStock(
     val backOrders: Int,
     val intRequest: Int,
     val physical: Int,
-
     )
 
 fun ProductStock.toDTO(): ProductStockDTO {
