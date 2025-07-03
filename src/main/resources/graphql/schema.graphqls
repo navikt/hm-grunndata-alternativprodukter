@@ -8,6 +8,12 @@ type Query {
     getHmsArtnrMappingBySourceHmsArtnr(sourceHmsArtnr: String!): [HmsArtnrMapping!]!
 }
 
+type Mutation {
+    createHmsArtnrMapping(input: HmsArtnrMappingInput!): [HmsArtnrMapping!]!
+    updateHmsArtnrMapping(id: String!, input: HmsArtnrMappingInput!): HmsArtnrMapping!
+    deleteHmsArtnrMapping(input: HmsArtnrMappingInput!): Boolean!
+}
+
 type AlternativeProduct {
     id: String!
     hmsArtNr: String!
@@ -90,10 +96,4 @@ type HmsArtnrMapping {
     sourceHmsArtnr: String!
     targetHmsArtnr: String!
     created: String!
-}
-
-type Mutation {
-    createHmsArtnrMapping(input: HmsArtnrMappingInput!): HmsArtnrMapping!
-    updateHmsArtnrMapping(id: String!, input: HmsArtnrMappingInput!): HmsArtnrMapping!
-    deleteHmsArtnrMapping(id: String!): Boolean!
 }

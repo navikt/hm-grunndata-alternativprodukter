@@ -22,13 +22,21 @@ class HmsArtnrMappingResolver(
         repository.findBySourceHmsArtnr(sourceHmsArtnr)
     }
 
-    fun createHmsArtnrMapping(input: HmsArtnrMappingInputDTO): HmsArtnrMapping = runBlocking {
-        repository.save(
+    fun createHmsArtnrMapping(input: HmsArtnrMappingInputDTO): List<HmsArtnrMapping> = runBlocking {
+        val firstMapping = repository.findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr = input.sourceHmsArtnr, targetHmsArtnr = input.targetHmsArtnr) ?: repository.save(
             HmsArtnrMapping(
                 sourceHmsArtnr = input.sourceHmsArtnr,
                 targetHmsArtnr = input.targetHmsArtnr
             )
         )
+        // create a reverse mapping as well
+        val secondMapping = repository.findBySourceHmsArtnrAndTargetHmsArtnr(sourceHmsArtnr = input.targetHmsArtnr, targetHmsArtnr = input.sourceHmsArtnr) ?: repository.save(
+            HmsArtnrMapping(
+                sourceHmsArtnr = input.targetHmsArtnr,
+                targetHmsArtnr = input.sourceHmsArtnr
+            )
+        )
+        listOf(firstMapping, secondMapping)
     }
 
     fun updateHmsArtnrMapping(id: UUID, input: HmsArtnrMappingInputDTO): HmsArtnrMapping? = runBlocking {
@@ -38,8 +46,11 @@ class HmsArtnrMappingResolver(
     }
 
 
-    fun deleteHmsArtnrMapping(id: UUID): Int = runBlocking {
-        repository.deleteById(id)
+    fun deleteHmsArtnrMapping(input: HmsArtnrMappingInputDTO): Boolean = runBlocking{
+        repository.deleteMapping(sourceHmsArtnr = input.sourceHmsArtnr, targetHmsArtnr = input.targetHmsArtnr)
+        repository.deleteMapping(sourceHmsArtnr = input.targetHmsArtnr, targetHmsArtnr = input.sourceHmsArtnr)
+            true
     }
+
 
 }

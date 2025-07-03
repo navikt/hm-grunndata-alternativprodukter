@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import io.micronaut.data.model.query.factory.Projections.id
@@ -10,13 +11,16 @@ import org.slf4j.LoggerFactory
 import java.util.UUID
 
 @Singleton
-class HmsArtnrMappingDataFetchers(private val hmsArtnrMappingResolver: HmsArtnrMappingResolver) {
+class HmsArtnrMappingDataFetchers(private val hmsArtnrMappingResolver: HmsArtnrMappingResolver,
+                                  private val objectMapper: ObjectMapper
+) {
 
 
-    fun createHmsArtnrMappingDataFetcher(): DataFetcher<HmsArtnrMapping> {
+    fun createHmsArtnrMappingDataFetcher(): DataFetcher<List<HmsArtnrMapping>> {
         return DataFetcher { env: DataFetchingEnvironment ->
             LOG.info("creating HmsArtnrMapping")
-            val input = env.getArgument<HmsArtnrMappingInputDTO>("input")
+            val inputMap = env.getArgument<Map<String, Any>>("input")
+            val input = objectMapper.convertValue(inputMap, HmsArtnrMappingInputDTO::class.java)
             hmsArtnrMappingResolver.createHmsArtnrMapping(input!!)
         }
     }
@@ -32,9 +36,10 @@ class HmsArtnrMappingDataFetchers(private val hmsArtnrMappingResolver: HmsArtnrM
 
     fun deleteHmsArtnrMappingDataFetcher() : DataFetcher<Boolean> {
         return DataFetcher { env: DataFetchingEnvironment ->
-            val id = env.getArgument<UUID>("id")
-            LOG.info("deleting HmsArtnrMapping for $id")
-            ( hmsArtnrMappingResolver.deleteHmsArtnrMapping(id!!)  == 1 )
+            val inputMap = env.getArgument<Map<String, Any>>("input")
+            val input = objectMapper.convertValue(inputMap, HmsArtnrMappingInputDTO::class.java)
+            LOG.info("deleting HmsArtnrMapping ${input.sourceHmsArtnr} ${input.targetHmsArtnr}")
+            hmsArtnrMappingResolver.deleteHmsArtnrMapping(input)
         }
     }
 
