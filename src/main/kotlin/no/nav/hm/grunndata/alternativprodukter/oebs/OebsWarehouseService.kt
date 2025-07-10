@@ -17,21 +17,32 @@ class OebsWarehouseService(private val azureBody: AzureBody,
     )
 
     suspend fun getWarehouseStockSingle(hmsArtnr: String) : List<OebsStockResponse> {
-        return oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${getAccessToken()}")
+        return try {
+            oebsClient.getWarehouseStock(hmsArtnr, "Bearer ${getAccessToken()}")
+        } catch (e: Exception) {
+            LOG.error("Error fetching warehouse stock for HMS artnr $hmsArtnr", e)
+            emptyList()
+        }
     }
 
     suspend fun getWarehouseStockForCentral(hmsnrs: Set<String>, enhetnr: String): List<OebsStockResponse> {
-        return oebsClient.getWarehouseStockForCentral(
+        return try { oebsClient.getWarehouseStockForCentral(
             enhetnr = enhetnr, hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
             authorization = "Bearer ${getAccessToken()}"
-        )
+        ) } catch (e: Exception) {
+            LOG.error("Error fetching warehouse stock for HMS numbers $hmsnrs and enhet $enhetnr", e)
+            emptyList()
+        }
     }
 
     suspend fun getWarehouseStocks(hmsnrs: Set<String>): List<OebsStockResponse> {
-        return oebsClient.getWarehouseStocks(
+        return try {oebsClient.getWarehouseStocks(
             hmsnrs = HmsnrsDTO(hmsnrs = hmsnrs),
             authorization = "Bearer ${getAccessToken()}"
-        )
+        )} catch (e: Exception) {
+            LOG.error("Error fetching warehouse stocks for HMS numbers $hmsnrs", e)
+            emptyList()
+        }
     }
 
     suspend fun getAccessToken(): String {
