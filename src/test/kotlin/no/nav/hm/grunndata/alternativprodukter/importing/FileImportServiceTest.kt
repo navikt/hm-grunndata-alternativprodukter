@@ -19,12 +19,12 @@ class FileImportServiceTest(
 
         runBlocking {
             fileImportService.importNewMappings(SubstituteFiles.entries.map { it.fileName })
-            fileImportHistoryRepository.findAll().toList().size shouldBe 29
+            fileImportHistoryRepository.findAll().toList().size shouldBe 30
 
             // Personløftere
             hmsArtnrMappingRepository.findBySourceHmsArtnr("232472").size shouldBe 5
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("211366").size shouldBe 5
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("148028").size shouldBe 11
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("211366").size shouldBe 2
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("163258").size shouldBe 3
 
             // Stoler med oppreisingsfunksjon
             hmsArtnrMappingRepository.findBySourceHmsArtnr("296150").size shouldBe 4

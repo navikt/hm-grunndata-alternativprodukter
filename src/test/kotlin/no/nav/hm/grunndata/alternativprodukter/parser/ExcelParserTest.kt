@@ -1,6 +1,5 @@
 package no.nav.hm.grunndata.alternativprodukter.parser
 
-import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -21,7 +20,7 @@ class ExcelParserTest {
     @Test
     fun `reads personloftere liste without exception`() {
         val inputStream =
-            this::class.java.classLoader.getResourceAsStream("substituttlister/V1_personloftere.xlsx")
+            this::class.java.classLoader.getResourceAsStream("substituttlister/V31_personloftere.xlsx")
         val excelParser = ExcelParser()
         val parseResult = excelParser.readExcel(inputStream)
         assertTrue(parseResult.addGroups.isNotEmpty())
