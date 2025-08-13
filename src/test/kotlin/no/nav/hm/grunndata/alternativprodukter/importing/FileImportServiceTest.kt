@@ -142,9 +142,9 @@ class FileImportServiceTest(
             hmsArtnrMappingRepository.findBySourceHmsArtnr("297571").size shouldBe 2
 
             // Varsling
-            hmsArtnrMappingRepository.findBySourceHmsArtnr("700141").size shouldBe 10
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("700141").size shouldBe 9
             hmsArtnrMappingRepository.findBySourceHmsArtnr("189374").size shouldBe 3
-
+            hmsArtnrMappingRepository.findBySourceHmsArtnr("289709").size shouldBe 3
 
         }
 
