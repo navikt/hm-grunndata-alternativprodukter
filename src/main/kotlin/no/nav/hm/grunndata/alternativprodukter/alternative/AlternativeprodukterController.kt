@@ -28,14 +28,15 @@ class AlternativeProductsController(
     }
 
     @Get("/stock/{hmsArtNr}")
-    suspend fun getAlternativeStocks(hmsArtNr: String): HttpResponse<List<ProductStockDTO>> {
+    suspend fun getAlternativeStocks(hmsArtNr: String): HttpResponse<AlternativesWithStock> {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr)
 
-        val getStocks = alternatives.mapNotNull { productStockRepository.findByHmsArtnr(it) }.map { it.toDTO() }
+        val originalStock = productStockRepository.findByHmsArtnr(hmsArtNr)?.toDTO() ?: return HttpResponse.notFound()
+        val alternativeStocks = alternatives.mapNotNull { productStockRepository.findByHmsArtnr(it) }.map { it.toDTO() }
 
-            return HttpResponse.ok(
-                getStocks
-            )
+        return HttpResponse.ok(
+            AlternativesWithStock(originalStock, alternativeStocks)
+        )
     }
 
     @Get("/simple/{hmsArtNr}")
@@ -45,12 +46,16 @@ class AlternativeProductsController(
             alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr),
         )
     }
+
     @Get("/mappings")
     fun getAlternativeMappings(): Flow<HmsArtnrMappingInputDTO> {
         return alternativeProductService.getAlternativeMappings().flowOn(Dispatchers.IO)
     }
 
 }
+
+@Serdeable
+data class AlternativesWithStock(val original: ProductStockDTO, val alternatives: List<ProductStockDTO>)
 
 
 @Serdeable
