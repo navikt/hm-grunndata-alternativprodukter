@@ -9,12 +9,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
+import no.nav.hm.grunndata.alternativprodukter.stock.toDTO
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
-    private val alternativeAndProductStockService: AlternativeAndProductStockService
+    private val alternativeAndProductStockService: AlternativeAndProductStockService,
+    private val productStockRepository: ProductStockRepository
 ) {
 
     @Get("/stock-alternatives/{hmsArtNr}")
@@ -22,6 +25,17 @@ class AlternativeProductsController(
         return HttpResponse.ok(
             //alternativeAndProductStockService.getStockAndAlternativesFromOebs(hmsArtNr),
         )
+    }
+
+    @Get("/stock/{hmsArtNr}")
+    suspend fun getAlternativeStocks(hmsArtNr: String): HttpResponse<List<ProductStockDTO>> {
+        val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr)
+
+        val getStocks = alternatives.mapNotNull { productStockRepository.findByHmsArtnr(it) }.map { it.toDTO() }
+
+            return HttpResponse.ok(
+                getStocks
+            )
     }
 
     @Get("/simple/{hmsArtNr}")
