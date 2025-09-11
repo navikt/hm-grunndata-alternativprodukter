@@ -67,6 +67,9 @@ endpoints:
   metrics:
     enabled: true
     sensitive: false
+  routes:
+    enabled: true
+    sensitive: false
   prometheus:
     sensitive: false
     enabled: true

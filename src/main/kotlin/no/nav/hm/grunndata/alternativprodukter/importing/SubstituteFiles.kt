@@ -36,4 +36,5 @@ enum class SubstituteFiles(val fileName: String) {
     V34_ERS_UPDATEV3("V34_ers_updatev3.xlsx"),
     V35_HYGIENE_V3("V35_hygiene_v3.xlsx"),
     V36_SYN_V2("V36_syn_oppdatert_v2.xlsx"),
+    V37_HYGIENE_V4("V37_hygiene_v4.xlsx"),
 }
