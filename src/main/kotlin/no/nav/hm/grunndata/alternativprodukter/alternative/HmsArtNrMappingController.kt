@@ -15,7 +15,7 @@ class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrM
     @Post("/create")
     suspend fun createMapping(
         @Body mapping: HmsArtnrMappingInputDTO
-    ): List<HmsArtnrMapping> {
+    ): List<HmsArtnrMappingInputDTO> {
         val createdMapping = hmsArtnrMappingRepository.save(
             HmsArtnrMapping(
                 sourceHmsArtnr = mapping.sourceHmsArtnr,
@@ -30,7 +30,7 @@ class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrM
             )
         )
 
-        return listOf(createdMapping, createdReverseMapping)
+        return listOf(createdMapping.toDto(), createdReverseMapping.toDto())
     }
 
     @Delete("/delete")
