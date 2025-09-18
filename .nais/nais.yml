@@ -64,7 +64,7 @@ spec:
   {{/each}}
   ingresses:
   {{#each ingress as |url|}}
-     - {{url } }
+     - {{url}}
   {{/each}}
   gcp:
     sqlInstances:
