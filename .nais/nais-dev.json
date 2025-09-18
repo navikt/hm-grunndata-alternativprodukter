@@ -13,5 +13,8 @@
   "env": {
     "AZURE_SCOPE_OEBS_PROXY": "api://dev-fss.teamdigihot.hm-oebs-api-proxy/.default",
     "OEBS_CACHE_TTL": "5m"
-  }
+  },
+  "ingress": [
+    "https://hm-grunndata-alternativprodukter.intern.dev.nav.no"
+  ]
 }

@@ -62,6 +62,10 @@ spec:
     - name: {{@key}}
       value: "{{this}}"
   {{/each}}
+  ingresses:
+  {{#each ingress as |url|}}
+     - {{url } }
+  {{/each}}
   gcp:
     sqlInstances:
       - name: hm-grunndata-alternativprodukter-db
