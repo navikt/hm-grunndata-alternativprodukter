@@ -8,9 +8,10 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductNullableStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
-import no.nav.hm.grunndata.alternativprodukter.stock.toDTO
+import no.nav.hm.grunndata.alternativprodukter.stock.toNullableDTO
 
 @Controller("/alternativ")
 @Tag(name = "Alternativprodukter")
@@ -31,8 +32,9 @@ class AlternativeProductsController(
     suspend fun getAlternativeStocks(hmsArtNr: String): HttpResponse<AlternativesWithStock> {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr)
 
-        val originalStock = productStockRepository.findByHmsArtnr(hmsArtNr)?.toDTO() ?: return HttpResponse.notFound()
-        val alternativeStocks = alternatives.mapNotNull { productStockRepository.findByHmsArtnr(it) }.map { it.toDTO() }
+        val originalStock = productStockRepository.findByHmsArtnr(hmsArtNr)?.toNullableDTO() ?: ProductNullableStockDTO(hmsArtNr, null)
+
+        val alternativeStocks = alternatives.map { productStockRepository.findByHmsArtnr(it)?.toNullableDTO() ?: ProductNullableStockDTO(it, null) }
 
         return HttpResponse.ok(
             AlternativesWithStock(originalStock, alternativeStocks)
@@ -55,7 +57,7 @@ class AlternativeProductsController(
 }
 
 @Serdeable
-data class AlternativesWithStock(val original: ProductStockDTO, val alternatives: List<ProductStockDTO>)
+data class AlternativesWithStock(val original: ProductNullableStockDTO, val alternatives: List<ProductNullableStockDTO>)
 
 
 @Serdeable
