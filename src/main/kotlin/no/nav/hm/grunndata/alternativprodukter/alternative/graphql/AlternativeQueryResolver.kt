@@ -145,7 +145,7 @@ fun fetchQuery(hmsnrs: List<String>) = """
 {
   "query": {
     "terms": {
-      "hmsArtNr": ${hmsnrs.joinToString(prefix = "[\"", separator = "\",\"", postfix = "\"]")
+      "hmsArtNr": ${hmsnrs.joinToString(prefix = "[\"", separator = "\",\"", postfix = "\"]")}
     }
   }
 }
