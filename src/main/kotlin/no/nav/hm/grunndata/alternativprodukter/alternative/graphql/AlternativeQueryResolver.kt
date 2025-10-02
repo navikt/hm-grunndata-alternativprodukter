@@ -38,7 +38,8 @@ class AlternativeQueryResolver(
     }
 
     fun fetchAlternativeProducts(hmsNrs: List<String>): List<AlternativeProductDoc> {
-        val json = objectMapper.readTree(fetchQuery(hmsNrs))
+        LOG.debug("Fetching alternative products for hmsNrs $hmsNrs")
+        val json = objectMapper.readTree(fetchOpenSearch(hmsNrs))
         return alternativeProductDocs(json)
     }
 
@@ -48,6 +49,11 @@ class AlternativeQueryResolver(
         return searchService.searchWithBody(index = ALTERNATIVES, params = emptyMap(), body = body)
     }
 
+    private fun fetchOpenSearch(hmsNrs: List<String>): String {
+        val body = fetchQuery(hmsNrs)
+        LOG.debug("Fetch query: $body")
+        return searchService.searchWithBody(index = ALTERNATIVES, params = emptyMap(), body = body)
+    }
 
     fun searchAlternativeProductsPage(hmsNrs: List<String>, from: Int, size: Int): AlternativeProductsPage {
         val json = objectMapper.readTree(searchOpenSearch(hmsNrs, from, size))
