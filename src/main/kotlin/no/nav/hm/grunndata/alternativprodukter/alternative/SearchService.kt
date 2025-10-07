@@ -43,6 +43,7 @@ class SearchService(private val osclient: OpenSearchClient) {
 
     companion object {
         const val ALTERNATIVES = "alternative_products"
+        const val PRODUCTS = "products"
         private val LOG = LoggerFactory.getLogger(SearchService::class.java)
         val ALLOWED_REQUEST_PARAMS = setOf("q", "filter_path", "pretty", "format")
     }
