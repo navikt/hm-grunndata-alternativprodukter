@@ -12,7 +12,6 @@ import no.nav.hm.grunndata.alternativprodukter.stock.ProductNullableStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
 import no.nav.hm.grunndata.alternativprodukter.stock.toNullableDTO
-import no.nav.hm.grunndata.alternativprodukter.stock.toDTO
 import org.slf4j.LoggerFactory
 
 @Controller("/alternativ")
@@ -20,12 +19,14 @@ import org.slf4j.LoggerFactory
 class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
     private val alternativeAndProductStockService: AlternativeAndProductStockService,
+    private val alternativesFrontend: AlternativesFrontend,
     private val productStockRepository: ProductStockRepository
 ) {
 
     companion object {
         val LOG = LoggerFactory.getLogger(AlternativeProductsController::class.java)
     }
+
     @Get("/stock-alternatives/{hmsArtNr}")
     suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
         return HttpResponse.ok(
@@ -37,9 +38,15 @@ class AlternativeProductsController(
     suspend fun getAlternativeStocks(hmsArtNr: String): HttpResponse<AlternativesWithStock> {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsArtNr)
 
-        val originalStock = productStockRepository.findByHmsArtnr(hmsArtNr)?.toNullableDTO() ?: ProductNullableStockDTO(hmsArtNr, null)
+        val originalStock =
+            productStockRepository.findByHmsArtnr(hmsArtNr)?.toNullableDTO() ?: ProductNullableStockDTO(hmsArtNr, null)
 
-        val alternativeStocks = alternatives.map { productStockRepository.findByHmsArtnr(it)?.toNullableDTO() ?: ProductNullableStockDTO(it, null) }
+        val alternativeStocks = alternatives.map {
+            productStockRepository.findByHmsArtnr(it)?.toNullableDTO() ?: ProductNullableStockDTO(
+                it,
+                null
+            )
+        }
 
         return HttpResponse.ok(
             AlternativesWithStock(originalStock, alternativeStocks)
@@ -60,9 +67,14 @@ class AlternativeProductsController(
     }
 
     @Get("/alternatives/{hmsArtNr}")
-    suspend fun getAlternatives(hmsArtNr: String): HttpResponse<AlternativesWithStock> {
+    suspend fun getAlternatives(hmsArtNr: String): HttpResponse<AlternativesWithStockNew> {
+        val alternativesWithStockNew = try {
+            alternativesFrontend.getAlternatives(hmsArtNr)
+        } catch (illegalArgument: IllegalArgumentException) {
+            return HttpResponse.notFound()
+        }
 
-        return HttpResponse.ok()
+        return HttpResponse.ok(alternativesWithStockNew)
     }
 }
 

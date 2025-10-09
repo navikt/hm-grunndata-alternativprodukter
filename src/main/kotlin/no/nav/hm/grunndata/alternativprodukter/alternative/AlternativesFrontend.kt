@@ -7,7 +7,6 @@ import java.util.UUID
 import no.nav.hm.grunndata.alternativprodukter.index.SearchDoc
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
-import no.nav.hm.grunndata.alternativprodukter.stock.toDTO
 import no.nav.hm.grunndata.rapid.dto.MediaSourceType
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
@@ -22,18 +21,13 @@ class AlternativesFrontend(
     private val objectMapper: ObjectMapper
 ) {
 
-    suspend fun getAlternatives(hmsNr: String): AlternativesWithStock? {
+    suspend fun getAlternatives(hmsNr: String): AlternativesWithStockNew? {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsNr)
 
-        val originalStock = productStockRepository.findByHmsArtnr(hmsNr)?.toDTO()
-        val alternativeStocks = alternatives.mapNotNull { productStockRepository.findByHmsArtnr(it) }.map { it.toDTO() }
-
-
-        val originalResponse = searchForProduct(hmsNr)?.toResponse() ?: return null
-
+        val originalResponse = searchForProduct(hmsNr)?.toResponse() ?: throw IllegalArgumentException("Unknown hmsNr")
         val alternativesResponse = alternatives.map { searchForProduct(it) }.map { it?.toResponse() }
 
-        return AlternativesWithStock(original = originalResponse, alternatives = alternativesResponse)
+        return AlternativesWithStockNew(original = originalResponse, alternatives = alternativesResponse)
 
     }
 
@@ -58,7 +52,7 @@ class AlternativesFrontend(
 
         return ProductResponse(
             seriesId = seriesId,
-            id = id,
+            variantId = id,
             seriesTitle = title,
             variantTitle = articleName,
             status = status.name,
@@ -96,8 +90,9 @@ class AlternativesFrontend(
     private fun inStock(oebsStockResponse: List<OebsStockResponse>): Boolean =
         oebsStockResponse.any { stock -> calculateAvailable(stock) > 0 }
 
-    data class AlternativesWithStock(val original: ProductResponse, val alternatives: List<ProductResponse?>)
 }
+
+data class AlternativesWithStockNew(val original: ProductResponse, val alternatives: List<ProductResponse?>)
 
 @Language("JSON")
 fun searchBodyProduct(hmsNr: String) = """
@@ -118,7 +113,7 @@ data class StockResponse(val location: String, val available: Number)
 
 data class ProductResponse(
     val seriesId: String?,
-    val id: String,
+    val variantId: String,
     val seriesTitle: String,
     val variantTitle: String,
     val status: String,

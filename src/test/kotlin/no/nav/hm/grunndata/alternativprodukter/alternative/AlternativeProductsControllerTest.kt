@@ -2,6 +2,7 @@ package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
@@ -19,6 +20,14 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
             alts.shouldNotBeNull()
             alts.body().shouldNotBeNull()
             alts.body().original.hmsArtNr.shouldBe(testHmsnr)
+        }
+    }
+
+    @Test
+    fun `unknown hmsnr should return 404 not found`() {
+        runBlocking {
+            val response = alternativeProductsController.getAlternatives("0000")
+            response.status.shouldBe(HttpStatus.NOT_FOUND)
         }
     }
 }
