@@ -55,7 +55,7 @@ class OpenSearchConfig(private val openSearchEnv: OpenSearchEnv, private val obj
             .setHttpClientConfigCallback { httpClientBuilder: HttpAsyncClientBuilder ->
                 val tlsStrategy = ClientTlsStrategyBuilder.create()
                     .setSslContext(sslcontext)
-                    .build()
+                    .buildAsync()
                 val connectionManager = PoolingAsyncClientConnectionManagerBuilder
                     .create()
                     .setTlsStrategy(tlsStrategy)
