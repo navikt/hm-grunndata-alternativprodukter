@@ -1,5 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
@@ -21,16 +22,25 @@ class AlternativeQueryResolver(
     private val objectMapper: ObjectMapper
 ) {
 
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val refreshStockHitsLimit: Int = 10;
 
     fun searchAlternativeProducts(hmsNrs: List<String>): List<AlternativeProductDoc> {
         val json = objectMapper.readTree(searchOpenSearch(hmsNrs, 0, 1000))
+        return alternativeProductDocs(json)
+    }
+
+    private fun alternativeProductDocs(json: JsonNode): List<AlternativeProductDoc> {
         val hits = json.get("hits")?.get("hits")
         if (hits != null) {
             return hits.map { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java) }
         }
         return emptyList()
+    }
+
+    fun fetchAlternativeProducts(hmsNrs: List<String>): List<AlternativeProductDoc> {
+        LOG.debug("Fetching alternative products for hmsNrs $hmsNrs")
+        val json = objectMapper.readTree(fetchOpenSearch(hmsNrs))
+        return alternativeProductDocs(json)
     }
 
     private fun searchOpenSearch(hmsNrs: List<String>, from: Int, size: Int): String {
@@ -39,6 +49,11 @@ class AlternativeQueryResolver(
         return searchService.searchWithBody(index = ALTERNATIVES, params = emptyMap(), body = body)
     }
 
+    private fun fetchOpenSearch(hmsNrs: List<String>): String {
+        val body = fetchQuery(hmsNrs)
+        LOG.debug("Fetch query: $body")
+        return searchService.searchWithBody(index = ALTERNATIVES, params = emptyMap(), body = body)
+    }
 
     fun searchAlternativeProductsPage(hmsNrs: List<String>, from: Int, size: Int): AlternativeProductsPage {
         val json = objectMapper.readTree(searchOpenSearch(hmsNrs, from, size))
@@ -127,6 +142,16 @@ fun buildQueryBody(hmsnrs: List<String>, from: Int = 0, size: Int = 1000) = """
   "query": {
     "terms": {
       "alternativeFor": ${hmsnrs.joinToString(prefix = "[\"", separator = "\",\"", postfix = "\"]")}
+    }
+  }
+}
+"""
+
+fun fetchQuery(hmsnrs: List<String>) = """
+{
+  "query": {
+    "terms": {
+      "hmsArtNr": ${hmsnrs.joinToString(prefix = "[\"", separator = "\",\"", postfix = "\"]")}
     }
   }
 }

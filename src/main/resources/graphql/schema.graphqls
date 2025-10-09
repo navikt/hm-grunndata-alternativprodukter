@@ -1,6 +1,7 @@
 type Query {
     alternativeProducts(hmsnrs:[String!]!): [AlternativeProduct!]!
     alternativeProductsPage(hmsnrs: [String!]!, from: Int, size: Int): AlternativeProductPage!
+    fetchAlternativeProducts(hmsnrs: [String!]!): [AlternativeProduct!]!
     productStock(hmsnr: String!): ProductStock!
     productStocks(hmsnrs: [String!]!, enhetnr: String!): [ProductStock!]!
     productStocksAllLocations(hmsnrs: [String!]!): [ProductStock!]!

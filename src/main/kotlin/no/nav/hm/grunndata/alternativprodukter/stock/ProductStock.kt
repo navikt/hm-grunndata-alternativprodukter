@@ -36,6 +36,12 @@ data class ProductStockDTO(
 )
 
 @Serdeable
+data class ProductNullableStockDTO(
+    val hmsArtNr: String,
+    val warehouseStock: List<WarehouseStock>?,
+)
+
+@Serdeable
 data class WarehouseStock(
     val inStock: Boolean,
     val amountInStock: Int,
@@ -60,6 +66,13 @@ fun ProductStock.toDTO(): ProductStockDTO {
         status = status,
         warehouseStock =  oebsStockResponse.map { it.toDTO(this.updated) },
         updated = updated
+    )
+}
+
+fun ProductStock.toNullableDTO(): ProductNullableStockDTO {
+    return ProductNullableStockDTO(
+        hmsArtNr = hmsArtnr,
+        warehouseStock = oebsStockResponse.map { it.toDTO(this.updated) },
     )
 }
 
