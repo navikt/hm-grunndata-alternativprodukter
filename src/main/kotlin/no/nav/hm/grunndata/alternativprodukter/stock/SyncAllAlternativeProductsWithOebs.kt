@@ -1,9 +1,10 @@
 package no.nav.hm.grunndata.alternativprodukter.stock
 
 import jakarta.inject.Singleton
+import java.time.LocalDateTime
 import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeAndProductStockService.ProductStockAlternatives
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingRepository
-import no.nav.hm.grunndata.alternativprodukter.alternative.ProductStockAlternatives
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductDoc
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
@@ -11,7 +12,6 @@ import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.alternativprodukter.index.toDoc
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
-import java.time.LocalDateTime
 
 @Singleton
 class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,

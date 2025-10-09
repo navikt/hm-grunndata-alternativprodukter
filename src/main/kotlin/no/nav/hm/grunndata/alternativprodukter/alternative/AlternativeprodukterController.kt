@@ -9,7 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductNullableStockDTO
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
 import no.nav.hm.grunndata.alternativprodukter.stock.toNullableDTO
 import org.slf4j.LoggerFactory
@@ -18,20 +17,12 @@ import org.slf4j.LoggerFactory
 @Tag(name = "Alternativprodukter")
 class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
-    private val alternativeAndProductStockService: AlternativeAndProductStockService,
     private val alternativesFrontend: AlternativesFrontend,
     private val productStockRepository: ProductStockRepository
 ) {
 
     companion object {
         val LOG = LoggerFactory.getLogger(AlternativeProductsController::class.java)
-    }
-
-    @Get("/stock-alternatives/{hmsArtNr}")
-    suspend fun getStockAndAlternatives(hmsArtNr: String): HttpResponse<ProductStockAlternatives> {
-        return HttpResponse.ok(
-            //alternativeAndProductStockService.getStockAndAlternativesFromOebs(hmsArtNr),
-        )
     }
 
     @Get("/stock/{hmsArtNr}")
@@ -80,7 +71,3 @@ class AlternativeProductsController(
 
 @Serdeable
 data class AlternativesWithStock(val original: ProductNullableStockDTO, val alternatives: List<ProductNullableStockDTO>)
-
-
-@Serdeable
-data class ProductStockAlternatives(val original: ProductStockDTO, val alternatives: List<String>)

@@ -1,12 +1,25 @@
 package no.nav.hm.grunndata.alternativprodukter.index
 
 import io.micronaut.core.annotation.Introspected
-import no.nav.hm.grunndata.alternativprodukter.alternative.ProductStockAlternatives
-import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
-import no.nav.hm.grunndata.alternativprodukter.stock.WarehouseStock
-import no.nav.hm.grunndata.rapid.dto.*
 import java.time.LocalDateTime
 import java.util.UUID
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeAndProductStockService.ProductStockAlternatives
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
+import no.nav.hm.grunndata.alternativprodukter.stock.WarehouseStock
+import no.nav.hm.grunndata.rapid.dto.AgreementInfo
+import no.nav.hm.grunndata.rapid.dto.AlternativeFor
+import no.nav.hm.grunndata.rapid.dto.Attributes
+import no.nav.hm.grunndata.rapid.dto.CompatibleWith
+import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
+import no.nav.hm.grunndata.rapid.dto.MediaInfo
+import no.nav.hm.grunndata.rapid.dto.MediaSourceType
+import no.nav.hm.grunndata.rapid.dto.MediaType
+import no.nav.hm.grunndata.rapid.dto.PakrevdGodkjenningskurs
+import no.nav.hm.grunndata.rapid.dto.ProductAgreementStatus
+import no.nav.hm.grunndata.rapid.dto.ProductRapidDTO
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import no.nav.hm.grunndata.rapid.dto.Produkttype
+import no.nav.hm.grunndata.rapid.dto.TechData
 
 @Introspected
 data class AlternativeProductDoc(

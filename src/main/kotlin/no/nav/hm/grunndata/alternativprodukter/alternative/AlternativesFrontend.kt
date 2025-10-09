@@ -1,6 +1,7 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import java.time.LocalDateTime
 import java.util.UUID
@@ -92,6 +93,7 @@ class AlternativesFrontend(
 
 }
 
+@Serdeable
 data class AlternativesWithStockNew(val original: ProductResponse, val alternatives: List<ProductResponse?>)
 
 @Language("JSON")
