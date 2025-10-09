@@ -174,7 +174,7 @@ fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
 )
 
 fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: ProductStockAlternatives): AlternativeProductDoc {
-        val (onlyActiveAgreements, previousAgreements) =
+    val (onlyActiveAgreements) =
             agreements.partition {
                 it.published!!.isBefore(LocalDateTime.now())
                         && it.expired.isAfter(LocalDateTime.now()) && it.status == ProductAgreementStatus.ACTIVE
@@ -190,10 +190,10 @@ fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: Product
             hmsArtNr = hmsArtNr,
             supplierRef = supplierRef,
             isoCategory = isoCategory,
-            isoCategoryTitle = iso?.isoTitle,
-            isoCategoryTitleShort = iso?.isoTitleShort,
-            isoCategoryText = iso?.isoText,
-            isoCategoryTextShort = iso?.isoTextShort,
+            isoCategoryTitle = iso.isoTitle,
+            isoCategoryTitleShort = iso.isoTitleShort,
+            isoCategoryText = iso.isoText,
+            isoCategoryTextShort = iso.isoTextShort,
             seriesId = seriesUUID.toString(),
             data = techData,
             media = media.map { it.toDoc() }.sortedBy { it.priority },

@@ -22,7 +22,7 @@ class SyncAllAlternativeProductsWithOebsTest(
     init {
 
         runBlocking {
-            val saved = hmsArtnrMappingRepository.save(
+            hmsArtnrMappingRepository.save(
                 HmsArtnrMapping(
                     sourceHmsArtnr = MockFactory.sourceHmsNr,
                     targetHmsArtnr = MockFactory.targetHmsNr,

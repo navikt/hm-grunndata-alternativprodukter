@@ -3,7 +3,6 @@ package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
-import io.micronaut.data.model.query.factory.Projections.id
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMapping
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingInputDTO

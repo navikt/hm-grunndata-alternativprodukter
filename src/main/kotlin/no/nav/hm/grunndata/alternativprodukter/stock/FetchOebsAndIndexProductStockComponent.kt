@@ -95,7 +95,7 @@ open class FetchOebsAndIndexProductStockComponent(
     suspend fun saveAndReindex(oebsStocks: List<ProductStock>) {
         LOG.info("Saving and reindexing ${oebsStocks.size} product stocks")
         val hmsnrs = oebsStocks.map { oebsStock ->
-            val saved = productStockRepository.findByHmsArtnr(oebsStock.hmsArtnr)?.let {
+            productStockRepository.findByHmsArtnr(oebsStock.hmsArtnr)?.let {
                 productStockRepository.update(
                     it.copy(
                         updated = LocalDateTime.now(),
