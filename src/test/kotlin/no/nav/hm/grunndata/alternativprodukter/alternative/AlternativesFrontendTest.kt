@@ -1,8 +1,8 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.equality.shouldBeEqualToComparingFields
 import io.kotest.matchers.equality.shouldNotBeEqualToComparingFields
-import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.runBlocking
@@ -23,7 +23,7 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
             val original = result.original
             val productResponse = ProductResponse(
                 seriesId = "seriesid123",
-                id = "123",
+                variantId = "123",
                 seriesTitle = "Produkttittel",
                 variantTitle = "Artikkelnavn",
                 status = "ACTIVE",
@@ -32,8 +32,8 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
                 supplierName = "Supplier AS",
                 highestRank = 99,
                 onAgreement = false,
-                warehouseStock = emptyList(),
-                inStockAnyWarehouse = false
+                warehouseStock = listOf(StockResponse(location = "Location", available = 1)),
+                inStockAnyWarehouse = true
             )
             original.shouldBeEqualToComparingFields(productResponse)
         }
@@ -47,7 +47,7 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
             val original = result.original
             val productResponse = ProductResponse(
                 seriesId = null,
-                id = "123",
+                variantId = "123",
                 seriesTitle = "Produkttittel",
                 variantTitle = "Artikkelnavn",
                 status = "ACTIVE",
@@ -65,10 +65,11 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
     }
 
     @Test
-    fun `unknown hmsnr should be null`() {
+    fun `unknown hmsnr should throw exception`() {
         runBlocking {
-            val result = alternativesFrontend.getAlternatives("00000")
-            result.shouldBeNull()
+            shouldThrow<IllegalArgumentException> {
+                alternativesFrontend.getAlternatives("00000")
+            }
         }
     }
 }

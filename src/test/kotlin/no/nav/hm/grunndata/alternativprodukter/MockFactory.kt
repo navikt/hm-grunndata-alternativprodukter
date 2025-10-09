@@ -14,6 +14,8 @@ import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
 import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
+import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import no.nav.hm.grunndata.rapid.dto.MediaInfo
@@ -162,4 +164,36 @@ class MockFactory {
         coEvery { searchWithBody(SearchService.PRODUCTS, any(), body) } returns searchResponse
     }
 
+    @Singleton
+    @Replaces
+    fun mockProductStockRepository(): ProductStockRepository = mockk<ProductStockRepository>(relaxed = true).apply {
+        val oebsStockResponse = OebsStockResponse(
+            erPåLager = true,
+            antallPåLager = 1,
+            organisasjons_id = 1,
+            organisasjons_navn = "1234Location",
+            fysisk = 1,
+            minmax = true,
+            anmodning = 0,
+            intanmodning = 0,
+            forsyning = 0,
+            lagervare = true,
+            tilgjengeligatt = 0,
+            tilgjengeligroo = 0,
+            tilgjengelig = 1,
+            behovsmeldt = 0,
+            reservert = 0,
+            restordre = 0,
+            bestillinger = 0,
+            sortiment = true,
+            artikkelid = 1234,
+            artikkelnummer = testHmsNr
+        )
+        val productStock = ProductStock(
+            hmsArtnr = testHmsNr,
+            oebsStockResponse = listOf(oebsStockResponse),
+        )
+
+        coEvery { findByHmsArtnr(testHmsNr) } returns productStock
+    }
 }
