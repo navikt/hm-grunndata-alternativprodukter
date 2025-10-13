@@ -149,6 +149,7 @@ class MockFactory {
                       "seriesId": "seriesid123",
                       "media": [],
                       "expired": "${LocalDateTime.now()}",
+                      "agreements": [],
                       "hasAgreement": "false"
                     }
                 }]

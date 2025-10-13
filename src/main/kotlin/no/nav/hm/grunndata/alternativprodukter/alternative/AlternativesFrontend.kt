@@ -12,6 +12,7 @@ import no.nav.hm.grunndata.rapid.dto.MediaSourceType
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.intellij.lang.annotations.Language
+import org.slf4j.LoggerFactory
 import kotlin.math.max
 
 @Singleton
@@ -22,11 +23,15 @@ class AlternativesFrontend(
     private val objectMapper: ObjectMapper
 ) {
 
+    companion object {
+        private val LOG = LoggerFactory.getLogger(AlternativesFrontend::class.java)
+    }
+
     suspend fun getAlternatives(hmsNr: String): AlternativesWithStockNew? {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsNr)
 
         val originalResponse = searchForProduct(hmsNr)?.toResponse() ?: throw IllegalArgumentException("Unknown hmsNr")
-        val alternativesResponse = alternatives.map { searchForProduct(it) }.map { it?.toResponse() }
+        val alternativesResponse = alternatives.map { searchForProduct(it) }.mapNotNull { it?.toResponse() }
 
         return AlternativesWithStockNew(original = originalResponse, alternatives = alternativesResponse)
 
@@ -99,20 +104,22 @@ data class AlternativesWithStockNew(val original: ProductResponse, val alternati
 @Language("JSON")
 fun searchBodyProduct(hmsNr: String) = """
         {
-          "query": {
-            "bool": {
-              "must": {
-                "terms": {
-                  "hmsArtNr": $hmsNr
-                }
-              }
-            }
-          }
+  "query": {
+    "bool": {
+      "must": {
+        "match": {
+          "hmsArtNr": $hmsNr
         }
-        """
+      }
+    }
+  }
+}
+        """.trimIndent()
 
+@Serdeable
 data class StockResponse(val location: String, val available: Number)
 
+@Serdeable
 data class ProductResponse(
     val seriesId: String?,
     val variantId: String,
@@ -128,6 +135,7 @@ data class ProductResponse(
     val inStockAnyWarehouse: Boolean
 )
 
+@Serdeable
 data class ProductDoc(
     override val id: String,
     val supplier: ProductSupplier,
@@ -145,6 +153,7 @@ data class ProductDoc(
     val agreements: List<AgreementInfoDoc> = emptyList(),
 ) : SearchDoc
 
+@Serdeable
 data class AgreementInfoDoc(
     val id: UUID,
     val identifier: String? = null,
@@ -161,11 +170,13 @@ data class AgreementInfoDoc(
     val expired: LocalDateTime,
 )
 
+@Serdeable
 data class AttributesDoc(
     val manufacturer: String? = null,
     val series: String? = null,
 )
 
+@Serdeable
 data class MediaDoc(
     val uri: String,
     val priority: Int = 1,
@@ -174,4 +185,5 @@ data class MediaDoc(
     val source: MediaSourceType = MediaSourceType.HMDB
 )
 
+@Serdeable
 data class ProductSupplier(val id: String, val identifier: String, val name: String)
