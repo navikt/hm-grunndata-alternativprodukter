@@ -5,6 +5,7 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.serde.annotation.Serdeable
 
 @Controller("/hmsArtNrMapping")
 class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository) {
@@ -33,6 +34,51 @@ class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrM
         return listOf(createdMapping.toDto(), createdReverseMapping.toDto())
     }
 
+    @Post("/group/add")
+    suspend fun addToGroup(
+        @Body editGroupDTO: EditGroupDTO
+    ): List<HmsArtnrMappingInputDTO> {
+        val newMappings = editGroupDTO.group.map {
+            val createdMapping = hmsArtnrMappingRepository.save(
+                HmsArtnrMapping(
+                    sourceHmsArtnr = it,
+                    targetHmsArtnr = editGroupDTO.alternative
+                )
+            )
+
+            val createdReverseMapping = hmsArtnrMappingRepository.save(
+                HmsArtnrMapping(
+                    sourceHmsArtnr = editGroupDTO.alternative,
+                    targetHmsArtnr = it
+                )
+            )
+            listOf(createdMapping.toDto(), createdReverseMapping.toDto())
+        }.flatten()
+
+        return newMappings
+    }
+
+    @Delete("/group/delete")
+    suspend fun deleteFromGroup(
+        @Body editGroupDTO: EditGroupDTO
+    ) {
+        editGroupDTO.group.forEach {
+            hmsArtnrMappingRepository.delete(
+                HmsArtnrMapping(
+                    sourceHmsArtnr = it,
+                    targetHmsArtnr = editGroupDTO.alternative
+                )
+            )
+
+            hmsArtnrMappingRepository.delete(
+                HmsArtnrMapping(
+                    sourceHmsArtnr = editGroupDTO.alternative,
+                    targetHmsArtnr = it
+                )
+            )
+        }
+    }
+
     @Delete("/delete")
     suspend fun deleteMapping(
         @Body mapping: HmsArtnrMappingInputDTO
@@ -50,3 +96,6 @@ class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrM
 
 
 }
+
+@Serdeable
+data class EditGroupDTO(val group: List<String>, val alternative: String)
