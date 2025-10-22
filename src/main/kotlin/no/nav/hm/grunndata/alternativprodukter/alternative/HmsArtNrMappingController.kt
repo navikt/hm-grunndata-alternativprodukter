@@ -68,15 +68,13 @@ class HmsArtNrMappingController(private val hmsArtnrMappingRepository: HmsArtnrM
     suspend fun deleteFromGroup(
         @Body editGroupDTO: EditGroupDTO
     ) {
-        editGroupDTO.group.forEach {
+        editGroupDTO.group.filter { it !== editGroupDTO.alternative }.forEach {
             hmsArtnrMappingRepository.deleteMapping(
-                sourceHmsArtnr = it,
-                targetHmsArtnr = editGroupDTO.alternative
+                sourceHmsArtnr = it, targetHmsArtnr = editGroupDTO.alternative
             )
 
             hmsArtnrMappingRepository.deleteMapping(
-                sourceHmsArtnr = editGroupDTO.alternative,
-                targetHmsArtnr = it
+                sourceHmsArtnr = editGroupDTO.alternative, targetHmsArtnr = it
             )
         }
     }
