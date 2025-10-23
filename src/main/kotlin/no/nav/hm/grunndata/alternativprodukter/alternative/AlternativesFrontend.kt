@@ -50,7 +50,7 @@ class AlternativesFrontend(
                 it.get("_source"),
                 ProductDoc::class.java
             )
-        }.first()
+        }.firstOrNull()
     }
 
     suspend fun ProductDoc.toResponse(): ProductResponse {
