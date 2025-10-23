@@ -108,7 +108,7 @@ fun searchBodyProduct(hmsNr: String) = """
     "bool": {
       "must": {
         "match": {
-          "hmsArtNr": $hmsNr
+          "hmsArtNr": "$hmsNr"
         }
       }
     }
