@@ -3,7 +3,10 @@ package no.nav.hm.grunndata.alternativprodukter.alternative
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
+import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.mockk.coEvery
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
@@ -13,10 +16,16 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
 
     val testHmsnr = "147286"
 
+    @MockBean(AzureAdUserClient::class)
+    fun mockAuth(): AzureAdUserClient = mockk<AzureAdUserClient>().apply {
+        coEvery { validateToken(any()) } returns AuthResponse(active = true)
+    }
+
+
     @Test
     fun test() {
         runBlocking {
-            val alts = alternativeProductsController.getAlternatives(testHmsnr)
+            val alts = alternativeProductsController.getAlternatives(authentication = "123", hmsArtNr = testHmsnr)
             alts.shouldNotBeNull()
             alts.body().shouldNotBeNull()
             alts.body().original.hmsArtNr.shouldBe(testHmsnr)
@@ -26,7 +35,7 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
     @Test
     fun `unknown hmsnr should return 404 not found`() {
         runBlocking {
-            val response = alternativeProductsController.getAlternatives("0000")
+            val response = alternativeProductsController.getAlternatives(authentication = "123", hmsArtNr = "0000")
             response.status.shouldBe(HttpStatus.NOT_FOUND)
         }
     }

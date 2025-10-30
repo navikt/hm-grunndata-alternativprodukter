@@ -3,6 +3,7 @@ package no.nav.hm.grunndata.alternativprodukter.alternative
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Header
 import io.micronaut.serde.annotation.Serdeable
 import io.swagger.v3.oas.annotations.tags.Tag
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,8 @@ import org.slf4j.LoggerFactory
 class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
     private val alternativesFrontend: AlternativesFrontend,
-    private val productStockRepository: ProductStockRepository
+    private val productStockRepository: ProductStockRepository,
+    private val azureAdUserClient: AzureAdUserClient
 ) {
 
     companion object {
@@ -58,7 +60,13 @@ class AlternativeProductsController(
     }
 
     @Get("/alternatives/{hmsArtNr}")
-    suspend fun getAlternatives(hmsArtNr: String): HttpResponse<AlternativesWithStockNew> {
+    suspend fun getAlternatives(
+        @Header("Authentication") authentication: String,
+        hmsArtNr: String
+    ): HttpResponse<AlternativesWithStockNew> {
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authentication))
+        LOG.info("token valid? " + tokenValidated.active)
+        
         val alternativesWithStockNew = try {
             alternativesFrontend.getAlternatives(hmsArtNr)
         } catch (illegalArgument: IllegalArgumentException) {
