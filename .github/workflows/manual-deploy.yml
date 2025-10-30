@@ -17,12 +17,14 @@ jobs:
       contents: write
       id-token: write
       packages: write
+      security-events: write
       actions: read
     uses: navikt/mime-deploy/.github/workflows/build-deploy-dev-kotlin.yml@v0
     with:
-      NAIS_RESOURCE: .nais/nais.yaml
+      NAIS_RESOURCE: .nais/nais.yml
       NAIS_VARS: ".nais/nais-dev.json"
       JAVA_VERSION: 17
       CODEQL_ENABLED: true
       SKIP_DRAFT_RELEASE: true
+      DRAFTS_MAX: '100'
     secrets: inherit
