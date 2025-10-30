@@ -107,6 +107,8 @@ azure:
   endpoint: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:`localhost`}
   grant:
     type: client_credentials
+  introspection:
+    endpoint: ${NAIS_TOKEN_INTROSPECTION_ENDPOINT:`localhost`}
 
 oebs:
   url: https://${OEBS_API_PROXY}
