@@ -26,4 +26,5 @@ jobs:
       JAVA_VERSION: 17
       CODEQL_ENABLED: true
       SKIP_DRAFT_RELEASE: true
+      DRAFTS_MAX: '100'
     secrets: inherit
