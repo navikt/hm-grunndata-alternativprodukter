@@ -61,10 +61,10 @@ class AlternativeProductsController(
 
     @Get("/alternatives/{hmsArtNr}")
     suspend fun getAlternatives(
-        @Header("Authentication") authentication: String,
+        @Header("Authorization") authorization: String,
         hmsArtNr: String
     ): HttpResponse<AlternativesWithStockNew> {
-        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authentication))
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authorization))
         LOG.info("token valid? " + tokenValidated.active)
         
         val alternativesWithStockNew = try {

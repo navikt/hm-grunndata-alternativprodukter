@@ -25,7 +25,7 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
     @Test
     fun test() {
         runBlocking {
-            val alts = alternativeProductsController.getAlternatives(authentication = "123", hmsArtNr = testHmsnr)
+            val alts = alternativeProductsController.getAlternatives(authorization = "123", hmsArtNr = testHmsnr)
             alts.shouldNotBeNull()
             alts.body().shouldNotBeNull()
             alts.body().original.hmsArtNr.shouldBe(testHmsnr)
@@ -35,7 +35,7 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
     @Test
     fun `unknown hmsnr should return 404 not found`() {
         runBlocking {
-            val response = alternativeProductsController.getAlternatives(authentication = "123", hmsArtNr = "0000")
+            val response = alternativeProductsController.getAlternatives(authorization = "123", hmsArtNr = "0000")
             response.status.shouldBe(HttpStatus.NOT_FOUND)
         }
     }
