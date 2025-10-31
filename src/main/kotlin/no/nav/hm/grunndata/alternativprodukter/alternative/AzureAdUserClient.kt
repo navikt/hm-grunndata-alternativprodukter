@@ -18,7 +18,7 @@ interface AzureAdUserClient {
 @Serdeable
 data class AuthBody(
     val token: String,
-    val identityProvider: String? = "azuread",
+    val identity_provider: String? = "azuread",
 )
 
 @Serdeable
