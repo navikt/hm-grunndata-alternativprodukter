@@ -65,15 +65,18 @@ class AlternativeProductsController(
         hmsArtNr: String
     ): HttpResponse<AlternativesWithStockNew> {
         val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authorization))
-        LOG.info("token valid? " + tokenValidated.active)
-        
-        val alternativesWithStockNew = try {
-            alternativesFrontend.getAlternatives(hmsArtNr)
-        } catch (illegalArgument: IllegalArgumentException) {
-            return HttpResponse.notFound()
-        }
 
-        return HttpResponse.ok(alternativesWithStockNew)
+        if (tokenValidated.active) {
+            val alternativesWithStockNew = try {
+                alternativesFrontend.getAlternatives(hmsArtNr)
+            } catch (illegalArgument: IllegalArgumentException) {
+                return HttpResponse.notFound()
+            }
+
+            return HttpResponse.ok(alternativesWithStockNew)
+        } else {
+            return HttpResponse.unauthorized()
+        }
     }
 }
 
