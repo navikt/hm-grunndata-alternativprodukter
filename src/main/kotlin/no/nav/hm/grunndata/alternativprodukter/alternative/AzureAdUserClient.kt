@@ -24,4 +24,5 @@ data class AuthBody(
 @Serdeable
 data class AuthResponse(
     val active: Boolean,
+    val error: String? = "aok"
 )
