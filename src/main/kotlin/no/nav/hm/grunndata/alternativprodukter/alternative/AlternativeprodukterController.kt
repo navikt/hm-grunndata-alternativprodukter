@@ -64,7 +64,9 @@ class AlternativeProductsController(
         @Header("Authorization") authorization: String,
         hmsArtNr: String
     ): HttpResponse<AlternativesWithStockNew> {
-        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authorization))
+        val authToken = authorization.removePrefix("Bearer ")
+
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
 
         if (tokenValidated.active) {
             val alternativesWithStockNew = try {
@@ -76,6 +78,7 @@ class AlternativeProductsController(
             return HttpResponse.ok(alternativesWithStockNew)
         } else {
             LOG.warn("Token fail: " + tokenValidated.error)
+            LOG.warn("Token: " + tokenValidated)
             return HttpResponse.unauthorized()
         }
     }

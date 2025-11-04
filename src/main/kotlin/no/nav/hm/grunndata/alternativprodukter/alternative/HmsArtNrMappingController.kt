@@ -8,6 +8,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Post
 import io.micronaut.serde.annotation.Serdeable
+import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductsController.Companion.LOG
 
 @Controller("/hmsArtNrMapping")
 class HmsArtNrMappingController(
@@ -23,7 +24,9 @@ class HmsArtNrMappingController(
         @Header("Authorization") authorization: String,
         @Body editGroupDTO: EditGroupDTO
     ): HttpResponse<List<HmsArtnrMappingInputDTO>> {
-        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authorization))
+        val authToken = authorization.removePrefix("Bearer ")
+
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
 
         if (tokenValidated.active) {
             if (editGroupDTO.group.contains(editGroupDTO.alternative)) {
@@ -49,6 +52,7 @@ class HmsArtNrMappingController(
 
             return HttpResponse.ok(newMappings)
         } else {
+            LOG.warn("Token fail: " + tokenValidated.error)
             return HttpResponse.unauthorized()
         }
     }
@@ -72,6 +76,7 @@ class HmsArtNrMappingController(
             }
             return HttpResponse.ok()
         } else {
+            LOG.warn("Token fail: " + tokenValidated.error)
             return HttpResponse.unauthorized()
         }
     }
