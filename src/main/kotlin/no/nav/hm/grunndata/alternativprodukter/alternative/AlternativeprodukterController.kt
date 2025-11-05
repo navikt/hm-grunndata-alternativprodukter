@@ -78,8 +78,6 @@ class AlternativeProductsController(
             return HttpResponse.ok(alternativesWithStockNew)
         } else {
             LOG.warn("Token fail: " + tokenValidated.error)
-            LOG.warn("Token: " + tokenValidated)
-            LOG.warn("Token: " + authToken)
             return HttpResponse.unauthorized()
         }
     }
