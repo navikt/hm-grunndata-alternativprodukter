@@ -62,8 +62,10 @@ class HmsArtNrMappingController(
         @Header("Authorization") authorization: String,
         @Body editGroupDTO: EditGroupDTO
     ): HttpResponse<String> {
-        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authorization))
+        val authToken = authorization.removePrefix("Bearer ")
 
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
+        
         if (tokenValidated.active) {
             editGroupDTO.group.filter { it !== editGroupDTO.alternative }.forEach {
                 hmsArtnrMappingRepository.deleteMapping(
