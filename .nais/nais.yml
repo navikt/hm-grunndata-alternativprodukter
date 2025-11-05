@@ -93,3 +93,6 @@ spec:
         - application: hm-oversikt-frontend
         - application: hm-grunndata-index
         - application: hotsak-frontend
+        - application: azure-token-generator
+          namespace: nais
+          cluster: dev-gcp
