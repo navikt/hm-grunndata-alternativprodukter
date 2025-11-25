@@ -20,7 +20,8 @@ class AlternativeProductsController(
     private val alternativeProductService: AlternativeProductService,
     private val alternativesFrontend: AlternativesFrontend,
     private val productStockRepository: ProductStockRepository,
-    private val azureAdUserClient: AzureAdUserClient
+    private val azureAdUserClient: AzureAdUserClient,
+    private val cliqueService: CliqueService,
 ) {
 
     companion object {
@@ -81,6 +82,25 @@ class AlternativeProductsController(
             return HttpResponse.unauthorized()
         }
     }
+
+    @Get("/cliques/{hmsArtNr}")
+    suspend fun getCliquesForHmsArtNrFromAlternatives(
+        @Header("Authorization") authorization: String,
+        hmsArtNr: String,
+    ): HttpResponse<Set<Set<String>>> {
+        val authToken = authorization.removePrefix("Bearer ")
+
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
+
+        return if (tokenValidated.active) {
+            val cliques = cliqueService.findCliquesContaining(hmsArtNr)
+            HttpResponse.ok(cliques)
+        } else {
+            LOG.warn("Token fail: " + tokenValidated.error)
+            HttpResponse.unauthorized()
+        }
+    }
+
 }
 
 @Serdeable

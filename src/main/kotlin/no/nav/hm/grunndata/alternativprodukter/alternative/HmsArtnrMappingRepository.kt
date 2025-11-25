@@ -4,6 +4,7 @@ import io.micronaut.data.annotation.Query
 import io.micronaut.data.jdbc.annotation.JdbcRepository
 import io.micronaut.data.model.query.builder.sql.Dialect
 import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
+import io.micronaut.serde.annotation.Serdeable
 import java.util.UUID
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
@@ -29,4 +30,35 @@ interface HmsArtnrMappingRepository : CoroutineCrudRepository<HmsArtnrMapping, U
 
     suspend fun findDistinctSourceHmsArtnr(): Set<String>
 
+    @Query(
+        """
+        SELECT DISTINCT
+            LEAST(m1.source_hms_artnr, m1.target_hms_artnr) AS a,
+            GREATEST(m1.source_hms_artnr, m1.target_hms_artnr) AS b
+        FROM hms_artnr_mapping m1
+        JOIN hms_artnr_mapping m2
+          ON m1.source_hms_artnr = m2.target_hms_artnr
+         AND m1.target_hms_artnr = m2.source_hms_artnr
+        WHERE :hmsArtNr IN (m1.source_hms_artnr, m1.target_hms_artnr,
+                            m2.source_hms_artnr, m2.target_hms_artnr)
+        """
+    )
+    suspend fun findSymmetricPairsForHmsArtNr(hmsArtNr: String): List<SymmetricPair>
+
+    @Query(
+        """SELECT DISTINCT
+               LEAST(m1.source_hms_artnr, m1.target_hms_artnr) AS a,
+               GREATEST(m1.source_hms_artnr, m1.target_hms_artnr) AS b
+           FROM hms_artnr_mapping m1
+           JOIN hms_artnr_mapping m2
+             ON m1.source_hms_artnr = m2.target_hms_artnr
+            AND m1.target_hms_artnr = m2.source_hms_artnr"""
+    )
+    suspend fun findAllSymmetricPairs(): List<SymmetricPair>
 }
+
+@Serdeable
+data class SymmetricPair(
+    val a: String,
+    val b: String,
+)

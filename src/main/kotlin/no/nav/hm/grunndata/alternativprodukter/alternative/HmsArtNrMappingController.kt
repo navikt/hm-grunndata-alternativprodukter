@@ -19,6 +19,8 @@ class HmsArtNrMappingController(
     @Get("/all/distinct")
     suspend fun getAllDistinctHmsArtnr() = hmsArtnrMappingRepository.findDistinctSourceHmsArtnr()
 
+
+
     @Post("/group/add")
     suspend fun addToGroup(
         @Header("Authorization") authorization: String,
@@ -65,7 +67,7 @@ class HmsArtNrMappingController(
         val authToken = authorization.removePrefix("Bearer ")
 
         val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
-        
+
         if (tokenValidated.active) {
             editGroupDTO.group.filter { it !== editGroupDTO.alternative }.forEach {
                 hmsArtnrMappingRepository.deleteMapping(
