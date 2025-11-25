@@ -83,6 +83,29 @@ class AlternativeProductsController(
         }
     }
 
+    @Get("/alternatives-groups/{hmsArtNr}")
+    suspend fun getAlternativesInGroups(
+        @Header("Authorization") authorization: String,
+        hmsArtNr: String
+    ): HttpResponse<AlternativesWithStockGrouped> {
+        val authToken = authorization.removePrefix("Bearer ")
+
+        val tokenValidated = azureAdUserClient.validateToken(AuthBody(token = authToken))
+
+        return if (tokenValidated.active) {
+            val grouped = try {
+                alternativesFrontend.getAlternativesInGroups(hmsArtNr)
+            } catch (illegalArgument: IllegalArgumentException) {
+                return HttpResponse.notFound()
+            }
+
+            if (grouped == null) HttpResponse.notFound() else HttpResponse.ok(grouped)
+        } else {
+            LOG.warn("Token fail: " + tokenValidated.error)
+            HttpResponse.unauthorized()
+        }
+    }
+
     @Get("/cliques/{hmsArtNr}")
     suspend fun getCliquesForHmsArtNrFromAlternatives(
         @Header("Authorization") authorization: String,
@@ -101,6 +124,10 @@ class AlternativeProductsController(
         }
     }
 
+    @Get("/cliques-noauth/{hmsArtNr}")
+    suspend fun getCliquesForHmsArtNrNoAuth(
+        hmsArtNr: String,
+    ): Set<Set<String>> = cliqueService.findCliquesContaining(hmsArtNr)
 }
 
 @Serdeable
