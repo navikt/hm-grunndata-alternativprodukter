@@ -34,7 +34,7 @@ class CliqueService(
 
         if (directNeighbors.isEmpty()) return emptySet()
 
-        val egoNodes = directNeighbors + hmsArtNr
+        val egoNodes = (directNeighbors + hmsArtNr).sorted().toSet()
 
         // Restrict pairs to those fully inside the ego-node set (induced subgraph)
         val symmetricPairs = allPairs.filter { (a, b) ->
@@ -47,31 +47,45 @@ class CliqueService(
             neighbors.computeIfAbsent(a) { mutableSetOf() }.add(b)
             neighbors.computeIfAbsent(b) { mutableSetOf() }.add(a)
         }
+        // Ensure the requested node is present even if it has no neighbors inside the induced graph
         neighbors.putIfAbsent(hmsArtNr, mutableSetOf())
 
         val graph = neighbors.mapValues { it.value.toSet() }
         val allCliques = mutableSetOf<Set<String>>()
 
-        fun bronKerbosch(r: Set<String>, p: Set<String>, x: Set<String>) {
+        // Guard against pathological recursion depth: ego graphs are normally tiny,
+        // but if something goes wrong we avoid blowing the stack.
+        val maxDepth = egoNodes.size + 2
+
+        fun bronKerbosch(r: Set<String>, p: Set<String>, x: Set<String>, depth: Int) {
+            if (depth > maxDepth) return
+
             if (p.isEmpty() && x.isEmpty()) {
                 if (r.contains(hmsArtNr) && r.size >= 2) {
                     allCliques.add(r)
                 }
                 return
             }
+
             var pVar = p
             for (v in p.toList()) {
                 val vNeighbors = graph[v] ?: emptySet()
+                if (vNeighbors.isEmpty()) {
+                    // If v has no neighbors in the induced graph, it cannot grow a clique beyond itself
+                    pVar = pVar - v
+                    continue
+                }
                 bronKerbosch(
                     r + v,
                     pVar intersect vNeighbors,
                     x intersect vNeighbors,
+                    depth + 1,
                 )
                 pVar = pVar - v
             }
         }
 
-        bronKerbosch(emptySet(), egoNodes, emptySet())
+        bronKerbosch(emptySet(), egoNodes, emptySet(), depth = 0)
 
         // Keep only maximal cliques (no clique that is a strict subset of another)
         val maximalCliques = allCliques.filter { candidate ->
