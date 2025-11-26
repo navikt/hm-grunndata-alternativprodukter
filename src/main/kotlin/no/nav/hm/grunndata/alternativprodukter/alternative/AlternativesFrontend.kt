@@ -50,7 +50,7 @@ class AlternativesFrontend(
         val cliques = cliqueService.findCliquesContaining(hmsNr)
 
         // Build groups: each clique becomes a group of ProductResponses (original first if present)
-        val groups = cliques.map { clique ->
+        val rawGroups = cliques.map { clique ->
             val products = mutableListOf<ProductResponse>()
 
             // Always include original first if it is part of this clique
@@ -66,7 +66,25 @@ class AlternativesFrontend(
             products.toList()
         }.filter { it.isNotEmpty() }
 
-        return AlternativesWithStockGrouped(original = original, groups = groups)
+        // Remove exact duplicates first
+        val distinctGroups = rawGroups.distinctBy { group ->
+            group.map { it.hmsArtNr }.sorted().joinToString(",")
+        }
+
+        // Keep only maximal groups at the product level
+        val maximalGroups = distinctGroups.filter { candidate ->
+            val candidateSet = candidate.map { it.hmsArtNr }.toSet()
+            distinctGroups.none { other ->
+                if (other === candidate) return@none false
+                val otherSet = other.map { it.hmsArtNr }.toSet()
+                otherSet.containsAll(candidateSet)
+            }
+        }
+
+        LOG.info("Raw groups for $hmsNr: ${rawGroups.map { it.map(ProductResponse::hmsArtNr) }}")
+        LOG.info("Maximal groups for $hmsNr: ${maximalGroups.map { it.map(ProductResponse::hmsArtNr) }}")
+
+        return AlternativesWithStockGrouped(original = original, groups = maximalGroups)
     }
 
     private fun searchForProduct(hmsNr: String): ProductDoc? {

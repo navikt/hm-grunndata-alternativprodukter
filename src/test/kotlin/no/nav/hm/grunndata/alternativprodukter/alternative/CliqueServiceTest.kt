@@ -122,4 +122,44 @@ class CliqueServiceTest {
 
         assertEquals(expected, cliques)
     }
+
+    @Test
+    fun `two cliques`() = runBlocking {
+        val a = "D1"
+        val b = "D2"
+        val c = "D3"
+
+        suspend fun insert(s: String, t: String) {
+            hmsArtnrMappingRepository.insertMapping(UUID.randomUUID(), s, t)
+        }
+
+        // Clique {a,b}
+        insert(a, b); insert(b, a)
+
+        // Clique {c,b}
+        insert(c, b); insert(b, c)
+
+        val cliques = cliqueService.findCliquesContaining(b)
+
+        val expected = setOf(
+            setOf(a, b),
+            setOf(c, b),
+        )
+
+        assertEquals(expected, cliques)
+
+        //adding one more product to clique {a,b}
+        val d = "D4"
+        insert(a, d); insert(d, a)
+        insert(b, d); insert(d, b)
+
+        val expectedUpdated = setOf(
+            setOf(a, b, d),
+            setOf(c, b),
+        )
+
+        val cliquesUpdated = cliqueService.findCliquesContaining(b)
+
+        assertEquals(expectedUpdated, cliquesUpdated)
+    }
 }
