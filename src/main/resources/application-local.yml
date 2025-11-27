@@ -1,0 +1,5 @@
+micronaut:
+  task:
+    scheduling:
+      enabled: true
+

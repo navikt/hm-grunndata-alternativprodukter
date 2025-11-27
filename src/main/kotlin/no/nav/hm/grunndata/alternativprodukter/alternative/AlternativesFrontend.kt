@@ -20,7 +20,8 @@ class AlternativesFrontend(
     private val alternativeProductService: AlternativeProductService,
     private val productStockRepository: ProductStockRepository,
     private val searchService: SearchService,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val cliqueService: CliqueService,
 ) {
 
     companion object {
@@ -35,6 +36,55 @@ class AlternativesFrontend(
 
         return AlternativesWithStockNew(original = originalResponse, alternatives = alternativesResponse)
 
+    }
+
+    suspend fun getAlternativesInGroups(hmsNr: String): AlternativesWithStockGrouped? {
+        val base = getAlternatives(hmsNr) ?: return null
+
+        // Map hmsArtNr -> ProductResponse for quick lookup
+        val original = base.original
+        val alternativeByHms = base.alternatives
+            .filterNotNull()
+            .associateBy { it.hmsArtNr }
+
+        val cliques = cliqueService.findCliquesContaining(hmsNr)
+
+        // Build groups: each clique becomes a group of ProductResponses (original first if present)
+        val rawGroups = cliques.map { clique ->
+            val products = mutableListOf<ProductResponse>()
+
+            // Always include original first if it is part of this clique
+            if (clique.contains(original.hmsArtNr)) {
+                products.add(original)
+            }
+
+            // Then include alternatives from this clique (excluding original to avoid duplicates)
+            clique.filter { it != original.hmsArtNr }
+                .mapNotNull { alternativeByHms[it] }
+                .forEach { products.add(it) }
+
+            products.toList()
+        }.filter { it.isNotEmpty() }
+
+        // Remove exact duplicates first
+        val distinctGroups = rawGroups.distinctBy { group ->
+            group.map { it.hmsArtNr }.sorted().joinToString(",")
+        }
+
+        // Keep only maximal groups at the product level
+        val maximalGroups = distinctGroups.filter { candidate ->
+            val candidateSet = candidate.map { it.hmsArtNr }.toSet()
+            distinctGroups.none { other ->
+                if (other === candidate) return@none false
+                val otherSet = other.map { it.hmsArtNr }.toSet()
+                otherSet.containsAll(candidateSet)
+            }
+        }
+
+        LOG.info("Raw groups for $hmsNr: ${rawGroups.map { it.map(ProductResponse::hmsArtNr) }}")
+        LOG.info("Maximal groups for $hmsNr: ${maximalGroups.map { it.map(ProductResponse::hmsArtNr) }}")
+
+        return AlternativesWithStockGrouped(original = original, groups = maximalGroups)
     }
 
     private fun searchForProduct(hmsNr: String): ProductDoc? {
@@ -100,6 +150,9 @@ class AlternativesFrontend(
 
 @Serdeable
 data class AlternativesWithStockNew(val original: ProductResponse, val alternatives: List<ProductResponse?>)
+
+@Serdeable
+data class AlternativesWithStockGrouped(val original: ProductResponse, val groups: List<List<ProductResponse>>)
 
 @Language("JSON")
 fun searchBodyProduct(hmsNr: String) = """
