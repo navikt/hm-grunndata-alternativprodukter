@@ -9,7 +9,7 @@ class CliqueService(
 
     /**
      * Find all maximal cliques (size >= 2) in the symmetric ego-network of [hmsArtNr]
-     * that contain [hmsArtNr].
+     * that contain [hmsArtNr]. https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
      */
     suspend fun findCliquesContaining(hmsArtNr: String): Set<Set<String>> {
         // Load all symmetric pairs in the table

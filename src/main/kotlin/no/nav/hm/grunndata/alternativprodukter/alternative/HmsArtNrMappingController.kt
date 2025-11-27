@@ -8,6 +8,7 @@ import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Post
 import io.micronaut.serde.annotation.Serdeable
+import io.micronaut.data.exceptions.DataAccessException
 import no.nav.hm.grunndata.alternativprodukter.alternative.AlternativeProductsController.Companion.LOG
 
 @Controller("/hmsArtNrMapping")
@@ -35,22 +36,42 @@ class HmsArtNrMappingController(
                 return HttpResponse.badRequest()
             }
 
-            val newMappings = editGroupDTO.group.map {
-                val createdMapping = hmsArtnrMappingRepository.save(
-                    HmsArtnrMapping(
-                        sourceHmsArtnr = it,
-                        targetHmsArtnr = editGroupDTO.alternative
-                    )
-                )
+            val newMappings = mutableListOf<HmsArtnrMappingInputDTO>()
 
-                val createdReverseMapping = hmsArtnrMappingRepository.save(
-                    HmsArtnrMapping(
-                        sourceHmsArtnr = editGroupDTO.alternative,
-                        targetHmsArtnr = it
+            editGroupDTO.group.forEach { member ->
+                try {
+                    val createdMapping = hmsArtnrMappingRepository.save(
+                        HmsArtnrMapping(
+                            sourceHmsArtnr = member,
+                            targetHmsArtnr = editGroupDTO.alternative
+                        )
                     )
-                )
-                listOf(createdMapping.toDto(), createdReverseMapping.toDto())
-            }.flatten()
+                    newMappings.add(createdMapping.toDto())
+                } catch (e: DataAccessException) {
+                    // Ignore duplicate key violations; rethrow anything else
+                    if (e.cause?.message?.contains("duplicate key", ignoreCase = true) == true) {
+                        LOG.debug("Ignoring duplicate mapping for $member -> ${editGroupDTO.alternative}")
+                    } else {
+                        throw e
+                    }
+                }
+
+                try {
+                    val createdReverseMapping = hmsArtnrMappingRepository.save(
+                        HmsArtnrMapping(
+                            sourceHmsArtnr = editGroupDTO.alternative,
+                            targetHmsArtnr = member
+                        )
+                    )
+                    newMappings.add(createdReverseMapping.toDto())
+                } catch (e: DataAccessException) {
+                    if (e.cause?.message?.contains("duplicate key", ignoreCase = true) == true) {
+                        LOG.debug("Ignoring duplicate mapping for ${editGroupDTO.alternative} -> $member")
+                    } else {
+                        throw e
+                    }
+                }
+            }
 
             return HttpResponse.ok(newMappings)
         } else {
