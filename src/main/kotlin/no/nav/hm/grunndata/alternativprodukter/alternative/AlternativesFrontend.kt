@@ -81,20 +81,10 @@ class AlternativesFrontend(
             }
         }
 
-        // Deterministic sorting: sort products within each group, then sort groups by their key
-        val sortedGroups = maximalGroups.map { group ->
-            group.sortedBy { it.hmsArtNr }
-        }
-
-        val deterministicallySortedGroups = sortedGroups.sortedBy { group ->
-            group.joinToString(",") { it.hmsArtNr }
-        }
-
         LOG.info("Raw groups for $hmsNr: ${rawGroups.map { it.map(ProductResponse::hmsArtNr) }}")
         LOG.info("Maximal groups for $hmsNr: ${maximalGroups.map { it.map(ProductResponse::hmsArtNr) }}")
-        LOG.info("Deterministically sorted groups for $hmsNr: ${deterministicallySortedGroups.map { it.map(ProductResponse::hmsArtNr) }}")
 
-        return AlternativesWithStockGrouped(original = original, groups = deterministicallySortedGroups)
+        return AlternativesWithStockGrouped(original = original, groups = maximalGroups)
     }
 
     private fun searchForProduct(hmsNr: String): ProductDoc? {
