@@ -124,7 +124,7 @@ class AlternativesFrontend(
 
 
     private fun mapToImageUri(media: List<MediaDoc>): String? {
-        return media.minByOrNull { doc -> doc.priority }?.uri
+        return media.filter { it.type == MediaType.IMAGE }.minByOrNull { doc -> doc.priority }?.uri
     }
 
     private fun mapRank(agreements: List<AgreementInfoDoc>): Int =
