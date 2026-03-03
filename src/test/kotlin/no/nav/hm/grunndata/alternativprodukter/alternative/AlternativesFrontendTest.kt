@@ -10,7 +10,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.alternativprodukter.MockFactory
-import no.nav.hm.grunndata.alternativprodukter.MockFactory.Companion.testHmsNr
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsStockResponse
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStock
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockRepository
@@ -21,6 +20,7 @@ import org.junit.jupiter.api.Test
 class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFrontend) {
 
     val testHmsnr = MockFactory.testHmsNr
+    val telemarkHmsnr = MockFactory.telemarkHmsNr
 
     @MockBean(ProductStockRepository::class)
     fun mockProductStockRepository(): ProductStockRepository = mockk<ProductStockRepository>().apply {
@@ -44,15 +44,43 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
             bestillinger = 0,
             sortiment = true,
             artikkelid = 1234,
-            artikkelnummer = testHmsNr
+            artikkelnummer = testHmsnr
         )
         val productStock = ProductStock(
-            hmsArtnr = testHmsNr,
+            hmsArtnr = testHmsnr,
             oebsStockResponse = listOf(oebsStockResponse),
         )
 
-        coEvery { findByHmsArtnr(testHmsNr) } returns productStock
-        coEvery { findByHmsArtnr(neq(testHmsNr)) } answers { callOriginal() }
+        val oebsStockResponseWithTelemark = OebsStockResponse(
+            erPåLager = true,
+            antallPåLager = 1,
+            organisasjons_id = 1,
+            organisasjons_navn = "Telemark",
+            fysisk = 1,
+            minmax = true,
+            anmodning = 0,
+            intanmodning = 0,
+            forsyning = 0,
+            lagervare = true,
+            tilgjengeligatt = 0,
+            tilgjengeligroo = 0,
+            tilgjengelig = 1,
+            behovsmeldt = 0,
+            reservert = 0,
+            restordre = 0,
+            bestillinger = 0,
+            sortiment = true,
+            artikkelid = 1234,
+            artikkelnummer = telemarkHmsnr
+        )
+        val productStockWithTelemark = ProductStock(
+            hmsArtnr = telemarkHmsnr,
+            oebsStockResponse = listOf(oebsStockResponseWithTelemark),
+        )
+
+        coEvery { findByHmsArtnr(testHmsnr) } returns productStock
+        coEvery { findByHmsArtnr(telemarkHmsnr) } returns productStockWithTelemark
+        coEvery { findByHmsArtnr(match { it !in listOf(telemarkHmsnr, testHmsnr) }) } answers { callOriginal() }
         coEvery { save(any()) } answers { callOriginal() }
         coEvery { update(any()) } answers { callOriginal() }
     }
@@ -112,6 +140,13 @@ class AlternativesFrontendTest(private val alternativesFrontend: AlternativesFro
             shouldThrow<IllegalArgumentException> {
                 alternativesFrontend.getAlternatives("00000")
             }
+        }
+    }
+
+    @Test
+    fun `filter defunct warehouses`() {
+        runBlocking {
+            alternativesFrontend.getAlternatives(telemarkHmsnr).shouldNotBeNull()
         }
     }
 }

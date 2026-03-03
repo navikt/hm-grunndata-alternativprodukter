@@ -132,13 +132,18 @@ class AlternativesFrontend(
 
     private suspend fun mapStock(oebsStockResponse: List<OebsStockResponse>): List<StockResponse> =
         oebsStockResponse
-            .filter { it.organisasjons_navn.substring(4) != "Telemark" }
+            .filter { notInDefunctWarehouses(it.organisasjons_navn) }
             .map { stock: OebsStockResponse ->
                 StockResponse(
                     stock.organisasjons_navn.substring(4),
                     calculateAvailable(stock)
                 )
             }
+
+    // lagere som ikke finnes lengre eller ikke skal komme opp
+    private fun notInDefunctWarehouses(organisasjons_navn: String): Boolean =
+        organisasjons_navn.substring(4) !in listOf("Telemark", "Nord-Trønderlag")
+
 
     private fun calculateAvailable(oebsStockResponse: OebsStockResponse): Int =
         max((oebsStockResponse.tilgjengelig - oebsStockResponse.behovsmeldt), 0)

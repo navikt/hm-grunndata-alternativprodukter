@@ -32,6 +32,7 @@ class MockFactory {
         val sourceHmsNr = "123456789"
         val targetHmsNr = "987654321"
         val testHmsNr = "147286"
+        val telemarkHmsNr = "111111"
     }
 
     @Singleton
@@ -158,7 +159,42 @@ class MockFactory {
         """.trimIndent()
 
         val body = searchBodyProduct(testHmsNr)
+        @Language("JSON") val searchResponse2 = """
+            {
+                "hits": {
+                  "total": {
+                    "value": 1
+                  },
+                  "hits": [{
+                    "_source": {
+                      "id": "123",
+                      "supplier": {
+                        "id": "123",
+                        "identifier": "321",
+                        "name": "Supplier AS"
+                      },
+                      "title": "Produkttittel",
+                      "articleName": "Artikkelnavn",
+                      "attributes": {
+                      },
+                      "status": "ACTIVE",
+                      "hmsArtNr": $telemarkHmsNr,
+                      "identifier": "identifier",
+                      "supplierRef": "levArtNr",
+                      "seriesId": "seriesid123",
+                      "media": [],
+                      "expired": "${LocalDateTime.now()}",
+                      "agreements": [],
+                      "hasAgreement": "false"
+                    }
+                }]
+              }
+            }
+        """.trimIndent()
+
+        val body2 = searchBodyProduct(telemarkHmsNr)
 
         coEvery { searchWithBody(SearchService.PRODUCTS, any(), body) } returns searchResponse
+        coEvery { searchWithBody(SearchService.PRODUCTS, any(), body2) } returns searchResponse2
     }
 }
