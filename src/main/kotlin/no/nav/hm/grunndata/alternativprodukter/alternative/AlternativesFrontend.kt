@@ -141,8 +141,10 @@ class AlternativesFrontend(
             }
 
     // lagere som ikke finnes lengre eller ikke skal komme opp
-    private fun notInDefunctWarehouses(organisasjons_navn: String): Boolean =
-        organisasjons_navn.substring(4) !in listOf("Telemark", "Nord-Trønderlag")
+    private fun notInDefunctWarehouses(organisasjons_navn: String): Boolean {
+        LOG.info("ORG NAVN: $organisasjons_navn")
+        return organisasjons_navn.substring(4) !in listOf("Telemark", "Nord-Trønderlag")
+    }
 
 
     private fun calculateAvailable(oebsStockResponse: OebsStockResponse): Int =
