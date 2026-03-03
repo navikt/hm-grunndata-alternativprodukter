@@ -148,13 +148,6 @@ val jsontest =
       "actualAvailable": 0
     },
     {
-      "location": "Nord-Trøndelag",
-      "available": 0,
-      "reserved": 0,
-      "needNotified": 0,
-      "actualAvailable": 0
-    },
-    {
       "location": "Nordland",
       "available": 0,
       "reserved": 0,
