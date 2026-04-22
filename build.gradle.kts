@@ -1,14 +1,16 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.kotlin.kapt") version "1.9.25"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
-    id("com.gradleup.shadow") version "8.3.6"
-    id("io.micronaut.application") version "4.5.4"
-    id("io.micronaut.aot") version "4.5.4"
+    id("org.jetbrains.kotlin.jvm") version "2.1.21"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
+    id("com.google.devtools.ksp") version "2.1.21-2.0.1"
+    id("java")
+    id("com.gradleup.shadow") version "9.3.1"
+    id("io.micronaut.application") version "4.6.2"
+    id("io.micronaut.aot") version "4.6.2"
     id ("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -29,10 +31,10 @@ val leaderElectionVersion = "202506021230"
 val mockkVersion = "1.13.4"
 
 dependencies {
-    kapt("io.micronaut.data:micronaut-data-processor")
-    kapt("io.micronaut:micronaut-http-validation")
-    kapt("io.micronaut.openapi:micronaut-openapi")
-    kapt("io.micronaut.serde:micronaut-serde-processor")
+    ksp("io.micronaut.data:micronaut-data-processor")
+    ksp("io.micronaut:micronaut-http-validation")
+    ksp("io.micronaut.openapi:micronaut-openapi")
+    ksp("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
@@ -94,11 +96,11 @@ java {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = jvmTarget
+    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(jvmTarget))
 }
 
 tasks.named<KotlinCompile>("compileTestKotlin") {
-    kotlinOptions.jvmTarget = jvmTarget
+    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(jvmTarget))
 }
 
 tasks.named<ShadowJar>("shadowJar") {
