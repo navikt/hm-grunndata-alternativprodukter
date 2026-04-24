@@ -25,8 +25,8 @@ val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 val openSearchJavaClientVersion = "2.24.0"
 val httpClient5= "5.4.4"
-val rapidsRiversVersion = "202410290928"
-val grunndataDtoVersion = "202504011524"
+val rapidsRiversVersion = "202604231235"
+val grunndataDtoVersion = "202604241445"
 val leaderElectionVersion = "202506021230"
 val mockkVersion = "1.13.4"
 
@@ -58,6 +58,7 @@ dependencies {
     implementation("org.opensearch.client:opensearch-java:$openSearchJavaClientVersion")
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClient5")
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
+    implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto-micronaut:${grunndataDtoVersion}")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
 
