@@ -18,6 +18,8 @@ plugins {
 
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
+val githubUser: String? by project
+val githubPassword: String? by project
 
 val kotlinVersion=project.properties.get("kotlinVersion")
 val poiVersion = "5.4.1"
@@ -157,7 +159,13 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://packages.confluent.io/maven/")
-    maven("https://maven.pkg.github.com/navikt/maven-release")
+    maven {
+        url=uri("https://maven.pkg.github.com/navikt/maven-release")
+        credentials {
+            username = githubUser
+            password = githubPassword
+        }
+    }
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
