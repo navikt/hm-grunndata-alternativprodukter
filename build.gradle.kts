@@ -159,6 +159,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://packages.confluent.io/maven/")
+    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
     maven {
         url=uri("https://maven.pkg.github.com/navikt/maven-release")
         credentials {
@@ -166,7 +167,6 @@ repositories {
             password = githubPassword
         }
     }
-    maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
 
 
