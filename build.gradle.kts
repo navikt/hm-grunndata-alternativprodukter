@@ -23,8 +23,8 @@ val kotlinVersion=project.properties.get("kotlinVersion")
 val poiVersion = "5.4.1"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
-val openSearchJavaClientVersion = "2.24.0"
-val httpClient5= "5.4.4"
+val openSearchJavaClientVersion = "3.8.0"
+val httpClient5= "5.6.1"
 val rapidsRiversVersion = "202604231235"
 val grunndataDtoVersion = "202604280844"
 val leaderElectionVersion = "202506021230"
@@ -62,7 +62,7 @@ dependencies {
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-core:$rapidsRiversVersion")
     implementation("com.github.navikt:hm-rapids-and-rivers-v2-micronaut:$rapidsRiversVersion")
 
-    implementation("org.apache.logging.log4j:log4j-core:2.25.3")
+    implementation("org.apache.logging.log4j:log4j-core:2.25.4")
 
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
@@ -71,7 +71,7 @@ dependencies {
     implementation("com.github.navikt:hm-micronaut-leaderelection:$leaderElectionVersion")
 
     implementation("io.micronaut.graphql:micronaut-graphql")
-
+    implementation("org.apache.commons:commons-lang3:3.18.0")
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
