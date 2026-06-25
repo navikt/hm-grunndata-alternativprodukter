@@ -1,6 +1,4 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative
-
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import java.time.LocalDateTime
@@ -13,6 +11,7 @@ import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.intellij.lang.annotations.Language
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
 import kotlin.math.max
 
 @Singleton
@@ -30,8 +29,8 @@ class AlternativesFrontend(
 
     suspend fun getAlternatives(hmsNr: String): AlternativesWithStockNew? {
         val alternatives = alternativeProductService.getAlternativeProductsWithoutStock(hmsNr)
-
-        val originalResponse = searchForProduct(hmsNr)?.toResponse() ?: throw IllegalArgumentException("Unknown hmsNr")
+        val product = searchForProduct(hmsNr)
+        val originalResponse = product?.toResponse() ?: throw IllegalArgumentException("Unknown hmsNr")
         val alternativesResponse = alternatives.map { searchForProduct(it) }.mapNotNull { it?.toResponse() }
 
         return AlternativesWithStockNew(original = originalResponse, alternatives = alternativesResponse)
@@ -88,19 +87,16 @@ class AlternativesFrontend(
     }
 
     private fun searchForProduct(hmsNr: String): ProductDoc? {
+        LOG.info("Searching for $hmsNr")
         val params = emptyMap<String, String>()
 
         val products = searchService.searchWithBody(SearchService.PRODUCTS, params, searchBodyProduct(hmsNr))
 
         val json = objectMapper.readTree(products)
         val hits = json.get("hits") ?: return null
-        hits.get("total")?.get("value")?.asInt() ?: return null
-        return hits.get("hits").map {
-            objectMapper.treeToValue(
-                it.get("_source"),
-                ProductDoc::class.java
-            )
-        }.firstOrNull()
+        val firstHit = hits.get("hits")?.firstOrNull() ?: return null
+        val source = firstHit.get("_source") ?: return null
+        return objectMapper.treeToValue(source, ProductDoc::class.java)
     }
 
     suspend fun ProductDoc.toResponse(): ProductResponse {

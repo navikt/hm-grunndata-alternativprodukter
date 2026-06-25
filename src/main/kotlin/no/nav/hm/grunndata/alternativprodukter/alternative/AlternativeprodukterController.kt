@@ -75,8 +75,7 @@ class AlternativeProductsController(
             } catch (illegalArgument: IllegalArgumentException) {
                 return HttpResponse.notFound()
             }
-
-            return HttpResponse.ok(alternativesWithStockNew)
+            return HttpResponse.ok(alternativesWithStockNew!!)
         } else {
             LOG.warn("Token fail: " + tokenValidated.error)
             return HttpResponse.unauthorized()
