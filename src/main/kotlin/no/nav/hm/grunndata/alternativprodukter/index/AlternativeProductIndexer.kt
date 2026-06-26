@@ -26,8 +26,9 @@ class AlternativeProductIndexer(
 
     }
 
-    suspend fun reIndexAllProductStock() {
+    suspend fun reIndexAllProductStock(): String {
         val alternativsProductStock = alternativeAndProductStockService.getStockAndAlternativesFromDB()
+        LOG.info("Got alternatives and product stock from DB, size: ${alternativsProductStock.size} to reindex")
         val newIndexName = "${aliasName}_${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))}"
         createIndex(indexName = newIndexName, settings = settings, mapping = mapping)
         val mappedDoc = mutableListOf<AlternativeProductDoc>()
@@ -47,6 +48,7 @@ class AlternativeProductIndexer(
             index(mappedDoc, newIndexName)
         }
         LOG.info("reIndexAllProductStock finished with index: $newIndexName")
+        return newIndexName
     }
 
     suspend fun reIndexByHmsNr(hmsNr: String) {
