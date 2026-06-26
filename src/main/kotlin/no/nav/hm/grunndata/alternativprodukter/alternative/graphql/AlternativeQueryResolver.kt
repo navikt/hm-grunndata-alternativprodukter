@@ -1,19 +1,17 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+
 import no.nav.hm.grunndata.alternativprodukter.alternative.SearchService
 import no.nav.hm.grunndata.alternativprodukter.alternative.SearchService.Companion.ALTERNATIVES
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductDoc
-import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
-import no.nav.hm.grunndata.alternativprodukter.index.WareHouseStockDoc
+
 import no.nav.hm.grunndata.alternativprodukter.index.toDoc
 import no.nav.hm.grunndata.alternativprodukter.stock.ProductStockDTO
 import no.nav.hm.grunndata.alternativprodukter.stock.FetchOebsAndIndexProductStockComponent
+import tools.jackson.databind.JsonNode
+import tools.jackson.databind.ObjectMapper
 
 @Singleton
 class AlternativeQueryResolver(
@@ -31,10 +29,8 @@ class AlternativeQueryResolver(
 
     private fun alternativeProductDocs(json: JsonNode): List<AlternativeProductDoc> {
         val hits = json.get("hits")?.get("hits")
-        if (hits != null) {
-            return hits.map { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java) }
-        }
-        return emptyList()
+        return hits?.mapNotNull { objectMapper.treeToValue(it.get("_source"), AlternativeProductDoc::class.java) }
+            ?: emptyList()
     }
 
     fun fetchAlternativeProducts(hmsNrs: List<String>): List<AlternativeProductDoc> {
@@ -60,13 +56,12 @@ class AlternativeQueryResolver(
         val totalHits = json.get("hits")?.get("total")?.get("value")?.asInt() ?: 0
         val hits = json.get("hits")?.get("hits")
         val alternatives =
-            if (hits != null) hits.map {
+            hits?.mapNotNull {
                 objectMapper.treeToValue(
                     it.get("_source"),
                     AlternativeProductDoc::class.java
                 )
-            }
-            else emptyList<AlternativeProductDoc>()
+            } ?: emptyList<AlternativeProductDoc>()
         LOG.debug("alterternative size: ${alternatives.size}, total hits: $totalHits, from: $from, size: $size")
         if (alternatives.isNotEmpty() && alternatives.size <= refreshStockHitsLimit) {
             LOG.info("Refreshing stock for ${alternatives.size} alternative products")

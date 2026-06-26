@@ -1,6 +1,6 @@
 package no.nav.hm.grunndata.alternativprodukter.index
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import io.micronaut.context.annotation.Context
 import io.micronaut.context.annotation.Requires
 import no.nav.helse.rapids_rivers.JsonMessage
@@ -14,6 +14,7 @@ import no.nav.hm.grunndata.rapid.event.RapidApp
 import no.nav.hm.grunndata.rapid.version.rapidDTOVersion
 import no.nav.hm.rapids_rivers.micronaut.RiverHead
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
 
 @Context
 @Requires(bean = KafkaRapid::class)

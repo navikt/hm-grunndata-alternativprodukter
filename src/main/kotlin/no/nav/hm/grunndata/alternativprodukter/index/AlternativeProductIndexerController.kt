@@ -31,8 +31,11 @@ class AlternativeProductIndexerController(private val alternativeProductIndexer:
     fun count() = alternativeProductIndexer.docCount()
 
     @Post("/reIndexProductStock")
-    fun reIndexProductStock() = runBlocking {
-        alternativeProductIndexer.reIndexAllProductStock()
+    fun reIndexProductStock(@QueryValue(value = "alias", defaultValue = "false") alias: Boolean) = runBlocking {
+        val indexName = alternativeProductIndexer.reIndexAllProductStock()
+        if (alias) {
+            alternativeProductIndexer.updateAlias(indexName)
+        }
     }
 
 }

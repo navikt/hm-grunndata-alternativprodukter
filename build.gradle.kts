@@ -4,13 +4,13 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.1.21"
-    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
-    id("com.google.devtools.ksp") version "2.1.21-2.0.1"
+    id("org.jetbrains.kotlin.jvm") version "2.3.21"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.3.21"
+    id("com.google.devtools.ksp") version "2.3.7"
     id("java")
     id("com.gradleup.shadow") version "9.3.1"
-    id("io.micronaut.application") version "4.6.2"
-    id("io.micronaut.aot") version "4.6.2"
+    id("io.micronaut.application") version "5.0.0"
+    id("io.micronaut.aot") version "5.0.0"
     id ("com.github.ben-manes.versions") version "0.51.0"
 }
 
@@ -19,15 +19,15 @@ plugins {
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
+val kotlinVersion= project.properties["kotlinVersion"]
 val poiVersion = "5.4.1"
-val jvmTarget = "17"
+val jvmTarget = "25"
 val kotestVersion = "5.5.5"
-val openSearchJavaClientVersion = "3.8.0"
+val openSearchJavaClientVersion = "3.9.0"
 val httpClient5= "5.6.1"
-val rapidsRiversVersion = "202604231235"
-val grunndataDtoVersion = "202604280844"
-val leaderElectionVersion = "202506021230"
+val rapidsRiversVersion = "202606190809"
+val grunndataDtoVersion = "202606180923"
+val leaderElectionVersion = "202606231046"
 val mockkVersion = "1.13.4"
 
 dependencies {
@@ -55,7 +55,10 @@ dependencies {
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     runtimeOnly("org.yaml:snakeyaml")
 
-    implementation("org.opensearch.client:opensearch-java:$openSearchJavaClientVersion")
+    implementation("org.opensearch.client:opensearch-java:$openSearchJavaClientVersion") {
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
+        exclude(group = "com.fasterxml.jackson.core", module = "jackson-databind")
+    }
     implementation("org.apache.httpcomponents.client5:httpclient5:$httpClient5")
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto-serde:${grunndataDtoVersion}")
@@ -72,10 +75,8 @@ dependencies {
 
     implementation("io.micronaut.graphql:micronaut-graphql")
     implementation("org.apache.commons:commons-lang3:3.18.0")
-    testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:postgresql")
-    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
 

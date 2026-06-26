@@ -36,11 +36,11 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(RapidPushService::class)
     fun rapidPushService(): RapidPushService = mockk(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(GdbApiClient::class)
     fun mockGdbApiClient(): GdbApiClient = mockk<GdbApiClient>(relaxed = true).apply {
         coEvery {
             findProductByHmsArtNr(sourceHmsNr)
@@ -77,7 +77,7 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(IsoCategoryService::class)
     fun mockIsoCategoryService(): IsoCategoryService = mockk<IsoCategoryService>(relaxed = true).apply {
         coEvery { lookUpCode("123456") } returns
                 IsoCategoryDTO(
@@ -89,7 +89,7 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(OebsWarehouseService::class)
     fun mockOebsWarehouseService(): OebsWarehouseService = mockk<OebsWarehouseService>(relaxed = true).apply {
         val stockResponse = OebsStockResponse(
             erPåLager = true,
@@ -119,11 +119,11 @@ class MockFactory {
     }
 
     @Singleton
-    @Replaces
+    @Replaces(AlternativeProductIndexer::class)
     fun mockIndexer(): AlternativeProductIndexer = mockk<AlternativeProductIndexer>(relaxed = true)
 
     @Singleton
-    @Replaces
+    @Replaces(SearchService::class)
     fun mockSearchService(): SearchService = mockk<SearchService>(relaxed = true).apply {
         @Language("JSON") val searchResponse = """
             {

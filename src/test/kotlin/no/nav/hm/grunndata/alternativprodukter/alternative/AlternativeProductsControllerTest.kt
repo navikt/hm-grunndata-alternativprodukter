@@ -28,7 +28,7 @@ class AlternativeProductsControllerTest(private val alternativeProductsControlle
             val alts = alternativeProductsController.getAlternatives(authorization = "123", hmsArtNr = testHmsnr)
             alts.shouldNotBeNull()
             alts.body().shouldNotBeNull()
-            alts.body().original.hmsArtNr.shouldBe(testHmsnr)
+            alts.body()?.original?.hmsArtNr.shouldBe(testHmsnr)
         }
     }
 

@@ -1,12 +1,12 @@
 package no.nav.hm.grunndata.alternativprodukter.alternative.graphql
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import graphql.schema.DataFetcher
 import graphql.schema.DataFetchingEnvironment
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMapping
 import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingInputDTO
 import org.slf4j.LoggerFactory
+import tools.jackson.databind.ObjectMapper
 import java.util.UUID
 
 @Singleton
