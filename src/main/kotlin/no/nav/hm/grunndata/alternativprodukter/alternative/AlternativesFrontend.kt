@@ -87,7 +87,7 @@ class AlternativesFrontend(
     }
 
     private fun searchForProduct(hmsNr: String): ProductDoc? {
-        LOG.info("Searching for $hmsNr")
+        LOG.debug("Searching for {}", hmsNr)
         val params = emptyMap<String, String>()
 
         val products = searchService.searchWithBody(SearchService.PRODUCTS, params, searchBodyProduct(hmsNr))
