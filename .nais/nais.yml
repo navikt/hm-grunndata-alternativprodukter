@@ -91,6 +91,7 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
+        - application: hm-finnhjelpemiddel
         - application: hm-grunndata-index
         - application: hotsak-frontend
         - application: azure-token-generator
