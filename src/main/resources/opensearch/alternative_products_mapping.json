@@ -90,6 +90,9 @@
     "isoCategory": {
       "type": "keyword"
     },
+    "isoCategory22": {
+      "type": "keyword"
+    },
     "media": {
       "enabled": false
     },

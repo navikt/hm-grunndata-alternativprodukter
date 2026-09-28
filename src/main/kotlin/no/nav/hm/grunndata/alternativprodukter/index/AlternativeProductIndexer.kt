@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter
 class AlternativeProductIndexer(
     private val gdbApiClient: GdbApiClient,
     private val isoCategoryService: IsoCategoryService,
+    private val isoCategory22Service: IsoCategory22Service,
     private val alternativeAndProductStockService: AlternativeAndProductStockService,
     private val client: OpenSearchClient
 ) : Indexer(client, settings, mapping, aliasName) {
@@ -36,7 +37,8 @@ class AlternativeProductIndexer(
             gdbApiClient.findProductByHmsArtNr(productStock.original.hmsArtNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
-                    mappedDoc.add(it.toDoc(iso, productStock))
+                    val iso22 = it.isoCategory22?.let { cat -> isoCategory22Service.lookUpCode(cat) }
+                    mappedDoc.add(it.toDoc(iso, iso22, productStock))
                 }
             } ?: LOG.warn("No product found for hmsNr: ${productStock.original.hmsArtNr}")
             if (mappedDoc.size > 1000) {
@@ -56,8 +58,9 @@ class AlternativeProductIndexer(
         gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
             if (it.status != ProductStatus.DELETED) {
                 val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
+                val iso22 = it.isoCategory22?.let { cat -> isoCategory22Service.lookUpCode(cat) }
                 alternativeAndProductStockService.getStockAndAlternativesFromDB(hmsNr)?.let { alternatives ->
-                    val response = index(listOf(it.toDoc(iso, alternatives)))
+                    val response = index(listOf(it.toDoc(iso, iso22,alternatives)))
                     LOG.info("Got response from indexing: ${response.errors()}")
                 }
             }
@@ -71,8 +74,9 @@ class AlternativeProductIndexer(
             gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
+                    val iso22 = it.isoCategory22?.let { cat -> isoCategory22Service.lookUpCode(cat) }
                     alternativeAndProductStockService.getStockAndAlternativesFromDB(hmsNr)?.let { alternatives ->
-                        mappedDoc.add(it.toDoc(iso, alternatives))
+                        mappedDoc.add(it.toDoc(iso, iso22,alternatives))
                     }
                 }
             } ?: LOG.warn("No product found for hmsNr: $hmsNr")

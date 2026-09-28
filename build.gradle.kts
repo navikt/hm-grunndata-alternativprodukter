@@ -26,7 +26,7 @@ val kotestVersion = "5.5.5"
 val openSearchJavaClientVersion = "3.9.0"
 val httpClient5= "5.6.1"
 val rapidsRiversVersion = "202606190809"
-val grunndataDtoVersion = "202606180923"
+val grunndataDtoVersion = "202609220836"
 val leaderElectionVersion = "202606231046"
 val mockkVersion = "1.13.4"
 

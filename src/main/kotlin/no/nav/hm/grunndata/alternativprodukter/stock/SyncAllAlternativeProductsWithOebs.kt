@@ -8,6 +8,7 @@ import no.nav.hm.grunndata.alternativprodukter.alternative.HmsArtnrMappingReposi
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductDoc
 import no.nav.hm.grunndata.alternativprodukter.index.AlternativeProductIndexer
 import no.nav.hm.grunndata.alternativprodukter.index.GdbApiClient
+import no.nav.hm.grunndata.alternativprodukter.index.IsoCategory22Service
 import no.nav.hm.grunndata.alternativprodukter.index.IsoCategoryService
 import no.nav.hm.grunndata.alternativprodukter.index.toDoc
 import no.nav.hm.grunndata.alternativprodukter.oebs.OebsWarehouseService
@@ -17,6 +18,7 @@ import no.nav.hm.grunndata.rapid.dto.ProductStatus
 class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: HmsArtnrMappingRepository,
                                          private val gdbApiClient: GdbApiClient,
                                          private val isoCategoryService: IsoCategoryService,
+                                         private val isoCategory22Service: IsoCategory22Service,
                                          private val productStockRepository: ProductStockRepository,
                                          private val oebsWarehouseService: OebsWarehouseService,
                                          private val indexer: AlternativeProductIndexer){
@@ -30,8 +32,9 @@ class SyncAllAlternativeProductsWithOebs(private val hmsArtnrMappingRepository: 
             gdbApiClient.findProductByHmsArtNr(hmsNr)?.let {
                 if (it.status != ProductStatus.DELETED) {
                     val iso = isoCategoryService.lookUpCode(it.isoCategory)!!
+                    val iso22 = it.isoCategory22?.let { cat -> isoCategory22Service.lookUpCode(cat) }
                     val productStockAlternatives = getStockAndAlternativesFromOebs(hmsNr)
-                    mappedDoc.add(it.toDoc(iso, productStockAlternatives))
+                    mappedDoc.add(it.toDoc(iso, iso22, productStockAlternatives))
                 }
             } ?: LOG.warn("No product found for hmsNr: $hmsNr")
             if (mappedDoc.size > 1000) {

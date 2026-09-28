@@ -10,6 +10,7 @@ import no.nav.hm.grunndata.rapid.dto.AgreementInfo
 import no.nav.hm.grunndata.rapid.dto.AlternativeFor
 import no.nav.hm.grunndata.rapid.dto.Attributes
 import no.nav.hm.grunndata.rapid.dto.CompatibleWith
+import no.nav.hm.grunndata.rapid.dto.IsoCategory22DTO
 import no.nav.hm.grunndata.rapid.dto.IsoCategoryDTO
 import no.nav.hm.grunndata.rapid.dto.MediaInfo
 import no.nav.hm.grunndata.rapid.dto.MediaSourceType
@@ -32,9 +33,12 @@ data class AlternativeProductDoc(
     val hmsArtNr: String? = null,
     val supplierRef: String,
     val isoCategory: String,
+    val isoCategory22: String? = null,
     val isoCategoryTitle: String? = null,
+    val isoCategoryTitle22: String? = null,
     val isoCategoryTitleShort: String? = null,
     val isoCategoryText: String? = null,
+    val isoCategoryText22: String? = null,
     val isoCategoryTextShort: String? = null,
     val seriesId: String? = null,
     val data: List<TechData> = emptyList(),
@@ -173,7 +177,7 @@ fun AgreementInfo.toDoc(): AgreementInfoDoc = AgreementInfoDoc(
     published = published ?: LocalDateTime.now()
 )
 
-fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: ProductStockAlternatives): AlternativeProductDoc {
+fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, iso22: IsoCategory22DTO?, productStockAlternatives: ProductStockAlternatives): AlternativeProductDoc {
     val (onlyActiveAgreements) =
             agreements.partition {
                 it.published!!.isBefore(LocalDateTime.now())
@@ -190,9 +194,12 @@ fun ProductRapidDTO.toDoc(iso: IsoCategoryDTO, productStockAlternatives: Product
             hmsArtNr = hmsArtNr,
             supplierRef = supplierRef,
             isoCategory = isoCategory,
+            isoCategory22 = isoCategory22,
             isoCategoryTitle = iso.isoTitle,
+            isoCategoryTitle22 = iso22?.isoTitle,
             isoCategoryTitleShort = iso.isoTitleShort,
             isoCategoryText = iso.isoText,
+            isoCategoryText22 = iso22?.isoText,
             isoCategoryTextShort = iso.isoTextShort,
             seriesId = seriesUUID.toString(),
             data = techData,
